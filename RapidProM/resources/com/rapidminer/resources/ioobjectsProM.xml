@@ -1,0 +1,246 @@
+<ioobjects>
+	<ioobject
+		name="StreamPublisherProM"
+		class="com.rapidminer.ioobjects.XSPublisherIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.XSPublisherIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="XSEventStreamProm"
+		class="com.rapidminer.ioobjects.XSEventStreamIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.XSEventStreamIOObjectRenderer</renderer>
+	</ioobject>	
+	<ioobject
+		name="CPNModelProM"
+		class="com.rapidminer.ioobjects.CPNModelIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.CPNModelIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="BalancedReplayResultProM"
+		class="com.rapidminer.ioobjects.BalancedReplayResultIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.BalancedReplayResultIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="PetriNetWithDataProM"
+		class="com.rapidminer.ioobjects.PetriNetWithDataIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.PetriNetWithDataIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="WoflanDiagnosisProM"
+		class="com.rapidminer.ioobjects.WoflanDiagnosisIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.WoflanDiagnosisIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="BPMNDiagramProM"
+		class="com.rapidminer.ioobjects.BPMNDiagramIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.BPMNDiagramIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="PredictorProM"
+		class="com.rapidminer.ioobjects.PredictorIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.PredictorIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="PomPomViewProM"
+		class="com.rapidminer.ioobjects.PomPomViewIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.PomPomViewIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="ClassifierProM"
+		class="com.rapidminer.ioobjects.ClassifierIOObject"
+		reportable="false">
+	</ioobject>
+	<ioobject
+		name="PNRepResultProM"
+		class="com.rapidminer.ioobjects.PNRepResultIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.PNRepResultIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="InteractiveMinerLauncherProM"
+		class="com.rapidminer.ioobjects.InteractiveMinerLauncherIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.InteractiveMinerLauncherIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="ReachabilityGraphProM"
+		class="com.rapidminer.ioobjects.ReachabilityGraphIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.ReachabilityGraphIOObjectRenderer</renderer>
+	</ioobject>
+    <ioobject
+		name="FuzzyAnimationProM"
+		class="com.rapidminer.ioobjects.FuzzyAnimationIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.FuzzyAnimationIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="MutableFuzzyGraphProM"
+		class="com.rapidminer.ioobjects.MutableFuzzyGraphIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.MutableFuzzyGraphIOObjectRenderer</renderer>
+	</ioobject>
+   <ioobject
+        name="CLIPluginContext"
+        class="com.rapidminer.ioobjects.ProMContextIOObject"
+        reportable="true">
+        <renderer>com.rapidminer.ioobjectrenderers.ProMContextIOObjectRenderer</renderer>
+    </ioobject>
+    
+    <ioobject
+        name="FirstPromTask"
+        class="com.rapidminer.ioobjects.OutputFirstProMTaskIOObject"
+        reportable="true">
+        <renderer>com.rapidminer.ioobjectrenderers.OutputFirstProMTaskIOObjectRenderer</renderer>
+    </ioobject>
+    
+     <ioobject
+        name="XLogProM"
+        class="com.rapidminer.ioobjects.XLogIOObject"
+        reportable="true">
+        <renderer>com.rapidminer.ioobjectrenderers.XLogIOObjectRenderer</renderer>
+    </ioobject>
+    
+    <ioobject
+        name="PetriNetProM"
+        class="com.rapidminer.ioobjects.PetriNetIOObject"
+        reportable="true">
+        <renderer>com.rapidminer.ioobjectrenderers.PetriNetIOObjectRenderer</renderer>
+    </ioobject>
+    
+    <ioobject
+        name="GuideTreeProM"
+        class="com.rapidminer.ioobjects.GuideTreeIOObject"
+        reportable="true">
+        <renderer>com.rapidminer.ioobjectrenderers.GuideTreeIOObjectRenderer</renderer>
+    </ioobject>
+	
+	<ioobject
+		name="MarkingProM"
+		class="com.rapidminer.ioobjects.MarkingIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.MarkingIOObjectRenderer</renderer>
+	</ioobject>
+	
+	<ioobject
+		name="HeuristicsNetArrayObjectProM"
+		class="com.rapidminer.ioobjects.HeuristicsNetArrayObjectIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.HeuristicsNetArrayObjectIOObjectRenderer</renderer>
+	</ioobject>
+	
+	<ioobject
+		name="HeuristicsNetProM"
+		class="com.rapidminer.ioobjects.HeuristicsNetIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.HeuristicsNetIOObjectRenderer</renderer>
+	</ioobject>
+	
+	<ioobject
+		name="ProcessTreeProM"
+		class="com.rapidminer.ioobjects.ProcessTreeIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.ProcessTreeIOObjectRenderer</renderer>
+	</ioobject>
+	
+	<ioobject
+		name="ManifestProM"
+		class="com.rapidminer.ioobjects.ManifestIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.ManifestIOObjectRenderer</renderer>
+	</ioobject>
+	
+	<ioobject
+		name="DottedChartModelProM"
+		class="com.rapidminer.ioobjects.DottedChartModelIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.DottedChartModelIOObjectRenderer</renderer>
+	</ioobject>
+	
+	<ioobject
+		name="SocialNetworkProM"
+		class="com.rapidminer.ioobjects.SocialNetworkIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.SocialNetworkIOObjectRenderer</renderer>
+	</ioobject>
+
+	<ioobject
+		name="TSMinerTransitionSystemProM"
+		class="com.rapidminer.ioobjects.TSMinerTransitionSystemIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.TSMinerTransitionSystemIOObjectRenderer</renderer>
+	</ioobject>
+
+	<ioobject
+		name="DirectedGraphElementWeightsProM"
+		class="com.rapidminer.ioobjects.DirectedGraphElementWeightsIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.DirectedGraphElementWeightsIOObjectRenderer</renderer>
+	</ioobject>
+
+	<ioobject
+		name="StartStateSetProM"
+		class="com.rapidminer.ioobjects.StartStateSetIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.StartStateSetIOObjectRenderer</renderer>
+	</ioobject>
+
+	<ioobject
+		name="AcceptStateSetProM"
+		class="com.rapidminer.ioobjects.AcceptStateSetIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.AcceptStateSetIOObjectRenderer</renderer>
+	</ioobject>
+	
+	<ioobject
+		name="AttenuationProM"
+		class="com.rapidminer.ioobjects.AttenuationIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.AttenuationIOObjectRenderer</renderer>
+	</ioobject>
+
+	<ioobject
+		name="IntegerProM"
+		class="com.rapidminer.ioobjects.IntegerIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.IntegerIOObjectRenderer</renderer>
+	</ioobject>
+	
+	<ioobject
+		name="MetricsRepositoryProM"
+		class="com.rapidminer.ioobjects.MetricsRepositoryIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.MetricsRepositoryIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="DotPanelProM"
+		class="com.rapidminer.ioobjects.DotPanelIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.DotPanelIOObjectRenderer</renderer>
+	</ioobject>
+
+<!--  
+    This is an example how to specify IOObjects and theirs various renderers.
+	<ioobject
+		name="Document"
+		class="com.rapidminer.operator.text.Document"
+		reportable="true">
+	  <renderer>com.rapidminer.gui.renderer.text.DocumentRenderer</renderer>
+	</ioobject>
+	
+    <ioobject
+        name="Word List"
+        class="com.rapidminer.operator.text.WordList"
+        reportable="true">
+      <renderer>com.rapidminer.gui.renderer.DefaultTextRenderer</renderer>
+    </ioobject>
+ -->
+</ioobjects>

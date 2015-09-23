@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="windows-1252" standalone="no"?>
+<operatorHelp lang="en_EN">
+    <!--  This is an example how to specify the description of operators and the translation of it's key identifier
+    to names. 
+
+   <operator>
+      <name>SingleTextInput</name>
+      <synopsis>Generates word vectors from a single text.</synopsis>
+      <help />
+   </operator>
+   <operator>
+      <name>TextObjectWriter</name>
+      <synopsis>Writes a textobject into a file.</synopsis>
+      <help>This operator writes a given textObject into a file. It might be specified if an existing file with the same name should be overwritten.</help>
+   </operator>
+
+    This is how group ids are translated:
+    
+   <group>
+      <key>text_processing</key>
+      <name>Text Processing</name>
+   </group>
+
+    -->
+    
+    <operator>
+		<name>Generate stream from CPN</name>
+		<synopsis>Generate stream from CPN</synopsis>
+		<help></help>
+		<key>stream_from_cpn</key>
+	</operator>
+		
+   <operator>
+   		<name>Mine a sequential model</name>
+        <synopsis>DO NOT USE THIS OPERATOR (Experimental)</synopsis>
+        <help> </help>
+		<key>sequence_miner</key>		
+	</operator>
+	
+	<operator>
+		<name>Import CPN Model</name>
+        <synopsis>Import CPN Model</synopsis>
+        <help> </help>
+        <key>read_cpn</key>
+    </operator>
+    
+   <operator>
+    	<name>Add Source and Sink to Petri net</name>
+        <synopsis>This operator creates an artificial and single source and sink places in a petri net</synopsis>
+        <help> </help>
+		<key>add_source_sink</key>
+	</operator>
+   <operator>
+   		<name>ActivityList to Petri net</name>
+        <synopsis>This operator creates a sequencial Petri net based on an activity name list extracted from a data table</synopsis>
+        <help> </help>
+		<key>name_to_petrinet</key>
+	</operator>
+    
+   <operator>
+   		<name>Conformance Checking</name>
+        <synopsis>This operator calculates different conformance metrics for a Petri net and an event log. One of these metrics is Replay Fitness</synopsis>
+        <help>This operator calculates different conformance metrics for a Petri net and an event log. One of these metrics is Replay Fitness</help>
+		<key>conformance_checking_of_dpn_(balanced)</key>
+	</operator>
+    
+  <operator>
+  		<name>Case Data Extractor</name>
+        <synopsis>This operator extract case data from an event log</synopsis>
+        <help>An event log is used as input and a data table (ExampleSet) is produced as output</help>
+		<key>case_data_extractor</key>
+  </operator>
+    
+  <operator>
+  		<name>Add Noise Filter to Log</name>
+        <synopsis>This operator filters noise out of an event log</synopsis>
+        <help>An event log is used as input and the filtered log is provided as output</help>
+		<key>add_noise_filter_log</key>
+	 </operator>
+    
+  <operator>
+  		<name>Clear Context</name>
+        <synopsis>This operator clears the ProM PluginContext</synopsis>
+        <help>This operator cleans the connection and provided objects manager, and sets future to null, use this when running out of memory </help>
+        <key>clear_context</key>
+     </operator>
+  <operator>
+  		<name>WOFLAN (Soundness)</name>
+        <synopsis>This operator analyzes the soundness of a petri net</synopsis>
+        <help>For using this operator, you need a context and a petri net. </help>
+		<key>analyze_with_woflan</key>
+	</operator>
+  <operator>
+  		<name>Feature Prediction (Decision Trees)</name>
+        <synopsis>This operator performs Predictions of Business Process Features</synopsis>
+        <help>For using this operator, you need a context and a log. </help>
+		<key>perform_predictions_of_business_process_features</key>
+	</operator>
+  <operator>
+  		<name>Replay Event Log on Petri Net (Alignment) + Bottleneck Visualization</name>
+        <synopsis>This operator replays a log into a petrinet and show visual results</synopsis>
+        <help>For using this operator, you need a context, a petri net and a log. </help>
+		<key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
+	</operator>
+  <operator>
+  		<name>Replay Event Log on Petri Net for Conformance Analysis</name>
+        <synopsis>This operator replays a log into a petrinet and show visual results</synopsis>
+        <help>For using this operator, you need a context, a petri net and a log. </help>
+		<key>replay_a_log_on_petri_net_for_conformance_analysis</key>
+	</operator>
+  <operator>
+  		<name>Inductive Visual Miner</name>
+        <synopsis>This operator creates a process model using the Inductive Visual Miner</synopsis>
+        <help>For using this operator, you need a context and a log. </help>
+		<key>mine_with_inductive_visual_miner</key>
+	</operator>
+  <operator>
+  		<name>PomPom (visualization)</name>
+        <synopsis>This operator shows a PomPom view over a PetriNet</synopsis>
+        <help>For using this operator, you need a context, a petri net and a log. </help>
+		<key>show_pompom_view</key>
+	</operator>
+  <operator>
+  		<name>Discover Process Data Flow (Decision Tree)</name>
+        <synopsis>This operator transforms a Petri net into a Desicion tree</synopsis>
+        <help>For using this operator, you need a context, a petri net and a log. </help>
+		<key>discovery_of_the_process_data-flow_(decision-tree_miner)</key>
+	</operator>
+  <operator>
+  		<name>Petri Net to BPMN</name>
+        <synopsis>This operator transforms a Petri net into a BPMN diagram</synopsis>
+        <help>For using this operator, you need a context and a petri net. </help>
+		<key>convert_petrinet_to_bpmn</key>
+	</operator>
+  <operator>
+  		<name>Reachability Graph to Petri Net (Regions)</name>
+        <synopsis>This operator transforms a Transition System (Reachability Graph) into a petri net</synopsis>
+        <help>For using this operator, you need a context and a transition system (reachability graph). </help>
+		<key>transition_system_to_petrinet</key>
+	</operator>
+  <operator>
+  		<name>Petri Net to Reachability Graph</name>
+        <synopsis>This operator transforms a petri net into a Transition System (Reachability Graph)</synopsis>
+        <help>For using this operator, you need a context, a petri net and an initial marking set. </help>
+		<key>construct_reachability_graph_of_a_petri_net</key>
+	</operator>
+    
+  <operator>
+  		<name>Petri Net with Data</name>
+        <synopsis>This operator is used to import a data annotated petri net</synopsis>
+        <help>For using this operator, a context is needed. </help>
+		<key>import_data_petri_net_from_pnml_file</key>
+	</operator>
+  <operator>
+  		<name>Animate Log in Fuzzy Instance</name>
+        <synopsis>This operator is used to animate (replay) an event log into a selected fuzzy instance</synopsis>
+        <help>For using this operator, a context, an event log, and a Fuzzy Instance (MutableFuzzyGraph object) are necessary as inputs. </help>
+		<key>animate_event_log_in_fuzzy_instance</key>
+	</operator>
+  <operator>
+  		<name>Select Fuzzy Instance</name>
+        <synopsis>This operator is used to select the best fuzzy instance for the Fuzzy Animation</synopsis>
+        <help>For using this operator, a context and a Fuzzy Model (MetricsRepository object) are necessary as inputs. </help>
+		<key>select_best_fuzzy_instance</key>
+	</operator>  
+   <operator>
+        <name>Import XLog (.xes)</name>
+        <synopsis>This operator can be used to import a ProM XES event log (.xes) file.</synopsis>
+        <help>This operator can be used to import a ProM XES event log file. 
+        Note that only .xes files can be read.</help>
+    <key>import_xes_log</key>
+  </operator>
+  
+  <operator>
+        <name>Read Log (File)</name>
+        <synopsis>This operator can be used to read a ProM XES log file from a File object (useful for loops over file collections)</synopsis>
+        <help>This operator can be used to read a ProM XES log file. Note that only XES files can be read! As input a ProM context and a file is needed.</help>
+    <key>extract_log_from_file</key>
+  </operator>
+  
+  <operator>
+        <name>Read PNML</name>
+        <synopsis>This operator can be used to read a PNML file.</synopsis>
+        <help>This operator can be used to read a PNML file. PNML files that are accepted are the ones that are produced by ProM itself or the ones that are produced by Yasper. As input a ProM context and a pnml file is needed.</help>
+    <key>read_pnml_file</key>
+  </operator>
+  
+  <operator>
+        <name>ProM Context</name>
+        <synopsis>This operator provides a ProM context.</synopsis>
+        <help>This operator provides a ProM context. In order to run most of the ProM operators a ProM context is needed. When the operator is executed an instance of ProM is started. This instance can be reused  for multiple operators that require such a ProM context.</help>
+    <key>prom_context</key>
+  </operator>
+  
+   <operator>
+        <name>Alpha Miner (Petri Net)</name>
+        <synopsis>This operator can be used to execute the Alpha algorithm.</synopsis>
+        <help>This operator can be used to execute the Alpha algorithm which provides a Petri Net and a Marking. As input a ProM context and a log file is needed.</help>
+    <key>alpha_miner</key>
+  </operator>
+
+   <operator>
+        <name>Guide Tree Miner (Process Tree)</name>
+        <synopsis>This operator can be used to execute the Guide Tree Miner algorithm.</synopsis>
+        <help>This operator can be used to execute the Guide Tree Miner algorithm which provides a Guide Tree and a selection of sublogs. As input a ProM context and a log file is needed.</help>
+    <key>guide_tree_miner</key>
+  </operator>
+  
+  <operator>
+        <name>Passage Miner (Petri Net)</name>
+        <synopsis>This operator can be used to execute the Passage Miner discovery algorithm.</synopsis>
+        <help>This operator can be used to execute the Passage Miner algorithm which provides a Petri Net. As input a ProM context and a log file is needed.</help>
+    <key>passage_miner</key>
+  </operator>
+  
+  <operator>
+        <name>ILP Miner (Petri Net)</name>
+        <synopsis>This operator can be used to execute the ILP Miner discovery algorithm.</synopsis>
+        <help>This operator can be used to execute the ILP Miner algorithm which provides a Petri Net and a marking. As input a ProM context and a log file is needed.</help>
+    <key>ilp_miner</key>
+  </operator>
+  
+  <operator>
+        <name>Genetic Miner (Heuristics Net)</name>
+        <synopsis>This operator can be used to execute the Genetic Miner discovery algorithm.</synopsis>
+        <help>This operator can be used to execute the Genetic Miner algorithm which provides a Heuristics Net. As input a ProM context and a log file is needed.</help>
+    <key>genetic_miner</key>
+  </operator>
+ 
+	<operator>
+        <name>Repair Model (Petri Net)</name>
+        <synopsis>This operator can be used to execute the repaid model algorithm.</synopsis>
+        <help>This operator can be used to execute the repair model algorithm which provides a Petri Net. As input a ProM context, a log file, and a Petri Net is needed.</help>
+    <key>repair_model</key>
+  </operator>
+  
+	<operator>
+        <name>Reduce Silent Transitions (Petri Net)</name>
+        <synopsis>This operator can be used to execute the reduce silent transitions algorithm.</synopsis>
+        <help>This operator can be used to execute the reduce silent transitions algorithm which provides a Petri Net and a marking. As input a ProM context, a Petri Net, and a marking is needed.</help>
+    <key>reduce_silent_transitions</key>
+  </operator>
+  
+	<operator>
+        <name>Export PNML</name>
+        <synopsis>This operator can be used to export a Petri Net to a PNML file.</synopsis>
+        <help>This operator can be used to export a Petri Net to a PNML file. As input a ProM context and a Petri Net is needed.</help>
+    <key>PNML_export</key>
+  </operator>
+  
+	<operator>
+        <name>Export Log</name>
+        <synopsis>This operator can be used to export a log.</synopsis>
+        <help>This operator can be used to export a log. As log format XES, XES.GZ, MXML, and MXML.GZ are available. As input a ProM context and a log is needed.</help>
+    <key>export_log_to_compressed_XES_file</key>
+  </operator>
+  
+	<operator>
+        <name>Log to Exampleset</name>
+        <synopsis>This operator can be used to convert a ProM log into an Exampleset.</synopsis>
+        <help>This operator can be used to convert a ProM log into an Exampleset. As input a log is needed. Each event of the log is converted into a single row in the Exampleset. Trace attributes are repeated in each row that is created for an event of that trace.</help>
+    <key>xlog_to_exampleset</key>
+  </operator>
+  
+	<operator>
+        <name>Exampleset to Log</name>
+        <synopsis>This operator can be used to convert an Exampleset into an ProM log.</synopsis>
+        <help>This operator can be used to convert an Exampleset into an ProM log. As input an Exampleset is needed. Each row of the exampleset is converted into a event belonging to a trace. For the conversion it is important that the following columns exist: T:concept:name (the concept name attribute of the trace), E:concept:name (the concept name attribute of the event), E:lifecycle:transition (the life cycle attribute of the event), E:org:resource (the resource attribute of the event), E:org:role (the role attribute of the event), E:org:group (the group attribute of the event), and E:time:time (the time attribute of the event).</help>
+    <key>exampleset_to_xlog</key>
+  </operator>
+  
+	<operator>
+        <name>Log Collection to Log Array</name>
+        <synopsis>This operator can be used to convert a collection of logs into an event log array.</synopsis>
+        <help>This operator can be used to convert a collection of logs into an event log array. As one of the inputs a ProM context is needed. Furthermore, each log that needs to be added to the resultant event log array needs to be connected to a separate input port.</help>
+    <key>logs_to_event_log_array</key>
+  </operator>
+  
+	<operator>
+        <name>Heuristics Net to Petri Net</name>
+        <synopsis>This operator can be used to convert a Heuristics Net into a Petri Net.</synopsis>
+        <help>This operator can be used to convert a Heuristics Net into a Petri Net and a marking. As input a ProM context and a Heuristics Net is needed.</help>
+    <key>convert_heuristics_net_into_petri_net</key>
+  </operator>
+  
+	<operator>
+        <name>Causal Activity Graph to Activity Cluster Array</name>
+        <synopsis>This operator can be used to convert a causal activity graph to an activity array.</synopsis>
+        <help>This operator can be used to convert a causal activity graph to an activity array. As input a ProM context and a Causal Activity Graph is needed.</help>
+    <key>convert_causal_activity_graph_to_activity_cluster_array</key>
+  </operator>
+  
+	<operator>
+        <name>Causal Activity Matrix to Causal Activity Graph</name>
+        <synopsis>This operator can be used to convert a causal activity matrix to a causal activity graph.</synopsis>
+        <help>This operator can be used to convert a causal activity matrix to a causal activity graph. As input a ProM context and a Causal Activity Matrix is needed.</help>
+    <key>convert_causal_activity_matrix_to_causal_activity_graph</key>
+  </operator>
+
+	<operator>
+        <name>Petri Net to Accepting Petri Net</name>
+        <synopsis>This operator can be used to convert a Petri Net into an Accepting Petri Net.</synopsis>
+        <help>This operator can be used to convert a Petri Net into an Accepting Petri Net. As input a ProM context and a Petri Net is needed.</help>
+    <key>convert_petrinet_to_accepting_petrinet</key>
+  </operator>
+  
+	<operator>
+        <name>Accepting Petri Net to Activity Cluster Array</name>
+        <synopsis>This operator can be used to decompose an Accepting Petri Net using an Activity Cluster Array.</synopsis>
+        <help>This operator can be used to decompose an Accepting Petri Net using an Activity Cluster Array. As input a ProM context and a Accepting Petri Net is needed.</help>
+    <key>decompose_accepting_petrinet_using_activity_cluster_array</key>
+  </operator>
+  
+	<operator>
+        <name>Log to Activity Cluster Array</name>
+        <synopsis>This operator can be used to decompose an Event Log using an Activity Cluster Array.</synopsis>
+        <help>This operator can be used to decompose an Event Log using an Activity Cluster Array. As input a ProM context and a log is needed.</help>
+    <key>decompose_event_log_using_activity_cluster_array</key>
+  </operator>
+  
+	<operator>
+        <name>Log Array to Accepting Petri Net Array</name>
+        <synopsis>This operator can be used to discover an Accepting Petri Net Array from an Event Log Array.</synopsis>
+        <help>This operator can be used to discover an Accepting Petri Net Array from an Event Log Array. As input a ProM context and a Event Log Array is needed.</help>
+    <key>discover_accepting_petrinet_array_from_event_log_array</key>
+  </operator>
+  
+	<operator>
+        <name>Accepting Petri Net Array to Activity Cluster Array</name>
+        <synopsis>This operator can be used to extract an Activity Cluster Array from an Accepting Petri Net Array.</synopsis>
+        <help>This operator can be used to extract an Activity Cluster Array from an Accepting Petri Net Array. As input a ProM context and a Accepting Petri Net Array is needed.</help>
+    <key>extract_activity_cluster_array_from_accepting_petrinet_array</key>
+  </operator>
+  
+	<operator>
+        <name>Accepting Petri Net Array to Accepting Petri Net</name>
+        <synopsis>This operator can be used to merge an Accepting Petri Net array into an Accepting Petri Net.</synopsis>
+        <help>This operator can be used to merge an Accepting Petri Net array into an Accepting Petri Net. As input a ProM context and a Accepting Petri Net is needed.</help>
+    <key>merge_accepting_petrinet_array_into_accepting_petrinet</key>
+  </operator>
+  
+	<operator>
+        <name>Log to Causal Activity Matrix</name>
+        <synopsis>This operator can be used to mine a Causal Activity Matrix into an Event Log.</synopsis>
+        <help>This operator can be used to mine a Causal Activity Matrix from an Event Log. As input a ProM context and an Event Log is needed.</help>
+    <key>mine_causal_activity_matrix_from_event_log</key>
+  </operator>
+  
+	<operator>
+        <name>Replay Log Array on Accepting Petri Net Array</name>
+        <synopsis>This operator can be used to replay an Event Log Array on an Accepting Petri Net Array.</synopsis>
+        <help>This operator can be used to replay an Event Log Array on an Accepting Petri Net Array. As input a ProM context, an Event Log Array, and an Accepting Petri Net Array is needed.</help>
+    <key>replay_event_log_array_on_accepting_petrinet_array</key>
+  </operator>
+  
+  	<operator>
+        <name>Log Array to Logm Collection</name>
+        <synopsis>This operator can be used to convert an event log array into a collection of logs.</synopsis>
+        <help>This operator can be used to convert an event log array into a collection of logs. As input an Event Log Array is needed.</help>
+    <key>convert_event_log_array_into_collection_of_logs</key>
+  </operator>
+
+	<operator>
+        <name>Accepting Petri Nets Collection to Accepting Petri Net Array</name>
+        <synopsis>This operator can be used to convert a collection of accepting petri nets into an accepting petri net array.</synopsis>
+        <help>This operator can be used to convert a collection of accepting petri nets into an accepting petri net array. As input an collection of accepting petri nets is needed.</help>
+    <key>convert_collection_of_logs_into_accepting_petri_net_array</key>
+  </operator>
+  
+  	<operator>
+        <name>Log to Log Array</name>
+        <synopsis>This operator can be used to convert a log into an event log array.</synopsis>
+        <help>This operator can be used to convert a log into an event log array. As input a log is needed.</help>
+    <key>convert_log_into_event_log_array</key>
+  </operator>
+  
+   	<operator>
+        <name>Accepting Petri Net Array to Accepting Petri Net</name>
+        <synopsis>This operator can be used to convert an accepting petrinet array into an accepting petri net.</synopsis>
+        <help>This operator can be used to convert an accepting petrinet array into an accepting petri net. As input an accepting petri net array is needed.</help>
+    <key>convert_accepting_petri_net_array_into_accepting_petri_net</key>
+  </operator>
+  
+    <operator>
+        <name>Collection Iteration Parallel</name>
+        <synopsis>The Collection Iteration Operator but now in parallel.</synopsis>
+        <help>The Collection Iteration Operator but now in parallel.</help>
+    <key>collection_iteration_parallel</key>
+  </operator>
+  
+    <operator>
+        <name>Collection Iteration Parallel2</name>
+        <synopsis>The Collection Iteration Operator but now in parallel.</synopsis>
+        <help>The Collection Iteration Operator but now in parallel.</help>
+    <key>collection_iteration_parallel2</key>
+  </operator>
+  
+      <operator>
+        <name>Split Log</name>
+        <synopsis>An XLog is split into multiple sublogs.</synopsis>
+        <help>An XLog is split into multiple sublogs. The number of sublogs can be defined and the seed can be defined in order to spread the traces over the sublogs.</help>
+    <key>log_random_split</key>
+  </operator>
+  
+       <operator>
+        <name>Evolutionary Tree Miner (Process Tree)</name>
+        <synopsis>Mine a Process Using the ETM Algorithm.</synopsis>
+        <help>Mine a Process Using the ETM Algorithm.</help>
+    	<key>mine_a_process_tree_using_the_etm_algorithm</key>
+  	  </operator>
+  	  
+  	  <operator>
+        <name>Process Tree to Petri Net</name>
+        <synopsis>Convert a Process Tree into a Petri Net.</synopsis>
+        <help>Convert a Process Tree into a Petri Net.</help>
+    	<key>convert_process_tree_to_petri_net</key>
+  	  </operator>
+  	  
+  	  <operator>
+        <name>Duplicate Log</name>
+        <synopsis>A Log can be duplicated multiple times.</synopsis>
+        <help>Duplicates a log.</help>
+    	<key>duplicate_log</key>
+  	  </operator>
+  	  
+  	  <operator>
+        <name>Replications</name>
+        <synopsis>Replications.</synopsis>
+        <help>Replications.</help>
+    	<key>replications</key>
+  	  </operator>
+  	  
+  	  <operator>
+        <name>Replay Log on Petri Net (Performance / Conformance Analysis)</name>
+        <synopsis>A log is replayed on a petri net to get performance and conformance information.</synopsis>
+        <help>A log is replayed on a petri net to get performance and conformance information.</help>
+    	<key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
+  	  </operator>
+  	  
+  	  <operator>
+        <name>Dotted Chart (Visualization)</name>
+        <synopsis>A log is visualised using a dotted chart.</synopsis>
+        <help>A log is visualised using a dotted chart.</help>
+    	<key>dotted_chart_analysis</key>
+  	  </operator>
+  	  
+  	   <operator>
+        <name>Case Data Extractor</name>
+        <synopsis>Extract Case Data.</synopsis>
+        <help>Extract Case Data.</help>
+    	<key>case_data_extractor</key>
+  	  </operator>
+  	  
+  	   <operator>
+        <name>Heuristics Miner (Heuristics Net)</name>
+        <synopsis>This operator can be used to execute the Heuristics Miner algorithm.</synopsis>
+        <help>This operator can be used to execute the Heuristics Miner algorithm which provides a Heuristics Net. As input a ProM context and a log file is needed.</help>
+    	<key>heuristics_miner</key>
+  	   </operator>
+  	   
+  	   <operator>
+        <name>Inductive Miner (Petri Net)</name>
+        <synopsis>This operator can be used to execute the Inductive Miner in order to discover a Petri Net.</synopsis>
+        <help>This operator can be used to execute the Inductive Miner algorithm which provides a Petri Net. As input a ProM context and a log file is needed.</help>
+    	<key>mine_petri_net_with_inductive_miner</key>
+  		</operator>
+  		
+  		<operator>
+        <name>Inductive Miner (Process Tree)</name>
+        <synopsis>This operator can be used to execute the Inductive Miner in order to discover a Process Tree.</synopsis>
+        <help>This operator can be used to execute the Inductive Miner algorithm which provides a Process Tree. As input a ProM context and a log file is needed.</help>
+    	<key>mine_process_tree_with_inductive_miner</key>
+  		</operator>
+  
+  	<operator>
+        <name>Social Network Miner (Similar-Task Social Network)</name>
+        <synopsis>This operator can be used to execute the Similar Task Social Network Miner in order to discover a Social Network.</synopsis>
+        <help>This operator can be used to execute the Similar Task Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
+    <key>social_network_st_miner</key>
+  </operator>
+  
+  	<operator>
+        <name>Social Network Miner (Handover-of-Work Social Network)</name>
+        <synopsis>This operator can be used to execute the Handover-of-Work Social Network Miner in order to discover a Social Network.</synopsis>
+        <help>This operator can be used to execute the Handover-of-Work Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
+    <key>social_network_how_miner</key>
+  </operator>
+  
+    <operator>
+        <name>Social Network Miner (Subcontracting Social Network)</name>
+        <synopsis>This operator can be used to execute the Subcontracting Social Network Miner in order to discover a Social Network.</synopsis>
+        <help>This operator can be used to execute the Subcontracting Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
+    	<key>social_network_sc_miner</key>
+  </operator>
+  
+  	<operator>
+        <name>Social Network Miner (Working-Together Social Network)</name>
+        <synopsis>This operator can be used to execute the Working-Together Social Network Miner in order to discover a Social Network.</synopsis>
+        <help>This operator can be used to execute the Working-Together Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
+    	<key>social_network_wt_miner</key>
+  	</operator>
+  	
+  	<operator>
+        <name>Social Network Miner (Reassignment Social Network)</name>
+        <synopsis>This operator can be used to execute the Reassignment Social Network Miner in order to discover a Social Network.</synopsis>
+        <help>This operator can be used to execute the Reassignment Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
+    	<key>social_network_ra_miner</key>
+  	</operator>
+  	
+  	<operator>
+        <name>Add Noise (Log)</name>
+        <synopsis>This filter randomly adds noise to the log.</synopsis>
+        <help>This operator can be used to add noise to a log. There are 5 possible noise types: remove head, remove body, swap tasks, remove task, and add task. The noise types remove head and remove body respectively remove at most the first or second 1/3 of a trace. The noise type swap randomly swaps two event in a trace. The noise type remove randomly removes event from a trace. The add type randomly adds an event to a trace. As input a log file is needed.</help>
+    	<key>add_noise_log_filter</key>
+  	</operator>
+  	
+  	<operator>
+        <name>Add Table Column to XLog</name>
+        <synopsis>This operator adds a column of an example set to an XLog.</synopsis>
+        <help>This operator adds a column of an example set to an XLog. As input a log file and an example set is needed.</help>
+    	<key>add_table_column_to_log</key>
+  	</operator>
+  	
+  	<operator>
+        <name>Log to Log Array using Trace Attribute</name>
+        <synopsis>This operator splits a log into an event log array based on different values for a trace attribute.</synopsis>
+        <help>This operator splits a log into an event log array based on different values for a trace attribute. As input a log file is needed.</help>
+    	<key>create_event_log_array_based_on_trace_attribute</key>
+  	</operator>
+  	
+  	<operator>
+        <name>Add Trace Attributes to Log</name>
+        <synopsis>This operator adds trace attributes to a log.</synopsis>
+        <help>This operator adds trace attributes (that are contained in an exampleset) to a log. For each trace only one row in the exampleset exists. In the exampleset one row needs to contain the (unique) case identifiers of the traces. As input a log file and an exampleset is needed.</help>
+    	<key>add_trace_attributes_to_log</key>
+  	</operator>
+  	
+  	<operator>
+        <name>Add Event Attributes to Log</name>
+        <synopsis>This operator adds event attributes to a log.</synopsis>
+        <help>This operator adds event attributes (that are contained in an exampleset) to a log. For each event only one row in the exampleset exists. In the exampleset one column needs to contain the case identifiers of the traces and another column needs to contain the (unique) event identifiers. As input a log file and an exampleset is needed.</help>
+    	<key>add_event_attributes_to_log</key>
+  	</operator>
+  	
+  	 <operator>
+        <name>Add Events to Log</name>
+        <synopsis>This operator adds events to a log.</synopsis>
+        <help>This operator adds events (that are contained in an exampleset) to a log. For each event only one row in the exampleset exists. In the exampleset, separate columns need to contain the following information: case identifiers, concept:name of the events, lifecycle:transition of the events, time:timestamp of the events, org:resource of the events, org:role of the events, group:resource of the events. In case a column with information is not present, no value needs to be filled in. As input a log file and an exampleset is needed.</help>
+    	<key>add_events_to_log</key>
+  	</operator>
+  	
+  	 <operator>
+        <name>Merge Event Logs</name>
+        <synopsis>This operator merges two event logs.</synopsis>
+        <help>This operator merges two event logs. As input two logs are needed.</help>
+    	<key>merge_two_event_logs</key>
+  	</operator>
+  	
+  	 <operator>
+        <name>Add Artificial Start and End Event</name>
+        <synopsis>This operator adds a start and end event to each trace.</synopsis>
+        <help>This operator adds a start and end event to each trace. As input a log is needed.</help>
+    	<key>add_artificial_start_end_event_filter</key>
+  	</operator>
+  	
+  	<operator>
+        <name>Transition System Miner (Transition System)</name>
+        <synopsis>This operator mines a transition system with default parameters</synopsis>
+        <help>A log is required for input</help>
+    	<key>mine_transition_system</key>
+  	</operator>
+	
+	<operator>
+        <name>Fuzzy Miner (Fuzzy Model)</name>
+        <synopsis>This operator mines a fuzzy model</synopsis>
+        <help>A log is required for input</help>
+    	<key>mine_fuzzy_model</key>
+  	</operator>  	
+
+</operatorHelp>
