@@ -1,4 +1,4 @@
-package com.rapidminer.operator.importplugins;
+package org.rapidprom.operators.importers;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -32,7 +32,7 @@ import com.rapidminer.parameters.ParameterCategory;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.util.ProMIOObjectList;
 
-public class ImportXESLogOperator extends AbstractProMOperator {
+public class ImportXLogOperator extends AbstractProMOperator {
 
 	public enum ImplementingPlugin {
 		LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs",
@@ -82,7 +82,7 @@ public class ImportXESLogOperator extends AbstractProMOperator {
 	private Parameter importerParameter = null;
 	private OutputPort output = getOutputPorts().createPort("Event Log (XLog)");
 
-	public ImportXESLogOperator(OperatorDescription description) {
+	public ImportXLogOperator(OperatorDescription description) {
 		super(description);
 		getTransformer().addRule(
 				new GenerateNewMDRule(output, XLogIOObject.class));

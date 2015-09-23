@@ -164,11 +164,11 @@
 		<key>select_best_fuzzy_instance</key>
 	</operator>  
    <operator>
-        <name>Import XLog (.xes)</name>
+        <name>Import XLog</name>
         <synopsis>This operator can be used to import a ProM XES event log (.xes) file.</synopsis>
         <help>This operator can be used to import a ProM XES event log file. 
         Note that only .xes files can be read.</help>
-    <key>import_xes_log</key>
+    <key>import_xlog</key>
   </operator>
   
   <operator>
