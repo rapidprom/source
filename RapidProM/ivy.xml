@@ -1,5 +1,5 @@
 <ivy-module version="2.0">
-    <info organisation="org.rapidprom" module="RapidProM" revision="${extension.version}.${extension.revision}.${extension.update}"/>
+    <info organisation="org.rapidprom" module="RapidProM" revision="2.1.0"/>
     <dependencies>
         <dependency org="org.rapidprom" name="Animation" rev="6.5.29" />
         <dependency org="org.rapidprom" name="ApacheUtils" rev="6.5.66" />
