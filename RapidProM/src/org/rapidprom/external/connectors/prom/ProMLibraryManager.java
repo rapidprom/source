@@ -1,11 +1,15 @@
 package org.rapidprom.external.connectors.prom;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -16,6 +20,7 @@ import org.processmining.framework.boot.Boot;
 import org.rapidprom.RapidProMInitializer;
 import org.rapidprom.external.connectors.ivy.IvyResolveException;
 import org.rapidprom.external.connectors.ivy.IvyStandAlone;
+import org.rapidprom.os.OSUtils;
 import org.rapidprom.properties.RapidProMProperties;
 
 import com.rapidminer.gui.tools.ProgressThread;
@@ -172,6 +177,22 @@ public class ProMLibraryManager extends ProgressThread {
 			ivyOS.close();
 		} catch (FileNotFoundException e2) {
 			e2.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return fixOperatingSystemInIvyFile(ivyFile);
+	}
+
+	protected File fixOperatingSystemInIvyFile(File ivyFile) {
+		Charset charset = StandardCharsets.UTF_8;
+		String search = RapidProMProperties.IVY_OPERATING_SYSTEM_REGEX;
+		String ivyConf = OSUtils.getOperatingSystem().getIvyConfiguration();
+		String replacement = "defaultconf=\"" + ivyConf + "\"";
+		try {
+			String ivyContents = new String(
+					Files.readAllBytes(ivyFile.toPath()), charset);
+			ivyContents = ivyContents.replaceAll(search, replacement);
+			Files.write(ivyFile.toPath(), ivyContents.getBytes(charset));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

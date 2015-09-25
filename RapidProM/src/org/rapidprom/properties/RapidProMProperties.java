@@ -19,6 +19,8 @@ public class RapidProMProperties {
 	private static String CONFIG_FILE_NAME = "config.properties";
 	private static RapidProMProperties instance = null;
 	private final Properties properties;
+	
+	public static final String IVY_OPERATING_SYSTEM_REGEX = "defaultconf=\\\"\\*\\\"";
 
 	private RapidProMProperties() {
 		properties = setup();
