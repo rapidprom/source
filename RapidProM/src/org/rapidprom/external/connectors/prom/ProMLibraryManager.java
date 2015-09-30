@@ -1,10 +1,8 @@
 package org.rapidprom.external.connectors.prom;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,7 +13,6 @@ import java.nio.file.Paths;
 
 import javax.swing.JOptionPane;
 
-import org.apache.ivy.util.cli.CommandLineParser;
 import org.processmining.framework.boot.Boot;
 import org.rapidprom.RapidProMInitializer;
 import org.rapidprom.external.connectors.ivy.IvyResolveException;
