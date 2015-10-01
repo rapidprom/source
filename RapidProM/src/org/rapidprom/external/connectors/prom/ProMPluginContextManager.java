@@ -219,7 +219,7 @@ public class ProMPluginContextManager extends ProgressThread {
 	 *            the class that contains the ProM plugin code
 	 * @return
 	 */
-	public PluginContext createChildContextForPluginClass(
+	public PluginContext getFutureResultAwareContext(
 			Class<?> classContainingProMPlugin) {
 		final PluginContext result = ProMPluginContextManager
 				.instance()

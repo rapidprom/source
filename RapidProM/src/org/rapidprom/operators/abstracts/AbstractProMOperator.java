@@ -36,7 +36,7 @@ public abstract class AbstractProMOperator extends Operator {
 	 * svzelst@20150110: I decided to move this code to the
 	 * ProMPluginContextManager. Please call the mangaer function as follows:
 	 * ProMPluginContextMangager
-	 * .instance().createChildContextForPluginClass(<some_class>)
+	 * .instance().getFutureResultAwareContext(<some_class>)
 	 * 
 	 * I decided to move the function as we might also need this for creation of
 	 * visualizers etc.
