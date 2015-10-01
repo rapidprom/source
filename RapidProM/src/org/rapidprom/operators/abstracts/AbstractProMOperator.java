@@ -33,15 +33,19 @@ public abstract class AbstractProMOperator extends Operator {
 	}
 
 	/**
-	 * This method prepares a PluginContext object, which is a child object of
-	 * the PluginContext provided by the "PluginContextManager". Basically this
-	 * method mimics some of the internal workings of the ProM framework, e.g.
-	 * setting the future result objects.
+	 * svzelst@20150110: I decided to move this code to the
+	 * ProMPluginContextManager. Please call the mangaer function as follows:
+	 * ProMPluginContextMangager
+	 * .instance().getFutureResultAwareContext(<some_class>)
+	 * 
+	 * I decided to move the function as we might also need this for creation of
+	 * visualizers etc.
 	 * 
 	 * @param classContainingProMPlugin
 	 *            the class that contains the ProM plugin code
 	 * @return
 	 */
+	@Deprecated
 	protected PluginContext prepareChildContext(
 			Class<?> classContainingProMPlugin) {
 		final PluginContext result = ProMPluginContextManager
@@ -78,6 +82,7 @@ public abstract class AbstractProMOperator extends Operator {
 		return result;
 	}
 
+	@Deprecated
 	private ProMFuture<?>[] createProMFutures(Plugin pluginAnn) {
 		ProMFuture<?>[] futures = new ProMFuture<?>[pluginAnn.returnTypes().length];
 		for (int i = 0; i < pluginAnn.returnTypes().length; i++) {
@@ -93,6 +98,7 @@ public abstract class AbstractProMOperator extends Operator {
 		return futures;
 	}
 
+	@Deprecated
 	@SuppressWarnings("unchecked")
 	private <T extends Annotation> T findAnnotation(Annotation[] annotations,
 			Class<T> clazz) {
@@ -191,6 +197,7 @@ public abstract class AbstractProMOperator extends Operator {
 		return results;
 	}
 
+	@Deprecated
 	private Class<?> getSubstitutedType(Class<?> type) {
 		if (type.isAnnotationPresent(SubstitutionType.class)) {
 			Class<?> declaredType = type.getAnnotation(SubstitutionType.class)
@@ -202,6 +209,7 @@ public abstract class AbstractProMOperator extends Operator {
 		return type;
 	}
 
+	@Deprecated
 	static class ChildLogger implements Logger {
 
 		public void log(String message, PluginContextID contextID,
