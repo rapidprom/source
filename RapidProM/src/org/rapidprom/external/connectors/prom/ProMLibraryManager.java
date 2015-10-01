@@ -1,10 +1,10 @@
 package org.rapidprom.external.connectors.prom;
 
-import java.io.BufferedReader;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,10 +12,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.JOptionPane;
 
-import org.apache.ivy.util.cli.CommandLineParser;
 import org.processmining.framework.boot.Boot;
 import org.rapidprom.RapidProMInitializer;
 import org.rapidprom.external.connectors.ivy.IvyResolveException;
@@ -25,6 +26,16 @@ import org.rapidprom.properties.RapidProMProperties;
 
 import com.rapidminer.gui.tools.ProgressThread;
 
+/**
+ * The ProM Library Manager Entity makes sure that all the required java
+ * archives as well as all needed resources (e.g. LpSolve) are present on the
+ * user's machine. For resources, which should be in the resources folder,
+ * defined in the /resources/org/rapidprom/properties/config.properties file,
+ * the script makes sure that all .zip files will be unzipped.
+ * 
+ * @author svzelst
+ *
+ */
 public class ProMLibraryManager extends ProgressThread {
 
 	private File packageDir;
@@ -71,32 +82,41 @@ public class ProMLibraryManager extends ProgressThread {
 	}
 
 	public void run() {
+		int progress = 0;
 		synchronized (RapidProMInitializer.LOCK) {
 			if (!isReadyForIvy()) {
-				getProgressListener().setTotal(3);
+				getProgressListener().setTotal(4);
 				getProgressListener().setMessage(
 						"Setting up library directory...");
 				packageDir = createPackageFolder();
-				getProgressListener().setCompleted(1);
+				progress++;
+				getProgressListener().setCompleted(progress);
 				getProgressListener().setMessage(
 						"Copying library definitions...");
 				ivyFile = unPackIvyFile(packageDir);
 				ivySettingsFile = unPackIvySettingsFile(packageDir);
-				getProgressListener().setCompleted(2);
+				progress++;
+				getProgressListener().setCompleted(progress);
 				getProgressListener().setMessage(
 						"Downloading libraries, please be patient...");
-				runIvy();
-				getProgressListener().setCompleted(3);
 			} else {
-				getProgressListener().setTotal(1);
+				getProgressListener().setTotal(2);
 				getProgressListener().setCompleted(0);
 				getProgressListener().setMessage("Checking libraries...");
 				packageDir = getPackageFolder();
 				ivyFile = getIvyFile();
 				ivySettingsFile = getIvySettingsFile();
-				runIvy();
-				getProgressListener().setCompleted(1);
 			}
+			runIvy();
+			progress++;
+			getProgressListener().setCompleted(progress);
+			unzipResources(new File(RapidProMProperties.instance()
+					.getRapidProMPackagesLocationString()
+					+ File.separator
+					+ RapidProMProperties.instance().getProperties()
+							.getProperty("rapidprom_resources_dir")));
+			progress++;
+			getProgressListener().setCompleted(progress);
 			getProgressListener().complete();
 			RapidProMInitializer.PROM_LIBRARIES_LOADED = true;
 			RapidProMInitializer.LOCK.notifyAll();
@@ -221,6 +241,101 @@ public class ProMLibraryManager extends ProgressThread {
 			e.printStackTrace();
 		}
 		return ivySettingsFile;
+	}
+
+	protected void unzipResources(File resourcesDir) {
+		if (resourcesDir.exists() && resourcesDir.isDirectory()
+				&& resourcesDir.canRead()) {
+			for (File f : resourcesDir.listFiles()) {
+				if (f.isDirectory()) {
+					unzipResources(f);
+				} else if (isZipFile(f)) {
+					if (needToUnpackZipFileInDir(f, resourcesDir)) {
+						unpackZipFileIntoDirectory(f, resourcesDir);
+					}
+				}
+			}
+		}
+	}
+
+	// as we are not guaranteed to have commons io, do a file name based check
+	private boolean isZipFile(File f) {
+		boolean result = false;
+		int i = f.getName().lastIndexOf('.');
+		if (i > 0) {
+			if (f.getName().substring(i + 1).equals("zip")) {
+				result = true;
+			}
+		}
+		return result;
+	}
+
+	private boolean needToUnpackZipFileInDir(File zipFile, File dir) {
+		boolean unpack = true;
+		String zipName = zipFile.getName().substring(0,
+				zipFile.getName().lastIndexOf('.'));
+		for (File f : dir.listFiles()) {
+			if (f.isDirectory() && f.getName().equals(zipName)) {
+				unpack = false;
+				break;
+			}
+		}
+		return unpack;
+	}
+
+	/*
+	 * Thanks to:
+	 * http://www.codejava.net/java-se/file-io/programmatically-extract
+	 * -a-zip-file-using-java
+	 */
+	private void unpackZipFileIntoDirectory(File zipFile, File dir) {
+		try {
+			File outputFolder = new File(dir.getCanonicalPath()
+					+ File.separator
+					+ zipFile.getName().substring(0,
+							zipFile.getName().lastIndexOf('.')));
+			if (!outputFolder.exists()) {
+				outputFolder.mkdir();
+			}
+
+			ZipInputStream zipIn = new ZipInputStream(new FileInputStream(
+					zipFile));
+			// get the zipped file list entry
+			ZipEntry entry = zipIn.getNextEntry();
+			while (entry != null) {
+				String filePath = outputFolder + File.separator
+						+ entry.getName();
+				if (!entry.isDirectory()) {
+					extractFile(zipIn, filePath);
+				} else {
+					File d = new File(filePath);
+					d.mkdir();
+				}
+				zipIn.closeEntry();
+				entry = zipIn.getNextEntry();
+			}
+			zipIn.closeEntry();
+			zipIn.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/*
+	 * Thanks to:
+	 * http://www.codejava.net/java-se/file-io/programmatically-extract
+	 * -a-zip-file-using-java
+	 */
+	private void extractFile(ZipInputStream zipIn, String filePath)
+			throws IOException {
+		BufferedOutputStream bos = new BufferedOutputStream(
+				new FileOutputStream(filePath));
+		byte[] bytesIn = new byte[1024];
+		int read = 0;
+		while ((read = zipIn.read(bytesIn)) > 0) {
+			bos.write(bytesIn, 0, read);
+		}
+		bos.close();
 	}
 
 }
