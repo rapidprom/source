@@ -15,6 +15,7 @@ import org.processmining.xeslite.plugin.OpenLogFileDiskImplPlugin;
 import org.processmining.xeslite.plugin.OpenLogFileLiteImplPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.operators.abstracts.AbstractProMOperator;
+import org.rapidprom.operators.abstracts.AbstractRapidProMOperator;
 
 import com.rapidminer.ioobjectrenderers.XLogIOObjectVisualizationType;
 import com.rapidminer.ioobjects.XLogIOObject;
@@ -32,47 +33,21 @@ import com.rapidminer.parameters.ParameterCategory;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.util.ProMIOObjectList;
 
-public class ImportXLogOperator extends AbstractProMOperator {
+public class ImportXLogOperator extends AbstractRapidProMOperator {
 
 	public enum ImplementingPlugin {
-		LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs",
-				OpenLogFileLiteImplPlugin.class, "importFile", new Class<?>[] {
-						PluginContext.class, File.class }), MAP_DB(
-				"Buffered by MAPDB", OpenLogFileDiskImplPlugin.class,
-				"importFile",
-				new Class<?>[] { PluginContext.class, File.class }), NAIVE(
-				"Naive", OpenNaiveLogFilePlugin.class, "importFile",
-				new Class<?>[] { PluginContext.class, File.class });
+		LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs"), MAP_DB(
+				"Buffered by MAPDB"), NAIVE("Naive");
 
 		private final String name;
 
-		private final Class<?> clazz;
-		private final String method;
-		private final Class<?>[] args;
-
-		private ImplementingPlugin(final String name, Class<?> clazz,
-				String method, Class<?>[] args) {
+		private ImplementingPlugin(final String name) {
 			this.name = name;
-			this.clazz = clazz;
-			this.method = method;
-			this.args = args;
 		}
 
 		@Override
 		public String toString() {
 			return name;
-		}
-
-		public Class<?> getImplementingClass() {
-			return clazz;
-		}
-
-		public String getImplementingMethod() {
-			return method;
-		}
-
-		public Class<?>[] getMethodArguments() {
-			return args;
 		}
 	}
 
@@ -84,11 +59,12 @@ public class ImportXLogOperator extends AbstractProMOperator {
 
 	public ImportXLogOperator(OperatorDescription description) {
 		super(description);
-		getTransformer().addRule(
-				new GenerateNewMDRule(output, XLogIOObject.class));
+		getTransformer()
+				.addRule(new GenerateNewMDRule(output, XLogIOObject.class));
 	}
 
-	protected boolean checkMetaData() throws UserError, UndefinedParameterError {
+	protected boolean checkMetaData()
+			throws UserError, UndefinedParameterError {
 		boolean result = false;
 		File file = getParameterAsFile(PARAMETER_LABEL_FILENAME);
 		if (!file.exists()) {
@@ -106,21 +82,17 @@ public class ImportXLogOperator extends AbstractProMOperator {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO, "Start importing event log");
 		ImplementingPlugin importPlugin = (ImplementingPlugin) importerParameter
-				.getValueParameter(getParameterAsInt(importerParameter
-						.getNameParameter()));
+				.getValueParameter(getParameterAsInt(
+						importerParameter.getNameParameter()));
 		XLog log = null;
 		if (checkMetaData()) {
-			log = importLog(
-					importPlugin,
-					new Object[] {
-							prepareChildContext(ImplementingPlugin.NAIVE
-									.getImplementingClass()),
-							getParameterAsFile(PARAMETER_LABEL_FILENAME) });
+			log = importLog(importPlugin,
+					getParameterAsFile(PARAMETER_LABEL_FILENAME));
 			XLogIOObject xLogIOObject = new XLogIOObject(log);
-			xLogIOObject.setPluginContext(ProMPluginContextManager.instance()
-					.getContext());
-			xLogIOObject
-					.setVisualizationType(XLogIOObjectVisualizationType.DEFAULT);
+			xLogIOObject.setPluginContext(
+					ProMPluginContextManager.instance().getContext());
+			xLogIOObject.setVisualizationType(
+					XLogIOObjectVisualizationType.DEFAULT);
 			output.deliver(xLogIOObject);
 			ProMIOObjectList instance = ProMIOObjectList.getInstance();
 			instance.addToList(xLogIOObject);
@@ -128,28 +100,69 @@ public class ImportXLogOperator extends AbstractProMOperator {
 		}
 	}
 
-	private XLog importLog(ImplementingPlugin p, Object[] args) {
+	private XLog importLog(ImplementingPlugin p, File file) {
 		XLog result = null;
+		switch (p) {
+		case LIGHT_WEIGHT_SEQ_ID:
+			result = importLeightWeight(file);
+			break;
+		case MAP_DB:
+			result = importMapDb(file);
+			break;
+		case NAIVE:
+		default:
+			result = importLogNaive(file);
+			break;
+		}
+		return result;
+	}
+
+	private XLog importLeightWeight(File file) {
+		XLog result = null;
+		OpenLogFileLiteImplPlugin plugin = new OpenLogFileLiteImplPlugin();
 		try {
-			Object importer = p.getImplementingClass().newInstance();
-			Method importMethod = p.getImplementingClass().getMethod(
-					p.getImplementingMethod(), p.getMethodArguments());
-			result = (XLog) importMethod.invoke(importer, args);
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
+			result = (XLog) plugin
+					.importFile(
+							ProMPluginContextManager.instance()
+									.getFutureResultAwareContext(
+											OpenLogFileLiteImplPlugin.class),
+							file);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return result;
+	}
 
+	private XLog importMapDb(File file) {
+		XLog result = null;
+		OpenLogFileDiskImplPlugin plugin = new OpenLogFileDiskImplPlugin();
+		try {
+			result = (XLog) plugin
+					.importFile(
+							ProMPluginContextManager.instance()
+									.getFutureResultAwareContext(
+											OpenLogFileDiskImplPlugin.class),
+							file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+
+	private XLog importLogNaive(File file) {
+		XLog result = null;
+		OpenNaiveLogFilePlugin plugin = new OpenNaiveLogFilePlugin();
+		try {
+			result = (XLog) plugin
+					.importFile(
+							ProMPluginContextManager.instance()
+									.getFutureResultAwareContext(
+											OpenNaiveLogFilePlugin.class),
+							file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	@Override
@@ -168,9 +181,8 @@ public class ImportXLogOperator extends AbstractProMOperator {
 				importersParameterCategory.getNameParameter(),
 				importersParameterCategory.getDescriptionParameter(),
 				importersParameterCategory.getOptionsParameter(),
-				importersParameterCategory
-						.getIndexValue(importersParameterCategory
-								.getDefaultValueParameter()));
+				importersParameterCategory.getIndexValue(
+						importersParameterCategory.getDefaultValueParameter()));
 		parameterTypes.add(logFileParameter);
 		parameterTypes.add(importersParameterTypeCategory);
 		importerParameter = importersParameterCategory;
