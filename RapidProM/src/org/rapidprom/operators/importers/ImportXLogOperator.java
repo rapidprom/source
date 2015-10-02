@@ -1,20 +1,16 @@
 package org.rapidprom.operators.importers;
 
 import java.io.File;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.deckfour.xes.model.XLog;
-import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.log.OpenNaiveLogFilePlugin;
 import org.processmining.xeslite.plugin.OpenLogFileDiskImplPlugin;
 import org.processmining.xeslite.plugin.OpenLogFileLiteImplPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.operators.abstracts.AbstractProMOperator;
 import org.rapidprom.operators.abstracts.AbstractRapidProMOperator;
 
 import com.rapidminer.ioobjectrenderers.XLogIOObjectVisualizationType;
