@@ -65,16 +65,18 @@ public class ProMLibraryManager extends ProgressThread {
 		boolean result = false;
 		if (Files.exists(RapidProMProperties.instance()
 				.getRapidProMPackagesLocationPath())) {
-			if (Files.exists(Paths.get(RapidProMProperties.instance()
-					.getRapidProMPackagesLocationString()
-					+ File.separator
-					+ RapidProMProperties.instance().getProperties()
-							.getProperty("ivy_file_name_ext")))
+			if (Files
+					.exists(Paths.get(RapidProMProperties.instance()
+							.getRapidProMPackagesLocationString()
+							+ File.separator
+							+ RapidProMProperties.instance().getProperties()
+									.getProperty("ivy_file_name_ext")))
 					&& Files.exists(Paths.get(RapidProMProperties.instance()
 							.getRapidProMPackagesLocationString()
 							+ File.separator
 							+ RapidProMProperties.instance().getProperties()
-									.getProperty("ivy_settings_file_name_ext")))) {
+									.getProperty(
+											"ivy_settings_file_name_ext")))) {
 				result = true;
 			}
 		}
@@ -83,50 +85,42 @@ public class ProMLibraryManager extends ProgressThread {
 
 	public void run() {
 		int progress = 0;
-		synchronized (RapidProMInitializer.LOCK) {
-			if (!isReadyForIvy()) {
-				getProgressListener().setTotal(4);
-				getProgressListener().setMessage(
-						"Setting up library directory...");
-				packageDir = createPackageFolder();
-				progress++;
-				getProgressListener().setCompleted(progress);
-				getProgressListener().setMessage(
-						"Copying library definitions...");
-				ivyFile = unPackIvyFile(packageDir);
-				ivySettingsFile = unPackIvySettingsFile(packageDir);
-				progress++;
-				getProgressListener().setCompleted(progress);
-				getProgressListener().setMessage(
-						"Downloading libraries, please be patient...");
-			} else {
-				getProgressListener().setTotal(2);
-				getProgressListener().setCompleted(0);
-				getProgressListener().setMessage("Checking libraries...");
-				packageDir = getPackageFolder();
-				ivyFile = getIvyFile();
-				ivySettingsFile = getIvySettingsFile();
-			}
-			runIvy();
+		if (!isReadyForIvy()) {
+			getProgressListener().setTotal(4);
+			getProgressListener().setMessage("Setting up library directory...");
+			packageDir = createPackageFolder();
 			progress++;
 			getProgressListener().setCompleted(progress);
-			unzipResources(new File(RapidProMProperties.instance()
-					.getRapidProMPackagesLocationString()
-					+ File.separator
-					+ RapidProMProperties.instance().getProperties()
-							.getProperty("rapidprom_resources_dir")));
+			getProgressListener().setMessage("Copying library definitions...");
+			ivyFile = unPackIvyFile(packageDir);
+			ivySettingsFile = unPackIvySettingsFile(packageDir);
 			progress++;
 			getProgressListener().setCompleted(progress);
-			getProgressListener().complete();
-			RapidProMInitializer.PROM_LIBRARIES_LOADED = true;
-			RapidProMInitializer.LOCK.notifyAll();
+			getProgressListener()
+					.setMessage("Downloading libraries, please be patient...");
+		} else {
+			getProgressListener().setTotal(2);
+			getProgressListener().setCompleted(0);
+			getProgressListener().setMessage("Checking libraries...");
+			packageDir = getPackageFolder();
+			ivyFile = getIvyFile();
+			ivySettingsFile = getIvySettingsFile();
 		}
-
+		runIvy();
+		progress++;
+		getProgressListener().setCompleted(progress);
+		unzipResources(new File(RapidProMProperties.instance()
+				.getRapidProMPackagesLocationString() + File.separator
+				+ RapidProMProperties.instance().getProperties()
+						.getProperty("rapidprom_resources_dir")));
+		progress++;
+		getProgressListener().setCompleted(progress);
+		getProgressListener().complete();
 	}
 
 	private File createPackageFolder() {
-		File rapidProMPackageDirectory = new File(RapidProMProperties
-				.instance().getRapidProMPackagesLocationString());
+		File rapidProMPackageDirectory = new File(RapidProMProperties.instance()
+				.getRapidProMPackagesLocationString());
 		rapidProMPackageDirectory.mkdir();
 		return rapidProMPackageDirectory;
 	}
@@ -138,16 +132,14 @@ public class ProMLibraryManager extends ProgressThread {
 
 	private File getIvyFile() {
 		return new File(RapidProMProperties.instance()
-				.getRapidProMPackagesLocationString()
-				+ File.separator
+				.getRapidProMPackagesLocationString() + File.separator
 				+ RapidProMProperties.instance().getProperties()
 						.getProperty("ivy_file_name_ext"));
 	}
 
 	private File getIvySettingsFile() {
 		return new File(RapidProMProperties.instance()
-				.getRapidProMPackagesLocationString()
-				+ File.separator
+				.getRapidProMPackagesLocationString() + File.separator
 				+ RapidProMProperties.instance().getProperties()
 						.getProperty("ivy_settings_file_name_ext"));
 	}
@@ -166,13 +158,10 @@ public class ProMLibraryManager extends ProgressThread {
 			IvyStandAlone.invokeIvy(args, Boot.Level.ALL);
 		} catch (IvyResolveException ire) {
 			Object[] options = { "OK" };
-			JOptionPane
-					.showOptionDialog(
-							null,
-							"Loading/Verifying the RapidProM extension failed. Please check your internet connection.",
-							"Warning", JOptionPane.PLAIN_MESSAGE,
-							JOptionPane.QUESTION_MESSAGE, null, options,
-							options[0]);
+			JOptionPane.showOptionDialog(null,
+					"Loading/Verifying the RapidProM extension failed. Please check your internet connection.",
+					"Warning", JOptionPane.PLAIN_MESSAGE,
+					JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
 			System.exit(1);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -180,16 +169,14 @@ public class ProMLibraryManager extends ProgressThread {
 	}
 
 	protected File unPackIvyFile(File toDir) {
-		assert (Files.exists(toDir.toPath()));
+		assert(Files.exists(toDir.toPath()));
 		String ivyFileStr = RapidProMProperties.instance().getProperties()
 				.getProperty("ivy_file_name_ext");
-		InputStream ivyIS = RapidProMInitializer.class
-				.getResourceAsStream(RapidProMProperties.instance()
-						.getProperties()
-						.getProperty("ivy_file_location_in_archive")
-						+ ivyFileStr);
-		File ivyFile = new File(toDir.getAbsolutePath() + File.separator
-				+ ivyFileStr);
+		InputStream ivyIS = RapidProMInitializer.class.getResourceAsStream(
+				RapidProMProperties.instance().getProperties().getProperty(
+						"ivy_file_location_in_archive") + ivyFileStr);
+		File ivyFile = new File(
+				toDir.getAbsolutePath() + File.separator + ivyFileStr);
 		try {
 			OutputStream ivyOS = new FileOutputStream(ivyFile);
 			copyInputStreamToOutputStream(ivyIS, ivyOS);
@@ -228,8 +215,8 @@ public class ProMLibraryManager extends ProgressThread {
 						.getProperty("ivy_settings_file_location_in_archive")
 						+ ivySettingsStr);
 		OutputStream ivySettingsOS;
-		File ivySettingsFile = new File(toDir.getAbsolutePath()
-				+ File.separator + ivySettingsStr);
+		File ivySettingsFile = new File(
+				toDir.getAbsolutePath() + File.separator + ivySettingsStr);
 		try {
 			ivySettingsOS = new FileOutputStream(ivySettingsFile);
 			copyInputStreamToOutputStream(ivySettingsIS, ivySettingsOS);
@@ -290,16 +277,15 @@ public class ProMLibraryManager extends ProgressThread {
 	 */
 	private void unpackZipFileIntoDirectory(File zipFile, File dir) {
 		try {
-			File outputFolder = new File(dir.getCanonicalPath()
-					+ File.separator
-					+ zipFile.getName().substring(0,
-							zipFile.getName().lastIndexOf('.')));
+			File outputFolder = new File(
+					dir.getCanonicalPath() + File.separator + zipFile.getName()
+							.substring(0, zipFile.getName().lastIndexOf('.')));
 			if (!outputFolder.exists()) {
 				outputFolder.mkdir();
 			}
 
-			ZipInputStream zipIn = new ZipInputStream(new FileInputStream(
-					zipFile));
+			ZipInputStream zipIn = new ZipInputStream(
+					new FileInputStream(zipFile));
 			// get the zipped file list entry
 			ZipEntry entry = zipIn.getNextEntry();
 			while (entry != null) {

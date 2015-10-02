@@ -14,15 +14,10 @@ import com.rapidminer.gui.MainFrame;
  */
 public class RapidProMInitializer {
 
-	public static final Object LOCK = new Object();
-	public static volatile boolean PROM_LIBRARIES_LOADED = false;
-
 	/**
 	 * The last hook before the splash screen is closed. Third in the row.
 	 */
 	public static void initFinalChecks() {
-		(new ProMLibraryManager()).start();
-		ProMPluginContextManager.instance().start();
 	}
 
 	/**
@@ -40,6 +35,9 @@ public class RapidProMInitializer {
 	 * operators or renderers has taken place when this is called.
 	 */
 	public static void initPlugin() {
+		// !DO NOT MOVE THE CALLS FROM THIS HOOK!
+		(new ProMLibraryManager()).startAndWait();
+		ProMPluginContextManager.instance().startAndWait();
 	}
 
 	/**

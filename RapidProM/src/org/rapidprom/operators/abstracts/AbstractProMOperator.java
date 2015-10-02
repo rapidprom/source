@@ -26,6 +26,10 @@ import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 
+/*
+ * Use: AbstractRapidProMOperator
+ */
+@Deprecated
 public abstract class AbstractProMOperator extends Operator {
 
 	public AbstractProMOperator(OperatorDescription description) {
@@ -35,8 +39,8 @@ public abstract class AbstractProMOperator extends Operator {
 	/**
 	 * svzelst@20150110: I decided to move this code to the
 	 * ProMPluginContextManager. Please call the mangaer function as follows:
-	 * ProMPluginContextMangager
-	 * .instance().getFutureResultAwareContext(<some_class>)
+	 * ProMPluginContextMangager .instance().getFutureResultAwareContext(
+	 * <some_class>)
 	 * 
 	 * I decided to move the function as we might also need this for creation of
 	 * visualizers etc.
@@ -48,10 +52,8 @@ public abstract class AbstractProMOperator extends Operator {
 	@Deprecated
 	protected PluginContext prepareChildContext(
 			Class<?> classContainingProMPlugin) {
-		final PluginContext result = ProMPluginContextManager
-				.instance()
-				.getContext()
-				.createChildContext(
+		final PluginContext result = ProMPluginContextManager.instance()
+				.getContext().createChildContext(
 						"RapidProMPluginContext_" + System.currentTimeMillis());
 		Plugin pluginAnn = findAnnotation(
 				classContainingProMPlugin.getAnnotations(), Plugin.class);
@@ -84,7 +86,8 @@ public abstract class AbstractProMOperator extends Operator {
 
 	@Deprecated
 	private ProMFuture<?>[] createProMFutures(Plugin pluginAnn) {
-		ProMFuture<?>[] futures = new ProMFuture<?>[pluginAnn.returnTypes().length];
+		ProMFuture<?>[] futures = new ProMFuture<?>[pluginAnn
+				.returnTypes().length];
 		for (int i = 0; i < pluginAnn.returnTypes().length; i++) {
 			futures[i] = new ProMFuture<Object>(pluginAnn.returnTypes()[i],
 					pluginAnn.returnLabels()[i]) {
@@ -147,8 +150,8 @@ public abstract class AbstractProMOperator extends Operator {
 			t[i] = getSubstitutedType(parameters.get(i).getClass());
 		}
 		PluginManager pm = pc.getPluginManager();
-		Set<PluginParameterBinding> plugins = pm.getPluginsAcceptingOrdered(
-				child.getClass(), false, t);
+		Set<PluginParameterBinding> plugins = pm
+				.getPluginsAcceptingOrdered(child.getClass(), false, t);
 		System.out.println("TEST");
 		System.out.println("PRINT PLUGINS");
 		for (PluginParameterBinding pBinding : plugins) {

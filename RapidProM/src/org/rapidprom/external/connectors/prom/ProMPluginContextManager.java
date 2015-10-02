@@ -22,7 +22,6 @@ import org.processmining.framework.plugin.impl.PluginExecutionResultImpl;
 import org.processmining.framework.plugin.impl.PluginManagerImpl;
 import org.processmining.framework.util.CommandLineArgumentList;
 import org.processmining.framework.util.PathHacker;
-import org.rapidprom.RapidProMInitializer;
 import org.rapidprom.properties.RapidProMProperties;
 
 import com.rapidminer.ClassLoaderRapidMiner;
@@ -75,15 +74,6 @@ public class ProMPluginContextManager extends ProgressThread {
 	}
 
 	protected void setup() {
-		synchronized (RapidProMInitializer.LOCK) {
-			while (!RapidProMInitializer.PROM_LIBRARIES_LOADED) {
-				try {
-					RapidProMInitializer.LOCK.wait();
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
 		context = promPackageLoader();
 	}
 
@@ -173,8 +163,8 @@ public class ProMPluginContextManager extends ProgressThread {
 		for (String arg : args) {
 			argList.add(arg);
 		}
-		return (PluginContext) bootMethod.invoke(bootMethod.getDeclaringClass()
-				.newInstance(), argList);
+		return (PluginContext) bootMethod
+				.invoke(bootMethod.getDeclaringClass().newInstance(), argList);
 	}
 
 	private void addJarsFromDirectory(File dir) {
@@ -221,10 +211,8 @@ public class ProMPluginContextManager extends ProgressThread {
 	 */
 	public PluginContext getFutureResultAwareContext(
 			Class<?> classContainingProMPlugin) {
-		final PluginContext result = ProMPluginContextManager
-				.instance()
-				.getContext()
-				.createChildContext(
+		final PluginContext result = ProMPluginContextManager.instance()
+				.getContext().createChildContext(
 						"RapidProMPluginContext_" + System.currentTimeMillis());
 		Plugin pluginAnn = findAnnotation(
 				classContainingProMPlugin.getAnnotations(), Plugin.class);
@@ -256,7 +244,8 @@ public class ProMPluginContextManager extends ProgressThread {
 	}
 
 	private ProMFuture<?>[] createProMFutures(Plugin pluginAnn) {
-		ProMFuture<?>[] futures = new ProMFuture<?>[pluginAnn.returnTypes().length];
+		ProMFuture<?>[] futures = new ProMFuture<?>[pluginAnn
+				.returnTypes().length];
 		for (int i = 0; i < pluginAnn.returnTypes().length; i++) {
 			futures[i] = new ProMFuture<Object>(pluginAnn.returnTypes()[i],
 					pluginAnn.returnLabels()[i]) {
@@ -282,5 +271,4 @@ public class ProMPluginContextManager extends ProgressThread {
 		}
 		return result;
 	}
-
 }

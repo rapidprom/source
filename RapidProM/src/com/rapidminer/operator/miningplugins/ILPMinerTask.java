@@ -28,11 +28,11 @@ import org.processmining.lpengines.interfaces.LPEngine.EngineType;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.operators.abstracts.AbstractRapidProMOperator;
 
 import com.rapidminer.ioobjects.MarkingIOObject;
 import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
-import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
@@ -41,16 +41,16 @@ import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameters.Parameter;
 import com.rapidminer.util.ProMIOObjectList;
 
-public class ILPMinerTask extends Operator {
+public class ILPMinerTask extends AbstractRapidProMOperator {
 
 	private List<Parameter> parametersILPMiner = null;
 
-	private InputPort inputXLog = getInputPorts().createPort(
-			"event log (ProM Event Log)", XLogIOObject.class);
-	private OutputPort outputPetrinet = getOutputPorts().createPort(
-			"model (ProM Petri Net)");
-	private OutputPort outputMarking = getOutputPorts().createPort(
-			"marking (ProM Marking)");
+	private InputPort inputXLog = getInputPorts()
+			.createPort("event log (ProM Event Log)", XLogIOObject.class);
+	private OutputPort outputPetrinet = getOutputPorts()
+			.createPort("model (ProM Petri Net)");
+	private OutputPort outputMarking = getOutputPorts()
+			.createPort("marking (ProM Marking)");
 
 	public ILPMinerTask(OperatorDescription description) {
 		super(description);
@@ -63,33 +63,31 @@ public class ILPMinerTask extends Operator {
 	public void doWork() throws OperatorException {
 		PluginContext context = ProMPluginContextManager.instance()
 				.getContext();
-		XLog eventLog = ((XLogIOObject) inputXLog.getData(XLogIOObject.class))
+		XLog log = ((XLogIOObject) inputXLog.getData(XLogIOObject.class))
 				.getData();
 		// TODO: ASK USER FOR CLASSIFIER
-		XEventClassifier classifier = new XEventAndClassifier(
-				new XEventNameClassifier());
-		MatrixMiner miner = new HAFMiniMatrixMiner();
-		MatrixMinerParameters minerParameters = new MatrixMinerParameters(
-				eventLog);
+		XEventClassifier classifier = getXEventClassifier();
+		MatrixMiner miner = getMatrixMiner();
+		MatrixMinerParameters minerParameters = getMatrixMinerParameters(log);
 		minerParameters.setClassifier(classifier);
-		CausalActivityMatrix matrix = miner.mineMatrix(context, eventLog,
+		CausalActivityMatrix matrix = miner.mineMatrix(context, log,
 				minerParameters);
-		ConvertCausalActivityMatrixToCausalActivityGraphPlugin creator = new ConvertCausalActivityMatrixToCausalActivityGraphPlugin();
-		ConvertCausalActivityMatrixToCausalActivityGraphParameters creatorParameters = new ConvertCausalActivityMatrixToCausalActivityGraphParameters();
+		ConvertCausalActivityMatrixToCausalActivityGraphPlugin creator = getMatrixToCagPlugin();
+		ConvertCausalActivityMatrixToCausalActivityGraphParameters creatorParameters = getMatrixToCagParameters();
 		creatorParameters.setZeroValue(miner.getZeroValue());
 		creatorParameters.setConcurrencyRatio(miner.getConcurrencyRatio());
 		creatorParameters.setIncludeThreshold(miner.getIncludeThreshold());
 		CausalActivityGraph graph = creator.run(context, matrix,
 				creatorParameters);
-		DiscoveryStrategy strategy = new DiscoveryStrategy(
-				DiscoveryStrategyType.CAUSAL);
+		DiscoveryStrategy strategy = getDiscoveryStrategy();
 		strategy.setCausalActivityGraph(graph);
 		LPMinerConfiguration configuration = LPMinerConfigurationFactory
-				.customConfiguration(eventLog, EngineType.LPSOLVE, classifier,
+				.customConfiguration(log, EngineType.LPSOLVE, classifier,
 						strategy, EnumSet.allOf(LPConstraintType.class),
 						LPObjectiveType.WEIGHTED_ABSOLUTE_PARIKH,
-						LPVariableType.DUAL, new LPFilter(), false);
-		Object[] pnAndMarking = HybridILPMinerPlugin.mine(eventLog,
+						LPVariableType.DUAL, getFilter(), false);
+		Object[] pnAndMarking = HybridILPMinerPlugin.mine(
+				ProMPluginContextManager.instance().getContext(), log,
 				configuration);
 
 		Petrinet pn = (Petrinet) pnAndMarking[0];
@@ -104,7 +102,34 @@ public class ILPMinerTask extends Operator {
 		instance.addToList(markingIOObject);
 		instance.addToList(petrinetIOObject);
 		outputMarking.deliver(markingIOObject);
+	}
 
+	private XEventClassifier getXEventClassifier() {
+		return new XEventAndClassifier(new XEventNameClassifier());
+	}
+
+	private MatrixMiner getMatrixMiner() {
+		return new HAFMiniMatrixMiner();
+	}
+
+	private MatrixMinerParameters getMatrixMinerParameters(XLog log) {
+		return new MatrixMinerParameters(log);
+	}
+
+	private ConvertCausalActivityMatrixToCausalActivityGraphPlugin getMatrixToCagPlugin() {
+		return new ConvertCausalActivityMatrixToCausalActivityGraphPlugin();
+	}
+
+	private ConvertCausalActivityMatrixToCausalActivityGraphParameters getMatrixToCagParameters() {
+		return new ConvertCausalActivityMatrixToCausalActivityGraphParameters();
+	}
+
+	private LPFilter getFilter() {
+		return new LPFilter();
+	}
+
+	private DiscoveryStrategy getDiscoveryStrategy() {
+		return new DiscoveryStrategy(DiscoveryStrategyType.CAUSAL);
 	}
 
 }
