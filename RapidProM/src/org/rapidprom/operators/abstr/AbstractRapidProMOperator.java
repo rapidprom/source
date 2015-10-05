@@ -5,8 +5,11 @@ import com.rapidminer.operator.OperatorDescription;
 
 public class AbstractRapidProMOperator extends Operator {
 
-	public AbstractRapidProMOperator(OperatorDescription description) {
-		super(description);
-	}
+    protected static final String PARAMETER_LABEL_FILENAME = "Filename";
+    protected static final String PARAMETER_LABEL_IMPORTERS = "Importer";
+
+    public AbstractRapidProMOperator(OperatorDescription description) {
+        super(description);
+    }
 
 }

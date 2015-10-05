@@ -624,7 +624,6 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom/Widgets/jars/Widgets-6.5.97.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom.thirdparty.lib/japura/jars/japura-1.12.3.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom/BPMN/jars/BPMN-6.5.35.jar!/" />
-          <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom/CPNet/jars/CPNet-6.5.56.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom.thirdparty.lib/AccessCPN/jars/AccessCPN-na-1.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom/EMF/jars/EMF-6.5.35.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.eclipse.birt.runtime.3_7_1/org.eclipse.emf.common/jars/org.eclipse.emf.common-2.7.0.jar!/" />
@@ -721,6 +720,7 @@
           <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom/EPCConversion/jars/EPCConversion-6.5.16.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom/SocialNetwork/jars/SocialNetwork-6.5.18.jar!/" />
           <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom/Woflan/jars/Woflan-6.5.25.jar!/" />
+          <root url="jar://$USER_HOME$/.ivy2/cache/org.rapidprom/CPNet/jars/CPNet-6.5.61.jar!/" />
         </CLASSES>
         <JAVADOC>
           <root url="jar://$USER_HOME$/.ivy2/cache/de.sciss/prefuse-core/javadocs/prefuse-core-1.0.0-javadoc.jar!/" />

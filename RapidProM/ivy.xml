@@ -9,10 +9,9 @@
         <dependency org="org.rapidprom" name="ApacheUtils" rev="6.5.66" />
         <dependency org="org.rapidprom" name="BasicUtils" rev="6.5.64" />
         <dependency org="org.rapidprom" name="BPMN" rev="6.5.35" />
-        <dependency org="org.rapidprom" name="CPNet" rev="6.5.56" />
+        <dependency org="org.rapidprom" name="CPNet" rev="6.5.61" />
         <dependency org="org.rapidprom" name="DataAwareReplayer" rev="6.5.270" />
         <dependency org="org.rapidprom" name="DataPetriNets" rev="6.5.188" />
-        <dependency org="org.rapidprom" name="EMF" rev="6.5.35" />
         <dependency org="org.rapidprom" name="EvolutionaryTreeMiner" rev="6.5.38" />
         <dependency org="org.rapidprom" name="EventStream" rev="6.5.31" />
         <dependency org="org.rapidprom" name="FeaturePrediction" rev="6.5.25" />
