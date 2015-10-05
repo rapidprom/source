@@ -8,7 +8,7 @@
             </operator>
             <operator>
                 <key>read_cpn</key>
-                <class>com.rapidminer.operator.importplugins.ImportCPNModelTask</class>
+                <class>org.rapidprom.operators.importers.ImportCPNModelOperator</class>
             </operator>
             <operator>
                 <key>read_pnml_file</key>
