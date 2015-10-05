@@ -1,4 +1,5 @@
 <ivy-module version="2.0">
+    <!-- please update the ivy version manually -->
     <info organisation="org.rapidprom" module="RapidProM" revision="2.1.0"/>
     <configurations>
         <include file="https://raw.githubusercontent.com/rapidprom/libraries/master/rapidprom_configurations.xml" />
