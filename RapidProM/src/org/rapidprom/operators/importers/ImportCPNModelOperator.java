@@ -21,7 +21,7 @@ import java.util.logging.Logger;
 
 public class ImportCPNModelOperator extends AbstractRapidProMOperator {
 
-    private OutputPort output = getOutputPorts().createPort("model (ProM Colored Petri Net)");
+    private OutputPort output = getOutputPorts().createPort("Model (Colored Petri Net)");
 
     public ImportCPNModelOperator(OperatorDescription description) {
         super(description);
