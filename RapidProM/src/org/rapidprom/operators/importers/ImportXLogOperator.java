@@ -11,7 +11,7 @@ import org.processmining.plugins.log.OpenNaiveLogFilePlugin;
 import org.processmining.xeslite.plugin.OpenLogFileDiskImplPlugin;
 import org.processmining.xeslite.plugin.OpenLogFileLiteImplPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.operators.abstracts.AbstractRapidProMOperator;
+import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
 
 import com.rapidminer.ioobjectrenderers.XLogIOObjectVisualizationType;
 import com.rapidminer.ioobjects.XLogIOObject;

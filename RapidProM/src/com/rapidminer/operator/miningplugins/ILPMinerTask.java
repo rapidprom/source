@@ -28,7 +28,7 @@ import org.processmining.lpengines.interfaces.LPEngine.EngineType;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.operators.abstracts.AbstractRapidProMOperator;
+import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
 
 import com.rapidminer.ioobjects.MarkingIOObject;
 import com.rapidminer.ioobjects.PetriNetIOObject;
