@@ -1,5 +1,7 @@
 package org.rapidprom.operators.streams.generators;
 
+import java.util.List;
+
 import org.processmining.eventstream.authors.cpn.parameters.CPN2XSStreamParameters;
 import org.processmining.eventstream.authors.cpn.plugins.CPNModelToXSEventStreamAuthorPlugin;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
@@ -17,6 +19,7 @@ import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.tools.LogService;
 
 public class CPNToEventStreamOperator extends Operator {
@@ -62,6 +65,12 @@ public class CPNToEventStreamOperator extends Operator {
 				.deliver(new XSEventStreamIOObject((XSEventStream) result[1]));
 
 		logService.log("end do work Stream Generator", LogService.NOTE);
+	}
+	
+	@Override
+	public List<ParameterType> getParameterTypes() {
+		
+	}
 	}
 
 }

@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import org.processmining.plugins.cpnet.ColouredPetriNet;
 import org.processmining.plugins.cpnet.LoadCPNModelFromFile;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
+import org.rapidprom.operators.abstr.AbstractRapidProMImportOperator;
 
 import com.rapidminer.ioobjects.CPNModelIOObject;
 import com.rapidminer.operator.OperatorDescription;
@@ -20,7 +20,7 @@ import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeFile;
 import com.rapidminer.tools.LogService;
 
-public class ImportCPNModelOperator extends AbstractRapidProMOperator {
+public class ImportCPNModelOperator extends AbstractRapidProMImportOperator {
 
 	private OutputPort output = getOutputPorts()
 			.createPort("Model (Colored Petri Net)");

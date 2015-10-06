@@ -29,10 +29,10 @@ import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
-import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
 
 import com.rapidminer.ioobjects.MarkingIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
+import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
@@ -41,7 +41,7 @@ import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameters.Parameter;
 import com.rapidminer.util.ProMIOObjectList;
 
-public class ILPMinerTask extends AbstractRapidProMOperator {
+public class ILPMinerTask extends Operator {
 
 	private List<Parameter> parametersILPMiner = null;
 
