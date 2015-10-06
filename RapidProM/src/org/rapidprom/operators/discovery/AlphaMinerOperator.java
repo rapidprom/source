@@ -19,7 +19,7 @@ import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AlphaMinerTask extends AbstractRapidProMOperator {
+public class AlphaMinerOperator extends AbstractRapidProMOperator {
 
 	/** defining the ports */
 	private InputPort inputLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
@@ -29,7 +29,7 @@ public class AlphaMinerTask extends AbstractRapidProMOperator {
 	/**
 	 * The default constructor needed in exactly this signature
 	 */
-	public AlphaMinerTask(OperatorDescription description) {
+	public AlphaMinerOperator(OperatorDescription description) {
 		super(description);
 
 		/** Adding a rule for the output */
