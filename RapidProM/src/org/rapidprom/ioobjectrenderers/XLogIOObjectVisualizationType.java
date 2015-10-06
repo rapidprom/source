@@ -2,8 +2,9 @@ package org.rapidprom.ioobjectrenderers;
 
 public enum XLogIOObjectVisualizationType {
 
-	EXAMPLE_SET("Example Set"), DEFAULT("Default"), X_DOTTED_CHART(
-			"XDottedChart");
+	DEFAULT("Default"), 
+	EXAMPLE_SET("Example Set"),
+	X_DOTTED_CHART("XDottedChart");
 
 	private final String name;
 
