@@ -6,12 +6,12 @@ import com.rapidminer.operator.UserError;
 
 import java.io.File;
 
-public abstract class AbstractRapidProMOperator extends Operator {
+public abstract class AbstractRapidProMImportOperator extends Operator {
 
     protected static final String PARAMETER_LABEL_FILENAME = "Filename";
     protected static final String PARAMETER_LABEL_IMPORTERS = "Importer";
 
-    public AbstractRapidProMOperator(OperatorDescription description) {
+    public AbstractRapidProMImportOperator(OperatorDescription description) {
         super(description);
     }
 
