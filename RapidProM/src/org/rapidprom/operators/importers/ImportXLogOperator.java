@@ -4,13 +4,11 @@ import com.rapidminer.ioobjectrenderers.XLogIOObjectVisualizationType;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.UserError;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.parameter.ParameterTypeFile;
-import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.parameters.Parameter;
 import com.rapidminer.parameters.ParameterCategory;
 import com.rapidminer.tools.LogService;
@@ -31,7 +29,7 @@ import java.util.logging.Logger;
 public class ImportXLogOperator extends AbstractRapidProMOperator {
 
     private Parameter importerParameter = null;
-    private OutputPort output = getOutputPorts().createPort("Event Log (XLog)");
+    private OutputPort output = getOutputPorts().createPort("event Log (XLog)");
     public ImportXLogOperator(OperatorDescription description) {
         super(description);
         getTransformer()
