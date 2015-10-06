@@ -1,7 +1,8 @@
 package org.rapidprom.operators.importers;
 
-import com.rapidminer.ioobjectrenderers.XLogIOObjectVisualizationType;
-import com.rapidminer.ioobjects.XLogIOObject;
+import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
+import org.rapidprom.ioobjects.XLogIOObject;
+
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.OutputPort;
@@ -12,7 +13,7 @@ import com.rapidminer.parameter.ParameterTypeFile;
 import com.rapidminer.parameters.Parameter;
 import com.rapidminer.parameters.ParameterCategory;
 import com.rapidminer.tools.LogService;
-import com.rapidminer.util.ProMIOObjectList;
+
 import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.log.OpenNaiveLogFilePlugin;
 import org.processmining.xeslite.plugin.OpenLogFileDiskImplPlugin;
@@ -41,7 +42,9 @@ public class ImportXLogOperator extends AbstractRapidProMOperator {
     @Override
     public void doWork() throws OperatorException {
         Logger logger = LogService.getRoot();
-        logger.log(Level.INFO, "Start importing event log");
+        logger.log(Level.INFO, "Start: importing event log");
+        long time = System.currentTimeMillis();
+        
         ImplementingPlugin importPlugin = (ImplementingPlugin) importerParameter
                 .getValueParameter(getParameterAsInt(
                         importerParameter.getNameParameter()));
@@ -55,9 +58,8 @@ public class ImportXLogOperator extends AbstractRapidProMOperator {
             xLogIOObject.setVisualizationType(
                     XLogIOObjectVisualizationType.DEFAULT);
             output.deliver(xLogIOObject);
-            ProMIOObjectList instance = ProMIOObjectList.getInstance();
-            instance.addToList(xLogIOObject);
-            logger.log(Level.INFO, "End importing .xes log");
+            
+            logger.log(Level.INFO, "End: importing event log (" + (System.currentTimeMillis() - time)/1000 + " sec)");
         }
     }
 
