@@ -1,7 +1,6 @@
 package org.rapidprom.ioobjectrenderers;
 
 import java.awt.Component;
-import java.io.File;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -10,7 +9,6 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.table.DefaultTableModel;
 
-import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.log.ui.logdialog.LogDialogInitializer;
@@ -25,7 +23,6 @@ import com.rapidminer.gui.tools.ExtendedJTable;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.IOContainer;
 import com.rapidminer.report.Reportable;
-import com.rapidminer.tools.ParameterService;
 import com.rapidminer.util.Utilities;
 import com.rapidminer.util.XLogUtils;
 import com.rapidminer.util.XLogUtils.ColumnNamesLog;

@@ -11,7 +11,7 @@ public class XLogIOObject extends ResultObjectAdapter implements ProMIOObject {
 
 	private static final long serialVersionUID = 1L;
 
-	private XLogIOObjectVisualizationType vt = XLogIOObjectVisualizationType.EXAMPLE_SET;
+	private XLogIOObjectVisualizationType vt = XLogIOObjectVisualizationType.DEFAULT;
 	private PluginContext pc = null;
 	private XLog xLog = null;
 

@@ -1,11 +1,13 @@
 package org.rapidprom.operators.discovery;
 
+import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.tools.LogService;
+
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
@@ -14,12 +16,10 @@ import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.MarkingIOObject;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.XLogIOObject;
-import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AlphaMinerOperator extends AbstractRapidProMOperator {
+public class AlphaMinerOperator extends Operator {
 
 	/** defining the ports */
 	private InputPort inputLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
