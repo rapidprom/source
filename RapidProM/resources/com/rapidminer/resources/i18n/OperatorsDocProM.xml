@@ -23,6 +23,8 @@
 
     -->
     
+    <!-- IMPORTERS -->
+    
     <operator>
 		<name>Generate stream from CPN</name>
 		<synopsis>Generate stream from CPN</synopsis>
@@ -164,17 +166,17 @@
 		<key>select_best_fuzzy_instance</key>
 	</operator>  
    <operator>
-        <name>Import XLog</name>
-        <synopsis>This operator can be used to import a ProM XES event log (.xes) file.</synopsis>
+        <name>Import Event Log</name>
+        <synopsis>This operator can be used to import a ProM XES event log from a file.</synopsis>
         <help>This operator can be used to import a ProM XES event log file. 
         Note that only .xes files can be read.</help>
     <key>import_xlog</key>
   </operator>
   
   <operator>
-        <name>Read Log (File)</name>
-        <synopsis>This operator can be used to read a ProM XES log file from a File object (useful for loops over file collections)</synopsis>
-        <help>This operator can be used to read a ProM XES log file. Note that only XES files can be read! As input a ProM context and a file is needed.</help>
+        <name>Extract Event Log</name>
+        <synopsis>This operator can be used to read a ProM XES log file from a file object (useful for loops over file collections)</synopsis>
+        <help>This operator can be used to read a ProM XES log file</help>
     <key>extract_log_from_file</key>
   </operator>
   
