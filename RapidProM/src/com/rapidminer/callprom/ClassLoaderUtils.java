@@ -5,12 +5,10 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.List;
 
 import org.processmining.framework.plugin.PluginManager;
 
-import com.rapidminer.ClassLoaderRapidMiner;
-import com.rapidminer.tools.plugin.Plugin;
+import org.rapidprom.external.connectors.prom.RapidProMClassLoader;
 
 public class ClassLoaderUtils {
 	
@@ -40,7 +38,7 @@ public class ClassLoaderUtils {
 
 	public static void addURLToClasspath(URL url) {
 		try {
-			URLClassLoader sysloader = (URLClassLoader) ClassLoaderRapidMiner.getRapidMinerClassLoader();
+			URLClassLoader sysloader = (URLClassLoader) RapidProMClassLoader.getRapidMinerClassLoader();
 			Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class<?>[] { URL.class });
 
 			method.setAccessible(true);

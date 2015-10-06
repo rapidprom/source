@@ -22,7 +22,7 @@ import org.processmining.framework.plugin.impl.PluginManagerImpl;
 import org.processmining.framework.util.CommandLineArgumentList;
 import org.processmining.framework.util.OsUtil;
 
-import com.rapidminer.ClassLoaderRapidMiner;
+import org.rapidprom.external.connectors.prom.RapidProMClassLoader;
 import com.rapidminer.tools.LogService;
 
 
@@ -180,10 +180,10 @@ public class BootProM extends Boot {
 		}
 
 		long startPlugins = System.currentTimeMillis();
-		URLClassLoader sysloader = (URLClassLoader) ClassLoaderRapidMiner.getRapidMinerClassLoader();
+		URLClassLoader sysloader = (URLClassLoader) RapidProMClassLoader.getRapidMinerClassLoader();
 		/*
 		System.out.println("ONE START");
-		listLoadedClasses(ClassLoaderRapidMiner.getRapidMinerClassLoader());
+		listLoadedClasses(RapidProMClassLoader.getRapidMinerClassLoader());
 		System.out.println("ONE END");
 		*/
 		URL[] defaultURLs = sysloader.getURLs();
@@ -290,7 +290,7 @@ public class BootProM extends Boot {
 						//System.out.println(url);
 						//System.out.println(pack);
 						//plugins.register(url, pack);
-						plugins.register(url, pack, ClassLoaderRapidMiner.getRapidMinerClassLoader());
+						plugins.register(url, pack, RapidProMClassLoader.getRapidMinerClassLoader());
 					}
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
@@ -427,7 +427,7 @@ public class BootProM extends Boot {
 
 		private static void addURLToClasspath(URL url) {
 			try {
-				URLClassLoader sysloader = (URLClassLoader) ClassLoaderRapidMiner.getRapidMinerClassLoader();
+				URLClassLoader sysloader = (URLClassLoader) RapidProMClassLoader.getRapidMinerClassLoader();
 				Method method = URLClassLoader.class.getDeclaredMethod("addURL", new Class<?>[] { URL.class });
 
 				method.setAccessible(true);

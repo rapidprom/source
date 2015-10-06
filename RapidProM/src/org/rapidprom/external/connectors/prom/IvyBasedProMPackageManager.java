@@ -3,33 +3,30 @@ package org.rapidprom.external.connectors.prom;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.util.ArrayList;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.apache.commons.io.FilenameUtils;
 import org.processmining.framework.boot.Boot;
 import org.processmining.framework.boot.Boot.Level;
-import org.processmining.framework.packages.PackageDescriptor;
 import org.processmining.framework.packages.PackageSet;
 import org.processmining.framework.packages.events.PackageManagerListener;
 import org.rapidprom.properties.RapidProMProperties;
 
-public class ProMIvyBasedPackageManager {
+public class IvyBasedProMPackageManager {
 
-	private static ProMIvyBasedPackageManager instance = null;
+	private static IvyBasedProMPackageManager instance = null;
 
 	private final PackageManagerListener.ListenerList listeners = new PackageManagerListener.ListenerList();
 
 	private final PackageSet packages = new PackageSet();
 
-	private ProMIvyBasedPackageManager() {
+	private IvyBasedProMPackageManager() {
 	}
 
-	public static ProMIvyBasedPackageManager getInstance() {
+	public static IvyBasedProMPackageManager getInstance() {
 		if (instance == null) {
-			instance = new ProMIvyBasedPackageManager();
+			instance = new IvyBasedProMPackageManager();
 		}
 		return instance;
 	}

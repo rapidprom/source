@@ -24,7 +24,6 @@ import org.processmining.framework.util.CommandLineArgumentList;
 import org.processmining.framework.util.PathHacker;
 import org.rapidprom.properties.RapidProMProperties;
 
-import com.rapidminer.ClassLoaderRapidMiner;
 import com.rapidminer.gui.tools.ProgressThread;
 
 /**
@@ -97,7 +96,7 @@ public class ProMPluginContextManager extends ProgressThread {
 	}
 
 	private void setupProMAnnotationAwareness() {
-		ProMIvyBasedPackageManager packages = ProMIvyBasedPackageManager
+		IvyBasedProMPackageManager packages = IvyBasedProMPackageManager
 				.getInstance();
 		PluginManagerImpl.initialize(CLIPluginContext.class);
 		PluginManager plugins = PluginManagerImpl.getInstance();
@@ -125,7 +124,7 @@ public class ProMPluginContextManager extends ProgressThread {
 					URL url = f.toURI().toURL();
 					if (f.getName().contains(pack.getName())) {
 						System.out.println("Regiser Plugin " + f.getName());
-						plugins.register(url, pack, ClassLoaderRapidMiner
+						plugins.register(url, pack, RapidProMClassLoader
 								.getRapidMinerClassLoader());
 					}
 					if (verbose == Level.ALL) {
@@ -188,7 +187,7 @@ public class ProMPluginContextManager extends ProgressThread {
 
 	private void addURLToClasspath(URL url) {
 		try {
-			URLClassLoader sysloader = (URLClassLoader) ClassLoaderRapidMiner
+			URLClassLoader sysloader = (URLClassLoader) RapidProMClassLoader
 					.getRapidMinerClassLoader();
 			Method method = URLClassLoader.class.getDeclaredMethod("addURL",
 					new Class<?>[] { URL.class });

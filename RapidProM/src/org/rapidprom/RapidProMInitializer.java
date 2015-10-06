@@ -9,7 +9,6 @@ import com.rapidminer.gui.MainFrame;
  * This class provides hooks for initialization
  * 
  * @author Sebastian Land
- * @author rmans
  * @author svzelst
  */
 public class RapidProMInitializer {
