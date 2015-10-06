@@ -104,7 +104,7 @@
     
      <ioobject
         name="XLogProM"
-        class="org.rapidprom.ioobjects.XLogIOObject;"
+        class="org.rapidprom.ioobjects.XLogIOObject"
         reportable="true">
         <renderer>org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer</renderer>
     </ioobject>
