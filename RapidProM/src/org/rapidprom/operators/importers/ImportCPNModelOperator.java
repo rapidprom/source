@@ -33,18 +33,22 @@ public class ImportCPNModelOperator extends AbstractRapidProMOperator {
         Logger logger = LogService.getRoot();
         logger.log(Level.INFO, "Start reading CPN model");
 
-        File file = getParameterAsFile(PARAMETER_LABEL_FILENAME);
+        if (checkFileParameterMetaData(PARAMETER_LABEL_FILENAME)) {
+            File file = getParameterAsFile(PARAMETER_LABEL_FILENAME);
 
-        ColouredPetriNet net = null;
-        try {
-            net = LoadCPNModelFromFile.importColouredPetriNetFromStream(ProMPluginContextManager.instance().getFutureResultAwareContext(LoadCPNModelFromFile.class),
-                    new FileInputStream(file), file.getName(), file.length());
-        } catch (Exception e) {
-            e.printStackTrace();
+            ColouredPetriNet net = null;
+            try {
+                net = LoadCPNModelFromFile.importColouredPetriNetFromStream(ProMPluginContextManager.instance().getFutureResultAwareContext(LoadCPNModelFromFile.class),
+                        new FileInputStream(file), file.getName(), file.length());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            CPNModelIOObject cpnIOObject = new CPNModelIOObject(net);
+            output.deliver(cpnIOObject);
+            logger.log(Level.INFO, "End reading CPN model");
+        } else {
+            logger.log(Level.WARNING, "End reading CPN model -> File could not be read");
         }
-        CPNModelIOObject cpnIOObject = new CPNModelIOObject(net);
-        output.deliver(cpnIOObject);
-        logger.log(Level.INFO, "End reading CPN model", LogService.NOTE);
     }
 
     @Override
