@@ -3,6 +3,7 @@ package com.rapidminer.parameters;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class ParameterLong implements Parameter {
 	
 	private Class<?> clazz = null;

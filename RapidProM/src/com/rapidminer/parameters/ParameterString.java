@@ -1,13 +1,15 @@
 package com.rapidminer.parameters;
 
+@Deprecated
 public class ParameterString implements Parameter {
-	
+
 	private Class<?> clazz = null;
 	private String defaultValue = "";
 	private String nameParameter = "";
 	private String descriptionParameter = "";
-	
-	public ParameterString (String def, Class<?> clazz, String name, String description) {
+
+	public ParameterString(String def, Class<?> clazz, String name,
+			String description) {
 		this.defaultValue = def;
 		this.clazz = clazz;
 		this.nameParameter = name;
