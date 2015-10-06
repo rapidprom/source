@@ -20,7 +20,6 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.plugins.etm.parameters.ETMParam;
 
 import com.rapidminer.ioobjects.XLogIOObject;
-import com.rapidminer.ioobjectrenderers.XLogIOObjectRenderer;
 
 import org.deckfour.xes.model.XLog;
 
@@ -28,6 +27,7 @@ import com.rapidminer.ioobjects.ProcessTreeIOObject;
 import com.rapidminer.ioobjectrenderers.ProcessTreeIOObjectRenderer;
 
 import org.processmining.processtree.ProcessTree;
+import org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer;
 import org.rapidprom.prom.CallProm;
 
 public class MineaProcessTreewithETMdTask extends Operator {

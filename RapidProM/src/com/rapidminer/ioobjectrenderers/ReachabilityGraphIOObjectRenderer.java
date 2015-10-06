@@ -11,9 +11,9 @@ import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.transitionsystem.ReachabilityGraph;
 import org.processmining.models.jgraph.ProMJGraph;
 import org.processmining.models.jgraph.visualization.ProMJGraphPanel;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.ReachabilityGraphIOObject;
 import com.rapidminer.gui.renderer.AbstractRenderer;
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;

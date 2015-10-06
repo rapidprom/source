@@ -13,11 +13,11 @@ import com.rapidminer.tools.LogService;
 import org.processmining.framework.plugin.PluginContext;
 
 import com.rapidminer.ioobjects.ProMContextIOObject;
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.MarkingIOObject;
 import com.rapidminer.ioobjects.ReachabilityGraphIOObject;
 
 import org.processmining.models.graphbased.directed.transitionsystem.ReachabilityGraph;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class ConstructReachabilityGraphofaPetriNetTask extends Operator {

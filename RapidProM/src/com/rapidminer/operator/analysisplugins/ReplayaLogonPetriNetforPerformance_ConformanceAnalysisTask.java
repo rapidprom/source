@@ -17,13 +17,13 @@ import com.rapidminer.parameters.*;
 
 import org.processmining.framework.plugin.PluginContext;
 
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.FitnessIOObject;
 import com.rapidminer.ioobjects.ProMContextIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.ioobjects.ManifestIOObject;
 
 import org.processmining.plugins.petrinet.manifestreplayresult.Manifest;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class ReplayaLogonPetriNetforPerformance_ConformanceAnalysisTask extends Operator {

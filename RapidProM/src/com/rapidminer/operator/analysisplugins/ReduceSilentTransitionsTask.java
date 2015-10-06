@@ -17,9 +17,9 @@ import com.rapidminer.ioobjects.ProMContextIOObject;
 
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.MarkingIOObject;
 
 public class ReduceSilentTransitionsTask extends Operator {

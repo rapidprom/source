@@ -25,7 +25,6 @@ import com.rapidminer.parameters.*;
 
 import org.processmining.framework.plugin.PluginContext;
 
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.ProMContextIOObject;
 
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
@@ -38,6 +37,7 @@ import org.processmining.plugins.InductiveMiner.mining.MiningParametersIM;
 import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMi;
 import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMin;
 import org.processmining.plugins.petrinet.behavioralanalysis.woflan.WoflanDiagnosis;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class AnalyzewithWoflanTask extends Operator {

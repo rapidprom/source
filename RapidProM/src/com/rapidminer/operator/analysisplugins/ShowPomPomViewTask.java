@@ -13,11 +13,11 @@ import com.rapidminer.tools.LogService;
 import org.processmining.framework.plugin.PluginContext;
 
 import com.rapidminer.ioobjects.ProMContextIOObject;
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.ioobjects.PomPomViewIOObject;
 
 import org.processmining.plugins.pompom.PomPomView;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class ShowPomPomViewTask extends Operator {

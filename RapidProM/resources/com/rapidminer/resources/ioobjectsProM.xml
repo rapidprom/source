@@ -104,16 +104,16 @@
     
      <ioobject
         name="XLogProM"
-        class="com.rapidminer.ioobjects.XLogIOObject"
+        class="org.rapidprom.ioobjects.XLogIOObject;"
         reportable="true">
-        <renderer>com.rapidminer.ioobjectrenderers.XLogIOObjectRenderer</renderer>
+        <renderer>org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer</renderer>
     </ioobject>
     
     <ioobject
         name="PetriNetProM"
-        class="com.rapidminer.ioobjects.PetriNetIOObject"
+        class="org.rapidprom.ioobjects.PetriNetIOObject"
         reportable="true">
-        <renderer>com.rapidminer.ioobjectrenderers.PetriNetIOObjectRenderer</renderer>
+        <renderer>org.rapidprom.ioobjectrenderers.PetriNetIOObjectRenderer</renderer>
     </ioobject>
     
     <ioobject

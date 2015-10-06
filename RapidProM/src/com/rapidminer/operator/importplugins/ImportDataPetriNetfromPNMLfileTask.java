@@ -21,7 +21,6 @@ import com.rapidminer.ioobjects.ProMContextIOObject;
 import java.io.File;
 import java.lang.String;
 
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.PetriNetWithDataIOObject;
 import com.rapidminer.ioobjects.MarkingIOObject;
 import com.rapidminer.ioobjectrenderers.PetriNetWithDataIOObjectRenderer;
@@ -30,6 +29,7 @@ import com.rapidminer.ioobjectrenderers.MarkingIOObjectRenderer;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinetwithdata.newImpl.PetriNetWithData;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class ImportDataPetriNetfromPNMLfileTask extends Operator {

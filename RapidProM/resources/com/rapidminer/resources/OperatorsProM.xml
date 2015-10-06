@@ -16,7 +16,7 @@
             </operator>
             <operator>
                 <key>extract_log_from_file</key>
-                <class>com.rapidminer.operator.importplugins.ExtractLogFromFileTask</class>
+                <class>org.rapidprom.operators.importers.ExtractXLogOperator</class>
             </operator>
             <operator>
                 <key>import_data_petri_net_from_pnml_file</key>
@@ -29,10 +29,10 @@
                 <class>com.rapidminer.operator.streams.CPNStreamPublisherTask</class>
             </operator>
         </group>
-        <group key="mining">
+        <group key="Discovery">
             <operator>
                 <key>alpha_miner</key>
-                <class>com.rapidminer.operator.miningplugins.AlphaMinerTask</class>
+                <class>org.rapidprom.operators.discovery.AlphaMinerOperator</class>
             </operator>
             <operator>
                 <key>ilp_miner</key>

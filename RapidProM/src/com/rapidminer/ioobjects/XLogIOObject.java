@@ -1,9 +1,9 @@
 package com.rapidminer.ioobjects;
 
-import com.rapidminer.ioobjectrenderers.XLogIOObjectVisualizationType;
 import com.rapidminer.operator.ResultObjectAdapter;
 
 import org.processmining.framework.plugin.PluginContext;
+import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
 import org.deckfour.xes.model.XLog;
 
 public class XLogIOObject extends ResultObjectAdapter implements ProMIOObject {
