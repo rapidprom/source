@@ -13,7 +13,7 @@
         <dependency org="org.rapidprom" name="DataAwareReplayer" rev="6.5.270" />
         <dependency org="org.rapidprom" name="DataPetriNets" rev="6.5.188" />
         <dependency org="org.rapidprom" name="EvolutionaryTreeMiner" rev="6.5.38" />
-        <dependency org="org.rapidprom" name="EventStream" rev="6.5.31" />
+        <dependency org="org.rapidprom" name="EventStream" rev="6.5.36" />
         <dependency org="org.rapidprom" name="FeaturePrediction" rev="6.5.25" />
         <dependency org="org.rapidprom" name="Fuzzy" rev="6.5.23" />
         <dependency org="org.rapidprom" name="GraphViz" rev="6.5.112" />
@@ -29,7 +29,6 @@
         <dependency org="org.rapidprom" name="PNetReplayer" rev="6.5.26" />
         <dependency org="org.rapidprom" name="PomPomView" rev="6.5.15" />
         <dependency org="org.rapidprom" name="SocialNetwork" rev="6.5.18" />
-        <dependency org="org.rapidprom" name="Stream" rev="6.5.44" />
         <dependency org="org.rapidprom" name="TransitionSystems" rev="6.5.36" />
         <dependency org="org.rapidprom" name="Woflan" rev="6.5.25" />
         <dependency org="org.rapidprom" name="XESLite" rev="6.5.115" />
