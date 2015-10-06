@@ -1,18 +1,5 @@
 package org.rapidprom.operators.importers;
 
-import java.io.File;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.deckfour.xes.model.XLog;
-import org.processmining.plugins.log.OpenNaiveLogFilePlugin;
-import org.processmining.xeslite.plugin.OpenLogFileDiskImplPlugin;
-import org.processmining.xeslite.plugin.OpenLogFileLiteImplPlugin;
-import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
-
 import com.rapidminer.ioobjectrenderers.XLogIOObjectVisualizationType;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.OperatorDescription;
@@ -28,47 +15,30 @@ import com.rapidminer.parameters.Parameter;
 import com.rapidminer.parameters.ParameterCategory;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.util.ProMIOObjectList;
+import org.deckfour.xes.model.XLog;
+import org.processmining.plugins.log.OpenNaiveLogFilePlugin;
+import org.processmining.xeslite.plugin.OpenLogFileDiskImplPlugin;
+import org.processmining.xeslite.plugin.OpenLogFileLiteImplPlugin;
+import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
+
+import java.io.File;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ImportXLogOperator extends AbstractRapidProMOperator {
 
-    public enum ImplementingPlugin {
-        LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs"), MAP_DB(
-                "Buffered by MAPDB"), NAIVE("Naive");
-
-        private final String name;
-
-        ImplementingPlugin(final String name) {
-            this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
     private Parameter importerParameter = null;
     private OutputPort output = getOutputPorts().createPort("Event Log (XLog)");
-
     public ImportXLogOperator(OperatorDescription description) {
         super(description);
         getTransformer()
                 .addRule(new GenerateNewMDRule(output, XLogIOObject.class));
     }
 
-    protected boolean checkMetaData()
-            throws UserError, UndefinedParameterError {
-        boolean result = false;
-        File file = getParameterAsFile(PARAMETER_LABEL_FILENAME);
-        if (!file.exists()) {
-            throw new UserError(this, "301", file);
-        } else if (!file.canRead()) {
-            throw new UserError(this, "302", file, "");
-        } else {
-            result = true;
-        }
-        return result;
-    }
+    private static String[] SUPPORTED_EVENT_LOG_FORMATS = new String[]{"xes", "xez", "xes.gz"};
 
     @Override
     public void doWork() throws OperatorException {
@@ -77,8 +47,8 @@ public class ImportXLogOperator extends AbstractRapidProMOperator {
         ImplementingPlugin importPlugin = (ImplementingPlugin) importerParameter
                 .getValueParameter(getParameterAsInt(
                         importerParameter.getNameParameter()));
-        XLog log = null;
-        if (checkMetaData()) {
+        XLog log;
+        if (checkFileParameterMetaData(PARAMETER_LABEL_FILENAME)) {
             log = importLog(importPlugin,
                     getParameterAsFile(PARAMETER_LABEL_FILENAME));
             XLogIOObject xLogIOObject = new XLogIOObject(log);
@@ -163,7 +133,7 @@ public class ImportXLogOperator extends AbstractRapidProMOperator {
         List<ParameterType> parameterTypes = super.getParameterTypes();
 
         ParameterTypeFile logFileParameter = new ParameterTypeFile(
-                PARAMETER_LABEL_FILENAME, "File to open", null, true, false);
+                PARAMETER_LABEL_FILENAME, "File to open", false, SUPPORTED_EVENT_LOG_FORMATS);
 
         ParameterCategory importersParameterCategory = new ParameterCategory(
                 EnumSet.allOf(ImplementingPlugin.class).toArray(),
@@ -180,5 +150,21 @@ public class ImportXLogOperator extends AbstractRapidProMOperator {
         parameterTypes.add(importersParameterTypeCategory);
         importerParameter = importersParameterCategory;
         return parameterTypes;
+    }
+
+    public enum ImplementingPlugin {
+        LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs"), MAP_DB(
+                "Buffered by MAPDB"), NAIVE("Naive");
+
+        private final String name;
+
+        private ImplementingPlugin(final String name) {
+            this.name = name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }
