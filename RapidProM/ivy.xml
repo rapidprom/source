@@ -33,5 +33,7 @@
         <dependency org="org.rapidprom" name="TransitionSystems" rev="6.5.36" />
         <dependency org="org.rapidprom" name="Woflan" rev="6.5.25" />
         <dependency org="org.rapidprom" name="XESLite" rev="6.5.115" />
+        <exclude org="*" ext="*" type="source"/>
+        <exclude org="*" ext="*" type="javadoc"/>
     </dependencies>
 </ivy-module>
