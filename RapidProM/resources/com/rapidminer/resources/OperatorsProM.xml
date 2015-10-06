@@ -16,7 +16,7 @@
             </operator>
             <operator>
                 <key>extract_log_from_file</key>
-                <class>org.rapidprom.operator.importplugins.ExtractXLogOperator</class>
+                <class>org.rapidprom.operators.importers.ExtractXLogOperator</class>
             </operator>
             <operator>
                 <key>import_data_petri_net_from_pnml_file</key>
