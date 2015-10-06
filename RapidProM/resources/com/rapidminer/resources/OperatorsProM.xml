@@ -26,7 +26,7 @@
         <group key="streams">
             <operator>
                 <key>stream_from_cpn</key>
-                <class>com.rapidminer.operator.streams.CPNStreamPublisherTask</class>
+                <class>org.rapidprom.operators.streams.generators.CPNToEventStreamOperator</class>
             </operator>
         </group>
         <group key="Discovery">
