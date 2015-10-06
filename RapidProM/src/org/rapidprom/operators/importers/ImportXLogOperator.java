@@ -1,18 +1,5 @@
 package org.rapidprom.operators.importers;
 
-import java.io.File;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.deckfour.xes.model.XLog;
-import org.processmining.plugins.log.OpenNaiveLogFilePlugin;
-import org.processmining.xeslite.plugin.OpenLogFileDiskImplPlugin;
-import org.processmining.xeslite.plugin.OpenLogFileLiteImplPlugin;
-import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
-
 import com.rapidminer.ioobjectrenderers.XLogIOObjectVisualizationType;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.OperatorDescription;
@@ -28,160 +15,156 @@ import com.rapidminer.parameters.Parameter;
 import com.rapidminer.parameters.ParameterCategory;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.util.ProMIOObjectList;
+import org.deckfour.xes.model.XLog;
+import org.processmining.plugins.log.OpenNaiveLogFilePlugin;
+import org.processmining.xeslite.plugin.OpenLogFileDiskImplPlugin;
+import org.processmining.xeslite.plugin.OpenLogFileLiteImplPlugin;
+import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.operators.abstr.AbstractRapidProMOperator;
+
+import java.io.File;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ImportXLogOperator extends AbstractRapidProMOperator {
 
-	public enum ImplementingPlugin {
-		LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs"), MAP_DB(
-				"Buffered by MAPDB"), NAIVE("Naive");
+    private Parameter importerParameter = null;
+    private OutputPort output = getOutputPorts().createPort("Event Log (XLog)");
+    public ImportXLogOperator(OperatorDescription description) {
+        super(description);
+        getTransformer()
+                .addRule(new GenerateNewMDRule(output, XLogIOObject.class));
+    }
 
-		private final String name;
+    private static String[] SUPPORTED_EVENT_LOG_FORMATS = new String[]{"xes", "xez", "xes.gz"};
 
-		private ImplementingPlugin(final String name) {
-			this.name = name;
-		}
+    @Override
+    public void doWork() throws OperatorException {
+        Logger logger = LogService.getRoot();
+        logger.log(Level.INFO, "Start importing event log");
+        ImplementingPlugin importPlugin = (ImplementingPlugin) importerParameter
+                .getValueParameter(getParameterAsInt(
+                        importerParameter.getNameParameter()));
+        XLog log;
+        if (checkFileParameterMetaData(PARAMETER_LABEL_FILENAME)) {
+            log = importLog(importPlugin,
+                    getParameterAsFile(PARAMETER_LABEL_FILENAME));
+            XLogIOObject xLogIOObject = new XLogIOObject(log);
+            xLogIOObject.setPluginContext(
+                    ProMPluginContextManager.instance().getContext());
+            xLogIOObject.setVisualizationType(
+                    XLogIOObjectVisualizationType.DEFAULT);
+            output.deliver(xLogIOObject);
+            ProMIOObjectList instance = ProMIOObjectList.getInstance();
+            instance.addToList(xLogIOObject);
+            logger.log(Level.INFO, "End importing .xes log");
+        }
+    }
 
-		@Override
-		public String toString() {
-			return name;
-		}
-	}
+    private XLog importLog(ImplementingPlugin p, File file) {
+        XLog result = null;
+        switch (p) {
+            case LIGHT_WEIGHT_SEQ_ID:
+                result = importLeightWeight(file);
+                break;
+            case MAP_DB:
+                result = importMapDb(file);
+                break;
+            case NAIVE:
+            default:
+                result = importLogNaive(file);
+                break;
+        }
+        return result;
+    }
 
-	private static final String PARAMETER_LABEL_FILENAME = "Filename";
-	private static final String PARAMETER_LABEL_IMPORTERS = "Importer";
+    private XLog importLeightWeight(File file) {
+        XLog result = null;
+        OpenLogFileLiteImplPlugin plugin = new OpenLogFileLiteImplPlugin();
+        try {
+            result = (XLog) plugin
+                    .importFile(
+                            ProMPluginContextManager.instance()
+                                    .getFutureResultAwareContext(
+                                            OpenLogFileLiteImplPlugin.class),
+                            file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
-	private Parameter importerParameter = null;
-	private OutputPort output = getOutputPorts().createPort("Event Log (XLog)");
+    private XLog importMapDb(File file) {
+        XLog result = null;
+        OpenLogFileDiskImplPlugin plugin = new OpenLogFileDiskImplPlugin();
+        try {
+            result = (XLog) plugin
+                    .importFile(
+                            ProMPluginContextManager.instance()
+                                    .getFutureResultAwareContext(
+                                            OpenLogFileDiskImplPlugin.class),
+                            file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
-	public ImportXLogOperator(OperatorDescription description) {
-		super(description);
-		getTransformer()
-				.addRule(new GenerateNewMDRule(output, XLogIOObject.class));
-	}
+    private XLog importLogNaive(File file) {
+        XLog result = null;
+        OpenNaiveLogFilePlugin plugin = new OpenNaiveLogFilePlugin();
+        try {
+            result = (XLog) plugin
+                    .importFile(
+                            ProMPluginContextManager.instance()
+                                    .getFutureResultAwareContext(
+                                            OpenNaiveLogFilePlugin.class),
+                            file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 
-	protected boolean checkMetaData()
-			throws UserError, UndefinedParameterError {
-		boolean result = false;
-		File file = getParameterAsFile(PARAMETER_LABEL_FILENAME);
-		if (!file.exists()) {
-			throw new UserError(this, "301", file);
-		} else if (!file.canRead()) {
-			throw new UserError(this, "302", file, "");
-		} else {
-			result = true;
-		}
-		return result;
-	}
+    @Override
+    public List<ParameterType> getParameterTypes() {
+        List<ParameterType> parameterTypes = super.getParameterTypes();
 
-	@Override
-	public void doWork() throws OperatorException {
-		Logger logger = LogService.getRoot();
-		logger.log(Level.INFO, "Start importing event log");
-		ImplementingPlugin importPlugin = (ImplementingPlugin) importerParameter
-				.getValueParameter(getParameterAsInt(
-						importerParameter.getNameParameter()));
-		XLog log = null;
-		if (checkMetaData()) {
-			log = importLog(importPlugin,
-					getParameterAsFile(PARAMETER_LABEL_FILENAME));
-			XLogIOObject xLogIOObject = new XLogIOObject(log);
-			xLogIOObject.setPluginContext(
-					ProMPluginContextManager.instance().getContext());
-			xLogIOObject.setVisualizationType(
-					XLogIOObjectVisualizationType.DEFAULT);
-			output.deliver(xLogIOObject);
-			ProMIOObjectList instance = ProMIOObjectList.getInstance();
-			instance.addToList(xLogIOObject);
-			logger.log(Level.INFO, "End importing .xes log");
-		}
-	}
+        ParameterTypeFile logFileParameter = new ParameterTypeFile(
+                PARAMETER_LABEL_FILENAME, "File to open", false, SUPPORTED_EVENT_LOG_FORMATS);
 
-	private XLog importLog(ImplementingPlugin p, File file) {
-		XLog result = null;
-		switch (p) {
-		case LIGHT_WEIGHT_SEQ_ID:
-			result = importLeightWeight(file);
-			break;
-		case MAP_DB:
-			result = importMapDb(file);
-			break;
-		case NAIVE:
-		default:
-			result = importLogNaive(file);
-			break;
-		}
-		return result;
-	}
+        ParameterCategory importersParameterCategory = new ParameterCategory(
+                EnumSet.allOf(ImplementingPlugin.class).toArray(),
+                ImplementingPlugin.NAIVE, ImplementingPlugin.class,
+                PARAMETER_LABEL_IMPORTERS, PARAMETER_LABEL_IMPORTERS);
 
-	private XLog importLeightWeight(File file) {
-		XLog result = null;
-		OpenLogFileLiteImplPlugin plugin = new OpenLogFileLiteImplPlugin();
-		try {
-			result = (XLog) plugin
-					.importFile(
-							ProMPluginContextManager.instance()
-									.getFutureResultAwareContext(
-											OpenLogFileLiteImplPlugin.class),
-							file);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+        ParameterTypeCategory importersParameterTypeCategory = new ParameterTypeCategory(
+                importersParameterCategory.getNameParameter(),
+                importersParameterCategory.getDescriptionParameter(),
+                importersParameterCategory.getOptionsParameter(),
+                importersParameterCategory.getIndexValue(
+                        importersParameterCategory.getDefaultValueParameter()));
+        parameterTypes.add(logFileParameter);
+        parameterTypes.add(importersParameterTypeCategory);
+        importerParameter = importersParameterCategory;
+        return parameterTypes;
+    }
 
-	private XLog importMapDb(File file) {
-		XLog result = null;
-		OpenLogFileDiskImplPlugin plugin = new OpenLogFileDiskImplPlugin();
-		try {
-			result = (XLog) plugin
-					.importFile(
-							ProMPluginContextManager.instance()
-									.getFutureResultAwareContext(
-											OpenLogFileDiskImplPlugin.class),
-							file);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+    public enum ImplementingPlugin {
+        LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs"), MAP_DB(
+                "Buffered by MAPDB"), NAIVE("Naive");
 
-	private XLog importLogNaive(File file) {
-		XLog result = null;
-		OpenNaiveLogFilePlugin plugin = new OpenNaiveLogFilePlugin();
-		try {
-			result = (XLog) plugin
-					.importFile(
-							ProMPluginContextManager.instance()
-									.getFutureResultAwareContext(
-											OpenNaiveLogFilePlugin.class),
-							file);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+        private final String name;
 
-	@Override
-	public List<ParameterType> getParameterTypes() {
-		List<ParameterType> parameterTypes = super.getParameterTypes();
+        private ImplementingPlugin(final String name) {
+            this.name = name;
+        }
 
-		ParameterTypeFile logFileParameter = new ParameterTypeFile(
-				PARAMETER_LABEL_FILENAME, "File to open", null, true, false);
-
-		ParameterCategory importersParameterCategory = new ParameterCategory(
-				EnumSet.allOf(ImplementingPlugin.class).toArray(),
-				ImplementingPlugin.NAIVE, ImplementingPlugin.class,
-				PARAMETER_LABEL_IMPORTERS, PARAMETER_LABEL_IMPORTERS);
-
-		ParameterTypeCategory importersParameterTypeCategory = new ParameterTypeCategory(
-				importersParameterCategory.getNameParameter(),
-				importersParameterCategory.getDescriptionParameter(),
-				importersParameterCategory.getOptionsParameter(),
-				importersParameterCategory.getIndexValue(
-						importersParameterCategory.getDefaultValueParameter()));
-		parameterTypes.add(logFileParameter);
-		parameterTypes.add(importersParameterTypeCategory);
-		importerParameter = importersParameterCategory;
-		return parameterTypes;
-	}
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
 }
