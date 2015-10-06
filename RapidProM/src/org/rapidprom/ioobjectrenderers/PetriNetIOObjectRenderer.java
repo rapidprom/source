@@ -26,6 +26,7 @@ import org.processmining.framework.util.ui.scalableview.interaction.ZoomInteract
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.jgraph.ProMJGraph;
 import org.processmining.models.jgraph.visualization.ProMJGraphPanel;
+import org.processmining.plugins.petrinet.PetriNetVisualization;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
@@ -49,32 +50,17 @@ public class PetriNetIOObjectRenderer extends AbstractRenderer {
 	public Component getVisualizationComponent(Object renderable, IOContainer ioContainer) {
 		if (renderable instanceof PetriNetIOObject) {
 			PetriNetIOObject object = (PetriNetIOObject) renderable;
-			// try to get the visualizer in ProM
-			JComponent panel = runVisualization(object.getPn(), object.getPluginContext());
-			return panel;
+			PetriNetVisualization visualizer = new PetriNetVisualization();
+			return visualizer.visualize(object.getPluginContext(), object.getPn());
 		}
 		return null;
 	}
 
 	@Override
 	public Reportable createReportable(Object renderable, IOContainer ioContainer, int desiredWidth, int desiredHeight) {
-		if (renderable instanceof PetriNetIOObject) {
-			PetriNetIOObject object = (PetriNetIOObject) renderable;
-			
-			ProMJGraphPanel promPanel = (ProMJGraphPanel) runVisualization(object.getPn(), object.getPluginContext());
-			ProMJGraph graph = Utilities.getSizedGraph(promPanel,desiredWidth,desiredHeight);
-			//return new DefaultComponentRenderable(runVisualization(object.getPn(), object.getPluginContext()));
-			return new DefaultComponentRenderable(graph);
+		if (renderable instanceof PetriNetIOObject) {									
+			return new DefaultComponentRenderable(getVisualizationComponent(renderable, ioContainer));
 		}
 		return new DefaultReadable("No Petri Net visualization available.");
 	}
-	
-	public static JComponent runVisualization(Petrinet pn, PluginContext pc) {		
-		CallProm tp = new CallProm();
-		List<Object> parameters = new ArrayList<Object>();
-		parameters.add(pn);
-		JComponent runVisualizationPlugin = tp.runVisualizationPlugin(pc,"x",parameters);
-		return runVisualizationPlugin;
-	}
-
 }
