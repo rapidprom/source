@@ -7,7 +7,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
 
-import com.rapidminer.ClassLoaderRapidMiner;
+import org.rapidprom.external.connectors.prom.RapidProMClassLoader;
 
 /**
  * Dynamically adds jars or dll files at runtime to the environment for direct
@@ -99,7 +99,7 @@ public class PathHacker2 {
 	 *            of the Java Archive
 	 */
 	public static void addJar(URL u) {
-		URLClassLoader sysloader = (URLClassLoader) ClassLoaderRapidMiner
+		URLClassLoader sysloader = (URLClassLoader) RapidProMClassLoader
 				.getRapidMinerClassLoader();
 		for (URL u2 : sysloader.getURLs()) {
 			if (u.equals(u2)) {
