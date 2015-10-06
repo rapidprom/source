@@ -30,6 +30,7 @@ import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.petrinet.replayresult.StepTypes;
 import org.processmining.plugins.pnalignanalysis.conformance.AlignmentPrecGenRes;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 import com.rapidminer.callprom.ClassLoaderUtils;
@@ -41,7 +42,6 @@ import com.rapidminer.example.table.AttributeFactory;
 import com.rapidminer.example.table.DataRow;
 import com.rapidminer.example.table.DataRowFactory;
 import com.rapidminer.example.table.MemoryExampleTable;
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.ProMContextIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;

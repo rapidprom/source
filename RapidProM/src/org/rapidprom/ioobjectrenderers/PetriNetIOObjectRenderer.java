@@ -1,4 +1,4 @@
-package com.rapidminer.ioobjectrenderers;
+package org.rapidprom.ioobjectrenderers;
 
 
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import org.processmining.framework.util.ui.scalableview.interaction.ZoomInteract
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.jgraph.ProMJGraph;
 import org.processmining.models.jgraph.visualization.ProMJGraphPanel;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 import com.rapidminer.gui.renderer.AbstractRenderer;
@@ -34,7 +35,6 @@ import com.rapidminer.gui.renderer.DefaultReadable;
 import com.rapidminer.operator.IOContainer;
 import com.rapidminer.report.Reportable;
 import com.rapidminer.util.Utilities;
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.fluxicon.slickerbox.components.*;
 
 

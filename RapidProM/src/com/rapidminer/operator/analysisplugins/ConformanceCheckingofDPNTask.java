@@ -37,13 +37,13 @@ import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.processmining.plugins.balancedconformance.config.BalancedProcessorConfiguration;
 
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.PetriNetWithDataIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.ioobjects.BalancedReplayResultIOObject;
 
 import org.processmining.plugins.balancedconformance.result.BalancedReplayResult;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 

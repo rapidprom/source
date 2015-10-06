@@ -10,10 +10,10 @@ import org.processmining.models.connections.petrinets.behavioral.InitialMarkingC
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 import com.rapidminer.ioobjects.MarkingIOObject;
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.ProMContextIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;

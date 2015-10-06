@@ -12,7 +12,6 @@ import com.rapidminer.tools.LogService;
 
 import org.processmining.framework.plugin.PluginContext;
 
-import com.rapidminer.ioobjects.PetriNetIOObject;
 import com.rapidminer.ioobjects.ProMContextIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.ioobjects.PetriNetWithDataIOObject;
@@ -20,6 +19,7 @@ import com.rapidminer.ioobjects.MarkingIOObject;
 
 import org.processmining.models.graphbased.directed.petrinetwithdata.newImpl.PetriNetWithData;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class DiscoveryoftheProcessDataFlowTask extends Operator {

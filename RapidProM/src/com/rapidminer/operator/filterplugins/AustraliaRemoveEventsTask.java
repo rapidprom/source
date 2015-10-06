@@ -14,6 +14,7 @@ import com.rapidminer.parameters.*;
 
 import org.processmining.contexts.cli.CLIPluginContext;
 import org.processmining.framework.plugin.PluginContext;
+import org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer;
 import org.rapidprom.prom.CallProm;
 
 import com.rapidminer.ioobjects.ProMContextIOObject;
@@ -21,7 +22,6 @@ import com.rapidminer.ioobjects.ProMContextIOObject;
 import org.deckfour.xes.model.XLog;
 
 import com.rapidminer.ioobjects.XLogIOObject;
-import com.rapidminer.ioobjectrenderers.XLogIOObjectRenderer;
 import com.rapidminer.callprom.ClassLoaderUtils;
 
 import java.io.File;

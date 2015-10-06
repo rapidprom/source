@@ -26,9 +26,9 @@ import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMin;
 
 import com.rapidminer.ioobjects.ClassifierIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
-import com.rapidminer.ioobjects.PetriNetIOObject;
 
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class MinePetrinetwithInductiveMinerTask extends Operator {

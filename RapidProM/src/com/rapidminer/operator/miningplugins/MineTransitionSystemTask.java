@@ -19,7 +19,6 @@ import com.rapidminer.ioobjects.ProMContextIOObject;
 import org.deckfour.xes.model.XLog;
 
 import com.rapidminer.ioobjects.XLogIOObject;
-import com.rapidminer.ioobjectrenderers.XLogIOObjectRenderer;
 
 import org.deckfour.xes.model.XLog;
 
@@ -36,6 +35,7 @@ import org.processmining.plugins.transitionsystem.miner.TSMinerTransitionSystem;
 import org.processmining.models.graphbased.directed.DirectedGraphElementWeights;
 import org.processmining.models.graphbased.directed.transitionsystem.StartStateSet;
 import org.processmining.models.graphbased.directed.transitionsystem.AcceptStateSet;
+import org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer;
 import org.rapidprom.prom.CallProm;
 
 public class MineTransitionSystemTask extends Operator {

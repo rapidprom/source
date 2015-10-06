@@ -11,6 +11,7 @@ import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.tools.LogService;
 
 import org.processmining.framework.plugin.PluginContext;
+import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
 import com.rapidminer.ioobjects.ProMContextIOObject;
@@ -18,7 +19,6 @@ import com.rapidminer.ioobjects.ProMContextIOObject;
 import org.deckfour.xes.model.XLog;
 
 import com.rapidminer.ioobjects.XLogIOObject;
-import com.rapidminer.ioobjects.PetriNetIOObject;
 
 
 public class AustraliaRemoveEvents2Task extends Operator {

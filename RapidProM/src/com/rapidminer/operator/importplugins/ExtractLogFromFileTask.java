@@ -8,10 +8,10 @@ import javax.swing.JOptionPane;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
+import org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer;
+import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
 import org.rapidprom.prom.CallProm;
 
-import com.rapidminer.ioobjectrenderers.XLogIOObjectRenderer;
-import com.rapidminer.ioobjectrenderers.XLogIOObjectVisualizationType;
 import com.rapidminer.ioobjects.ProMContextIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;

@@ -19,7 +19,6 @@ import com.rapidminer.ioobjects.ProMContextIOObject;
 import org.deckfour.xes.model.XLog;
 
 import com.rapidminer.ioobjects.XLogIOObject;
-import com.rapidminer.ioobjectrenderers.XLogIOObjectRenderer;
 
 import org.deckfour.xes.model.XLog;
 
@@ -27,6 +26,7 @@ import com.rapidminer.ioobjects.PredictorIOObject;
 import com.rapidminer.ioobjectrenderers.PredictorIOObjectRenderer;
 
 import org.processmining.prediction.Predictor;
+import org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer;
 import org.rapidprom.prom.CallProm;
 
 public class PerformPredictionsofBusinessProcessFeaturesTask extends Operator {
