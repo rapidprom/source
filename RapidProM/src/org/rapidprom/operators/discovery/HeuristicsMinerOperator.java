@@ -1,4 +1,4 @@
-package com.rapidminer.operator.miningplugins;
+package org.rapidprom.operators.discovery;
 
 import java.util.*;
 
@@ -33,7 +33,7 @@ import com.rapidminer.ioobjects.HeuristicsNetIOObject;
 import org.processmining.models.heuristics.HeuristicsNet;
 import org.rapidprom.prom.CallProm;
 
-public class MineforaHeuristicsNetusingHeuristicsMinerTask extends Operator {
+public class HeuristicsMinerOperator extends Operator {
 
 	private List<Parameter> parametersMineforaHeuristicsNetusingHeuristicsMiner = null;
 
@@ -41,7 +41,7 @@ public class MineforaHeuristicsNetusingHeuristicsMinerTask extends Operator {
 	private InputPort inputXLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
 	private OutputPort outputHeuristicsNet = getOutputPorts().createPort("model (ProM Heuristics Net)");
 
-	public MineforaHeuristicsNetusingHeuristicsMinerTask(OperatorDescription description) {
+	public HeuristicsMinerOperator(OperatorDescription description) {
 		super(description);
 		getTransformer().addRule( new GenerateNewMDRule(outputHeuristicsNet, HeuristicsNetIOObject.class));
 }
