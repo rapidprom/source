@@ -49,37 +49,24 @@ public class ImportPetriNetOperator extends AbstractRapidProMImportOperator {
         Logger logger = LogService.getRoot();
         logger.log(Level.INFO, "Start: importing petri net");
         long time = System.currentTimeMillis();
-
-        Petrinet pn;
+        
         if (checkFileParameterMetaData(PARAMETER_LABEL_FILENAME)) {
-            pn = importPetrinet(getParameterAsFile(PARAMETER_LABEL_FILENAME));
-            PetriNetIOObject petriNetIOObject = new PetriNetIOObject(pn);
+        	
+        	PluginContext context = ProMPluginContextManager.instance().getFutureResultAwareContext(PnmlImportNet.class);
+        	PnmlImportNet importer = new PnmlImportNet();
+        	Object[] result = null;
+        	try {
+    			result = (Object[]) importer.importFile(context, getParameterAsFile(PARAMETER_LABEL_FILENAME));
+    		} catch (Exception e) {
+    			e.printStackTrace();
+    		}
+            PetriNetIOObject petriNetIOObject = new PetriNetIOObject((Petrinet) result[0]);
             petriNetIOObject.setPluginContext(
                     ProMPluginContextManager.instance().getContext());
             outputPetriNet.deliver(petriNetIOObject);
             
             logger.log(Level.INFO, "End: importing petri net (" + (System.currentTimeMillis() - time)/1000 + " sec)");
         }
-    }
-
-    private Petrinet importPetrinet(File file) {
-    	Petrinet result = null;    	
-        try {
-        	PnmlImportUtils utils = new PnmlImportUtils();
-        	PluginContext context = ProMPluginContextManager.instance().getContext();
-        	
-        	Pnml pnml = utils.importPnmlFromStream(context, new FileInputStream(file), file.getName(),file.length());
-        	if (pnml == null) return null;
-        	
-        	PetrinetGraph net = PetrinetFactory.newPetrinet(pnml.getLabel());
-        	
-        	result = (Petrinet) utils.connectNet(context, pnml, net);
-			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-        return result;
     }
 
     
