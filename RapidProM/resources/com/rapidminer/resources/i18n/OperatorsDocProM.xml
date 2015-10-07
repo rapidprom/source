@@ -148,10 +148,10 @@
 	</operator>
     
   <operator>
-  		<name>Petri Net with Data</name>
+  		<name>Import PNML</name>
         <synopsis>This operator is used to import a data annotated petri net</synopsis>
         <help>For using this operator, a context is needed. </help>
-		<key>import_data_petri_net_from_pnml_file</key>
+		<key>import_petri_net_from_pnml_file</key>
 	</operator>
   <operator>
   		<name>Animate Log in Fuzzy Instance</name>

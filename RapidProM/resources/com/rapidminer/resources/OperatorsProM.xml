@@ -19,8 +19,8 @@
                 <class>org.rapidprom.operators.importers.ExtractXLogOperator</class>
             </operator>
             <operator>
-                <key>import_data_petri_net_from_pnml_file</key>
-                <class>com.rapidminer.operator.importplugins.ImportDataPetriNetfromPNMLfileTask</class>
+                <key>import_petri_net_from_pnml_file</key>
+                <class>org.rapidprom.operators.importers.ImportPetriNetOperator</class>
             </operator>
         </group>
         <group key="streams">
