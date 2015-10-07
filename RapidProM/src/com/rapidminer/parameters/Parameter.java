@@ -1,5 +1,6 @@
 package com.rapidminer.parameters;
 
+@Deprecated
 public interface Parameter {
 	
 	public String getNameParameter ();
