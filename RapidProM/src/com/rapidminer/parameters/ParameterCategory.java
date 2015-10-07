@@ -6,15 +6,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+@Deprecated
 public class ParameterCategory implements Parameter {
-	
+
 	private Class clazz = null;
 	private Object defaultValue = null;
-	private Map<Integer,Object> mappingPar = new HashMap<Integer,Object>();
+	private Map<Integer, Object> mappingPar = new HashMap<Integer, Object>();
 	private String nameParameter = "";
 	private String descriptionParameter = "";
-	
-	public ParameterCategory (Object[] categories, Object def, Class clazz, String name, String description) {
+
+	public ParameterCategory(Object[] categories, Object def, Class clazz,
+			String name, String description) {
 		this.clazz = clazz;
 		this.nameParameter = name;
 		this.descriptionParameter = description;
@@ -26,22 +28,23 @@ public class ParameterCategory implements Parameter {
 			counter++;
 		}
 	}
-	
+
 	public Class getClazz() {
 		return this.clazz;
 	}
-	
-	public String getNameParameter () {
+
+	public String getNameParameter() {
 		return this.nameParameter;
 	}
-	
-	public String getDescriptionParameter () {
+
+	public String getDescriptionParameter() {
 		return this.descriptionParameter;
 	}
-	
-	public String[] getOptionsParameter () {
-		String [] options = new String[mappingPar.size()];
-		Iterator<Entry<Integer, Object>> iterator = mappingPar.entrySet().iterator();
+
+	public String[] getOptionsParameter() {
+		String[] options = new String[mappingPar.size()];
+		Iterator<Entry<Integer, Object>> iterator = mappingPar.entrySet()
+				.iterator();
 		int counter = 0;
 		while (iterator.hasNext()) {
 			Entry<Integer, Object> next = iterator.next();
@@ -50,23 +53,24 @@ public class ParameterCategory implements Parameter {
 		}
 		return options;
 	}
-	
-	public Object getValueParameter (Integer index) {
+
+	public Object getValueParameter(Integer index) {
 		return this.mappingPar.get(index);
 	}
-	
-	public int getIndexValue (Object obj) {
-		Iterator<Entry<Integer, Object>> iterator = mappingPar.entrySet().iterator();
+
+	public int getIndexValue(Object obj) {
+		Iterator<Entry<Integer, Object>> iterator = mappingPar.entrySet()
+				.iterator();
 		while (iterator.hasNext()) {
 			Entry<Integer, Object> next = iterator.next();
 			if (next.getValue().equals(obj)) {
-				return next.getKey(); 
+				return next.getKey();
 			}
 		}
 		return -1;
 	}
-	
-	public Object getDefaultValueParameter () {
+
+	public Object getDefaultValueParameter() {
 		return this.defaultValue;
 	}
 
