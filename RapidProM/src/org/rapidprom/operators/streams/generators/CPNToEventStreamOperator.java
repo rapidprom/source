@@ -1,6 +1,9 @@
 package org.rapidprom.operators.streams.generators;
 
+import java.util.EnumSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.processmining.eventstream.authors.cpn.parameters.CPN2XSStreamParameters;
 import org.processmining.eventstream.authors.cpn.plugins.CPNModelToXSEventStreamAuthorPlugin;
@@ -20,7 +23,10 @@ import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.parameter.ParameterTypeInt;
+import com.rapidminer.parameter.ParameterTypeString;
+import com.rapidminer.parameter.conditions.EqualStringCondition;
 import com.rapidminer.tools.LogService;
 
 public class CPNToEventStreamOperator extends Operator {
@@ -32,7 +38,29 @@ public class CPNToEventStreamOperator extends Operator {
 	private static String PARAMETER_LABEL_REPETITIONS = "Repetitions";
 
 	private static String PARAMETER_KEY_STEP_DELAY = "step_delay";
-	private static String PARAMETER_LABEL_STEP_DELAY = "Step delay (ms)";
+	private static String PARAMETER_LABEL_STEP_DELAY = "Step delay (ms) inbetween two consecutive emissions.";
+
+	private static String PARAMETER_KEY_CASE_IDENTIFICATION = "case_identification";
+	private static String PARAMETER_LABEL_CASE_IDENTIFICATION = "Case identification, specifying what how to identify cases within the stream.";
+
+	private static String PARAMETER_KEY_CASE_IDENTIFICATION_VARIABLE = "cpn_variable";
+	private static String PARAMETER_LABEL_CASE_IDENTIFICATION_VARIABLE = "Case identification by CPN variable, denotes what CPN variable to track.";
+	private static String PARAMETER_DEFAULT_VALUE_CASE_IDENTIFICATION_VARIABLE = "trace";
+
+	private enum CaseIdentificationTechniques {
+		REPITITION("by repitition"), CPN_VARIABLE("by a CPN variable");
+
+		private String toString;
+
+		CaseIdentificationTechniques(String toString) {
+			this.toString = toString;
+		}
+
+		@Override
+		public String toString() {
+			return toString;
+		}
+	}
 
 	private InputPort inputCPNModel = getInputPorts()
 			.createPort("model (ProM CPN model)", CPNModelIOObject.class);
@@ -54,8 +82,8 @@ public class CPNToEventStreamOperator extends Operator {
 
 	public void doWork() throws OperatorException {
 
-		LogService logService = LogService.getGlobal();
-		logService.log("start do work Stream Generator", LogService.NOTE);
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "start do work Stream Generator");
 
 		// ProMContextIOObject context =
 		// inputContext.getData(ProMContextIOObject.class);
@@ -74,40 +102,70 @@ public class CPNToEventStreamOperator extends Operator {
 		outputStream
 				.deliver(new XSEventStreamIOObject((XSEventStream) result[1]));
 
-		logService.log("end do work Stream Generator", LogService.NOTE);
+		logger.log(Level.INFO, "start do work Stream Generator");
 	}
 
 	@Override
 	public List<ParameterType> getParameterTypes() {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
-		parameterTypes.add(setupMaxStepsParameter());
-		parameterTypes.add(setupRepetitionsParameter());
-		parameterTypes.add(setupStepDelayParameter());
+		setupMaxStepsParameter(parameterTypes);
+		setupRepetitionsParameter(parameterTypes);
+		setupStepDelayParameter(parameterTypes);
+		setupCaseIdentificationParameter(parameterTypes);
 		return parameterTypes;
 	}
 
-	private ParameterTypeInt setupMaxStepsParameter() {
+	private void setupMaxStepsParameter(List<ParameterType> parameterTypes) {
 		ParameterTypeInt maxSteps = new ParameterTypeInt(
 				PARAMETER_KEY_MAX_STEPS, PARAMETER_LABEL_MAX_STEPS, -1,
 				Integer.MAX_VALUE, -1, true);
 		maxSteps.setOptional(false);
-		return maxSteps;
+		parameterTypes.add(maxSteps);
 	}
 
-	private ParameterTypeInt setupRepetitionsParameter() {
+	private void setupRepetitionsParameter(List<ParameterType> parameterTypes) {
 		ParameterTypeInt repetitions = new ParameterTypeInt(
 				PARAMETER_KEY_REPETITIONS, PARAMETER_LABEL_REPETITIONS, 1,
 				Integer.MAX_VALUE, 1, true);
 		repetitions.setOptional(false);
-		return repetitions;
+		parameterTypes.add(repetitions);
 	}
 
-	private ParameterTypeInt setupStepDelayParameter() {
+	private void setupStepDelayParameter(List<ParameterType> parameterTypes) {
 		ParameterTypeInt stepDelay = new ParameterTypeInt(
 				PARAMETER_KEY_STEP_DELAY, PARAMETER_LABEL_STEP_DELAY, 0,
 				Integer.MAX_VALUE, 0, true);
 		stepDelay.setOptional(false);
-		return stepDelay;
+	}
+
+	private void setupCaseIdentificationParameter(
+			List<ParameterType> parameterTypes) {
+
+		Object[] caseIdentificationTechniques = EnumSet
+				.allOf(CaseIdentificationTechniques.class).toArray();
+		String[] caseIdentificationTechniqueNames = new String[caseIdentificationTechniques.length];
+		for (int i = 0; i < caseIdentificationTechniques.length; i++) {
+			caseIdentificationTechniqueNames[i] = caseIdentificationTechniques[i]
+					.toString();
+		}
+
+		ParameterTypeCategory caseIdentificationCat = new ParameterTypeCategory(
+				PARAMETER_KEY_CASE_IDENTIFICATION,
+				PARAMETER_LABEL_CASE_IDENTIFICATION,
+				caseIdentificationTechniqueNames, 0, true);
+
+		parameterTypes.add(caseIdentificationCat);
+
+		ParameterTypeString caseIdentificationVariable = new ParameterTypeString(
+				PARAMETER_KEY_CASE_IDENTIFICATION_VARIABLE,
+				PARAMETER_LABEL_CASE_IDENTIFICATION_VARIABLE,
+				PARAMETER_DEFAULT_VALUE_CASE_IDENTIFICATION_VARIABLE, true);
+		caseIdentificationVariable.setOptional(true);
+		caseIdentificationVariable
+				.registerDependencyCondition(new EqualStringCondition(this,
+						PARAMETER_KEY_CASE_IDENTIFICATION, true, new String[] {
+								CaseIdentificationTechniques.CPN_VARIABLE.toString }));
+		parameterTypes.add(caseIdentificationVariable);
 	}
 
 }
