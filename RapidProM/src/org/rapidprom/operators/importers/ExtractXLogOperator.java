@@ -15,11 +15,9 @@ public class ExtractXLogOperator extends AbstractImportXLogOperator {
 	private InputPort inputfile = getInputPorts().createPort("file",
 			FileObject.class);
 
-
 	public ExtractXLogOperator(OperatorDescription description) {
 		super(description);
 	}
-	
 
 	@Override
 	protected File getFile() throws UserError {

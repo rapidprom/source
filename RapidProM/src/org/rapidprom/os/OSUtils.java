@@ -9,14 +9,27 @@ import com.sun.management.OperatingSystemMXBean;
 
 public class OSUtils {
 
+	// hooray for eclipse auto formatting!!! triangular style, i love it.
 	public enum OperatingSystem {
 		WINDOWS_32("windows", true, "win32"), WINDOWS_64("windows", false,
 				"win64"), LINUX_32("linux", true, "lin32"), LINUX_64("linux",
-				false, "lin64"), OS_X_32("mac os x", true, "mac32"), OS_X_64(
-				"mac os x", false, "mac64"), BSD_32("bsd", true, "lin32"), BSD_64(
-				"bsd", false, "lin64"), RISCOS_32("risc os", true, "lin32"), RISCOS_64(
-				"risc os", false, "lin64"), BEOS_32("beos", true, "lin32"), BEOS_64(
-				"beos", false, "lin64"), UNKNOWN("unknown", false, "unknown");
+						false,
+						"lin64"), OS_X_32("mac os x", true, "mac32"), OS_X_64(
+								"mac os x", false,
+								"mac64"), BSD_32("bsd", true, "lin32"), BSD_64(
+										"bsd", false,
+										"lin64"), RISCOS_32("risc os", true,
+												"lin32"), RISCOS_64("risc os",
+														false,
+														"lin64"), BEOS_32(
+																"beos", true,
+																"lin32"), BEOS_64(
+																		"beos",
+																		false,
+																		"lin64"), UNKNOWN(
+																				"unknown",
+																				false,
+																				"unknown");
 
 		private final String name;
 		private final boolean is32Bit;
@@ -108,10 +121,6 @@ public class OSUtils {
 		return currentOs;
 	}
 
-	private static boolean is64Bit() {
-		return System.getProperty("sun.arch.data.model").equals("64");
-	}
-
 	private static boolean is32Bit() {
 		return System.getProperty("sun.arch.data.model").equals("32");
 	}
@@ -124,15 +133,15 @@ public class OSUtils {
 			File here = new File(".");
 			try {
 				if (new File(here.getAbsolutePath() + "/ProM.app").exists()) {
-					System.out
-							.println("--> Mac OS X: running from application bundle (1).");
+					System.out.println(
+							"--> Mac OS X: running from application bundle (1).");
 					File nextHere = new File(here.getCanonicalPath()
 							+ "/ProM.app/Contents/Resources/ProMhome");
 					System.setProperty("user.dir", nextHere.getCanonicalPath());
-				} else if (here.getAbsolutePath().matches(
-						"^(.*)ProM\\.app(/*)$")) {
-					System.out
-							.println("--> Mac OS X: running from application bundle (2).");
+				} else if (here.getAbsolutePath()
+						.matches("^(.*)ProM\\.app(/*)$")) {
+					System.out.println(
+							"--> Mac OS X: running from application bundle (2).");
 					File nextHere = new File(here.getCanonicalPath()
 							+ "/Contents/Resources/ProMhome");
 					System.setProperty("user.dir", nextHere.getCanonicalPath());

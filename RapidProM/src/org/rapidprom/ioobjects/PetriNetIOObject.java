@@ -1,6 +1,5 @@
 package org.rapidprom.ioobjects;
 
-import org.processmining.contexts.cli.CLIPluginContext;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 
@@ -12,8 +11,9 @@ import com.rapidminer.operator.ResultObjectAdapter;
  * @author rmans
  *
  */
-public class PetriNetIOObject extends ResultObjectAdapter implements ProMIOObject {
-	
+public class PetriNetIOObject extends ResultObjectAdapter
+		implements ProMIOObject {
+
 	/**
 	 * generated
 	 */
@@ -21,8 +21,8 @@ public class PetriNetIOObject extends ResultObjectAdapter implements ProMIOObjec
 	private Petrinet pn = null;
 	// needed for rendering
 	private PluginContext pc = null;
-	
-	public PetriNetIOObject (Petrinet pn) {
+
+	public PetriNetIOObject(Petrinet pn) {
 		this.pn = pn;
 	}
 
@@ -33,15 +33,15 @@ public class PetriNetIOObject extends ResultObjectAdapter implements ProMIOObjec
 	public void setPn(Petrinet pn) {
 		this.pn = pn;
 	}
-	
-	public void setPluginContext (PluginContext pc) {
+
+	public void setPluginContext(PluginContext pc) {
 		this.pc = pc;
 	}
-	
-	public PluginContext getPluginContext () {
+
+	public PluginContext getPluginContext() {
 		return this.pc;
 	}
-	
+
 	@Override
 	public String toResultString() {
 		String extractName = pn.getLabel();

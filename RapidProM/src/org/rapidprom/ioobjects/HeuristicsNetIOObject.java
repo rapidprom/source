@@ -1,27 +1,28 @@
 package org.rapidprom.ioobjects;
 
-import com.rapidminer.ioobjects.ProMIOObject;
-import com.rapidminer.operator.ResultObjectAdapter;
-
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.heuristics.HeuristicsNet;
 
-public class HeuristicsNetIOObject extends ResultObjectAdapter implements ProMIOObject {
+import com.rapidminer.ioobjects.ProMIOObject;
+import com.rapidminer.operator.ResultObjectAdapter;
+
+public class HeuristicsNetIOObject extends ResultObjectAdapter
+		implements ProMIOObject {
 
 	private static final long serialVersionUID = 1L;
 
 	private PluginContext pc = null;
 	private HeuristicsNet heuristicsNet = null;
 
-	public HeuristicsNetIOObject (HeuristicsNet heuristicsNet) {
+	public HeuristicsNetIOObject(HeuristicsNet heuristicsNet) {
 		this.heuristicsNet = heuristicsNet;
 	}
 
-	public void setPluginContext (PluginContext pc) {
+	public void setPluginContext(PluginContext pc) {
 		this.pc = pc;
 	}
 
-	public PluginContext getPluginContext () {
+	public PluginContext getPluginContext() {
 		return this.pc;
 	}
 
@@ -45,7 +46,7 @@ public class HeuristicsNetIOObject extends ResultObjectAdapter implements ProMIO
 	@Override
 	public void clear() {
 		this.pc = null;
-		this.heuristicsNet = null;		
+		this.heuristicsNet = null;
 	}
 
 }

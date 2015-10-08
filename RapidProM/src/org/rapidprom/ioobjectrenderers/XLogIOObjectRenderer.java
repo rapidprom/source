@@ -14,10 +14,11 @@ import org.processmining.plugins.log.ui.logdialog.LogDialogInitializer;
 import org.processmining.plugins.log.ui.logdialog.SlickerOpenLogSettings;
 import org.rapidprom.AbstractMultipleVisualizersRenderer;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjects.XLogIOObject;
+
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;
 import com.rapidminer.gui.tools.ExtendedJScrollPane;
 import com.rapidminer.gui.tools.ExtendedJTable;
-import org.rapidprom.ioobjects.XLogIOObject;
 import com.rapidminer.operator.IOContainer;
 import com.rapidminer.report.Reportable;
 import com.rapidminer.util.XLogUtils;
@@ -36,21 +37,20 @@ public class XLogIOObjectRenderer extends
 	private WeakReference<XLog> exampleSetLog = null;
 	private Component defaultComponent = null;
 	private WeakReference<XLog> defaultLog = null;
-	private Component xDottedChartComponent = null; //TO-DO
-	private WeakReference<XLog> xDottedLog = null;
+	// private Component xDottedChartComponent = null; //TO-DO
+	// private WeakReference<XLog> xDottedLog = null;
 
-	protected Component visualizeRendererOption(
-			XLogIOObjectVisualizationType e, Object renderable,
-			IOContainer ioContainer) {
+	protected Component visualizeRendererOption(XLogIOObjectVisualizationType e,
+			Object renderable, IOContainer ioContainer) {
 		Component result;
-		switch (e) {		
+		switch (e) {
 		case EXAMPLE_SET:
 			result = createExampleSetComponet(renderable, ioContainer);
 			break;
 		default:
 		case DEFAULT:
 			result = createDefaultVisualizerComponent(renderable, ioContainer);
-			break;			
+			break;
 		}
 		return result;
 	}
@@ -63,8 +63,8 @@ public class XLogIOObjectRenderer extends
 				|| !(log.equals(exampleSetLog.get()))) {
 			final List<String> columnNames = new ArrayList<String>();
 			System.out.println("Render!");
-			ColumnNamesLog columnNames2 = XLogUtils.getColumnNames(object
-					.getPromLog());
+			ColumnNamesLog columnNames2 = XLogUtils
+					.getColumnNames(object.getPromLog());
 			columnNames.addAll(columnNames2.getAttribsTrace());
 			columnNames.addAll(columnNames2.getAttribsEvents());
 			try {
@@ -75,8 +75,8 @@ public class XLogIOObjectRenderer extends
 			} catch (Exception error) {
 				error.printStackTrace();
 			}
-			exampleSetComponent = new ExtendedJScrollPane(new ExtendedJTable(
-					new DefaultTableModel(), true, true));
+			exampleSetComponent = new ExtendedJScrollPane(
+					new ExtendedJTable(new DefaultTableModel(), true, true));
 			exampleSetLog = new WeakReference<XLog>(log);
 		}
 		return exampleSetComponent;
@@ -90,9 +90,10 @@ public class XLogIOObjectRenderer extends
 		if (defaultComponent == null || defaultLog == null
 				|| !(xLog.equals(defaultLog.get()))) {
 			try {
-								
-				PluginContext pluginContext = ProMPluginContextManager.instance().getContext();
-				
+
+				PluginContext pluginContext = ProMPluginContextManager
+						.instance().getContext();
+
 				LogDialogInitializer i = new LogDialogInitializer();
 				SlickerOpenLogSettings o = new SlickerOpenLogSettings();
 
@@ -109,8 +110,8 @@ public class XLogIOObjectRenderer extends
 
 	public Reportable createReportable(Object renderable,
 			IOContainer ioContainer, int desiredWidth, int desiredHeight) {
-		return new DefaultComponentRenderable(getVisualizationComponent(renderable,
-				ioContainer));
+		return new DefaultComponentRenderable(
+				getVisualizationComponent(renderable, ioContainer));
 	}
 
 }

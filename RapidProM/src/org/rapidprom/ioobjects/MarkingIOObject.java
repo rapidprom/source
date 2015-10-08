@@ -1,27 +1,28 @@
 package org.rapidprom.ioobjects;
 
-import com.rapidminer.ioobjects.ProMIOObject;
-import com.rapidminer.operator.ResultObjectAdapter;
-
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.semantics.petrinet.Marking;
 
-public class MarkingIOObject extends ResultObjectAdapter implements ProMIOObject {
+import com.rapidminer.ioobjects.ProMIOObject;
+import com.rapidminer.operator.ResultObjectAdapter;
+
+public class MarkingIOObject extends ResultObjectAdapter
+		implements ProMIOObject {
 
 	private static final long serialVersionUID = 1L;
 
 	private PluginContext pc = null;
 	private Marking marking = null;
 
-	public MarkingIOObject (Marking marking) {
+	public MarkingIOObject(Marking marking) {
 		this.marking = marking;
 	}
 
-	public void setPluginContext (PluginContext pc) {
+	public void setPluginContext(PluginContext pc) {
 		this.pc = pc;
 	}
 
-	public PluginContext getPluginContext () {
+	public PluginContext getPluginContext() {
 		return this.pc;
 	}
 
