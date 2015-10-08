@@ -48,7 +48,7 @@
             </operator>
             <operator>
                 <key>heuristics_miner</key>
-                <class>com.rapidminer.operator.miningplugins.MineforaHeuristicsNetusingHeuristicsMinerTask</class>
+                <class>org.rapidprom.operators.discovery.HeuristicsMinerOperator</class>
             </operator>
             <operator>
                 <key>dotted_chart_analysis</key>

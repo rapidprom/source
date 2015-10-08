@@ -1,6 +1,8 @@
 package org.rapidprom.operators.discovery;
 
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
@@ -9,35 +11,32 @@ import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.tools.LogService;
-import com.rapidminer.util.ProMIOObjectList;
-import com.rapidminer.util.Utilities;
 import com.rapidminer.parameter.*;
-import com.rapidminer.parameters.*;
 
-import org.deckfour.xes.classification.XEventAndClassifier;
-import org.deckfour.xes.classification.XEventAttributeClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventLifeTransClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
-
-import com.rapidminer.ioobjects.ProMContextIOObject;
-
+import org.processmining.plugins.heuristicsnet.miner.heuristics.miner.FlexibleHeuristicsMinerPlugin;
 import org.processmining.plugins.heuristicsnet.miner.heuristics.miner.LogUtility;
 import org.processmining.plugins.heuristicsnet.miner.heuristics.miner.settings.HeuristicsMinerSettings;
 
-import com.rapidminer.ioobjects.XLogIOObject;
-import com.rapidminer.ioobjects.HeuristicsNetIOObject;
-
-import org.processmining.models.heuristics.HeuristicsNet;
-import org.rapidprom.prom.CallProm;
+import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjects.HeuristicsNetIOObject;
 
 public class HeuristicsMinerOperator extends Operator {
+	
+	//Parameter keys (also used as description)
+	public static final String
+		PARAMETER_1 = "Threshold: Relative-to-best",
+		PARAMETER_2 = "Threshold: Dependency",
+		PARAMETER_3 = "Threshold: Length-one-loops",
+		PARAMETER_4 = "Threshold: Length-two-loops",
+		PARAMETER_5 = "Threshold: Long distance",
+		PARAMETER_6 = "All tasks connected",
+		PARAMETER_7 = "Long distance dependency",
+		PARAMETER_8 = "Ignore loop dependency thresholds";		
 
-	private List<Parameter> parametersMineforaHeuristicsNetusingHeuristicsMiner = null;
-
-	private InputPort inputContext = getInputPorts().createPort("context (ProM Context)", ProMContextIOObject.class);
 	private InputPort inputXLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
 	private OutputPort outputHeuristicsNet = getOutputPorts().createPort("model (ProM Heuristics Net)");
 
@@ -47,135 +46,76 @@ public class HeuristicsMinerOperator extends Operator {
 }
 
 	public void doWork() throws OperatorException {
-		LogService logService = LogService.getGlobal();
-		logService.log("start do work Mine for a Heuristics Net using Heuristics Miner", LogService.NOTE);
-		ProMContextIOObject context = inputContext.getData(ProMContextIOObject.class);
-		PluginContext pluginContext = context.getPluginContext();
-		List<Object> pars = new ArrayList<Object>();
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "Start: heuristics miner");
+		long time = System.currentTimeMillis();
+		
+		PluginContext pluginContext = ProMPluginContextManager.instance().getFutureResultAwareContext(FlexibleHeuristicsMinerPlugin.class);	
 		XLogIOObject XLogdata = inputXLog.getData(XLogIOObject.class);
-		pars.add(XLogdata.getData());
-
-		HeuristicsMinerSettings heuristicsMinerSettings = getConfiguration(this.parametersMineforaHeuristicsNetusingHeuristicsMiner, XLogdata.getData());
-		pars.add(heuristicsMinerSettings);
-		CallProm cp = new CallProm();
-		Object[] runPlugin = cp.runPlugin(pluginContext, "XX", "Mine for a Heuristics Net using Heuristics Miner", pars);
-		HeuristicsNetIOObject heuristicsNetIOObject = new HeuristicsNetIOObject((HeuristicsNet) runPlugin[0]);
+		HeuristicsMinerSettings heuristicsMinerSettings = getConfiguration(XLogdata.getData());
+		
+		HeuristicsNetIOObject heuristicsNetIOObject = new HeuristicsNetIOObject(FlexibleHeuristicsMinerPlugin .run(pluginContext, XLogdata.getData(), heuristicsMinerSettings));
 		heuristicsNetIOObject.setPluginContext(pluginContext);
-		// add to list so that afterwards it can be cleared if needed
-		ProMIOObjectList instance = ProMIOObjectList.getInstance();
-		instance.addToList(heuristicsNetIOObject);
-		outputHeuristicsNet.deliver(heuristicsNetIOObject);
-		logService.log("end do work Mine for a Heuristics Net using Heuristics Miner", LogService.NOTE);
+		
+		outputHeuristicsNet.deliver(heuristicsNetIOObject);	
+		
+		logger.log(Level.INFO, "End: heuristics miner (" + (System.currentTimeMillis() - time)/1000 + " sec)");
 	}
 
 	public List<ParameterType> getParameterTypes() {
-		loadRequiredClasses();
-		this.parametersMineforaHeuristicsNetusingHeuristicsMiner = new ArrayList<Parameter>();
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
-		ParameterDouble parameter1 = new ParameterDouble(5, 0, 100, 0.01, Double.class, "Threshold: Relative-to-best", "getRelativeToBestThreshold");
-		ParameterTypeDouble parameterType1 = new ParameterTypeDouble(parameter1.getNameParameter(), parameter1.getDescriptionParameter(), parameter1.getMin(), parameter1.getMax(), (Double) parameter1.getDefaultValueParameter());
-		parameterTypes.add(parameterType1);
-		parametersMineforaHeuristicsNetusingHeuristicsMiner.add(parameter1);
+		ParameterTypeDouble parameter1 = new ParameterTypeDouble(PARAMETER_1, PARAMETER_1, 0, 100, 5);
+		parameterTypes.add(parameter1);
 		
-		ParameterDouble parameter2 = new ParameterDouble(90, 0, 100, 0.01, Double.class, "Threshold: Dependency", "getDependencyThreshold");
-		ParameterTypeDouble parameterType2 = new ParameterTypeDouble(parameter2.getNameParameter(), parameter2.getDescriptionParameter(), parameter2.getMin(), parameter2.getMax(), (Double) parameter2.getDefaultValueParameter());
-		parameterTypes.add(parameterType2);
-		parametersMineforaHeuristicsNetusingHeuristicsMiner.add(parameter2);
+		ParameterTypeDouble parameter2 = new ParameterTypeDouble(PARAMETER_2, PARAMETER_2, 0, 100, 90);
+		parameterTypes.add(parameter2);
 		
-		ParameterDouble parameter3 = new ParameterDouble(90, 0, 100, 0.01, Double.class, "Threshold: Length-one-loops", "getL1lThreshold");
-		ParameterTypeDouble parameterType3 = new ParameterTypeDouble(parameter3.getNameParameter(), parameter3.getDescriptionParameter(), parameter3.getMin(), parameter3.getMax(), (Double) parameter3.getDefaultValueParameter());
-		parameterTypes.add(parameterType3);
-		parametersMineforaHeuristicsNetusingHeuristicsMiner.add(parameter3);
+		ParameterTypeDouble parameter3 = new ParameterTypeDouble(PARAMETER_3, PARAMETER_3, 0, 100, 90);
+		parameterTypes.add(parameter3);
 
-		ParameterDouble parameter4 = new ParameterDouble(90, 0, 100, 0.01, Double.class, "Threshold: Length-two-loops", "getL2lThreshold");
-		ParameterTypeDouble parameterType4 = new ParameterTypeDouble(parameter4.getNameParameter(), parameter4.getDescriptionParameter(), parameter4.getMin(), parameter4.getMax(), (Double) parameter4.getDefaultValueParameter());
-		parameterTypes.add(parameterType4);
-		parametersMineforaHeuristicsNetusingHeuristicsMiner.add(parameter4);
+		ParameterTypeDouble parameter4 = new ParameterTypeDouble(PARAMETER_4, PARAMETER_4 , 0, 100, 90);
+		parameterTypes.add(parameter4);
 
-		ParameterDouble parameter5 = new ParameterDouble(90, 0, 100, 0.01, Double.class, "Threshold: Long distance", "getLongDistanceThreshold");
-		ParameterTypeDouble parameterType5 = new ParameterTypeDouble(parameter5.getNameParameter(), parameter5.getDescriptionParameter(), parameter5.getMin(), parameter5.getMax(), (Double) parameter5.getDefaultValueParameter());
-		parameterTypes.add(parameterType5);
-		parametersMineforaHeuristicsNetusingHeuristicsMiner.add(parameter5);
-
+		ParameterTypeDouble parameter5 = new ParameterTypeDouble(PARAMETER_5, PARAMETER_5, 0, 100, 90);
+		parameterTypes.add(parameter5);
 	
-		ParameterBoolean parameter6 = new ParameterBoolean(true, Boolean.class, "All tasks connected","isUseAllConnectedHeuristics");
-		ParameterTypeBoolean parameterType6 = new ParameterTypeBoolean(parameter6.getNameParameter(), parameter6.getDescriptionParameter(), parameter6.getDefaultValueParameter());
-		parameterTypes.add(parameterType6);
-		parametersMineforaHeuristicsNetusingHeuristicsMiner.add(parameter6);
+		ParameterTypeBoolean parameter6 = new ParameterTypeBoolean(PARAMETER_6, PARAMETER_6, true);
+		parameterTypes.add(parameter6);
 
-		ParameterBoolean parameter7 = new ParameterBoolean(false, Boolean.class, "Long distance dependency","isUseLongDistanceDependency");
-		ParameterTypeBoolean parameterType7 = new ParameterTypeBoolean(parameter7.getNameParameter(), parameter7.getDescriptionParameter(), parameter7.getDefaultValueParameter());
-		parameterTypes.add(parameterType7);
-		parametersMineforaHeuristicsNetusingHeuristicsMiner.add(parameter7);
+		ParameterTypeBoolean parameter7 = new ParameterTypeBoolean(PARAMETER_7, PARAMETER_7, false);
+		parameterTypes.add(parameter7);
 
-		ParameterBoolean parameter8 = new ParameterBoolean(true, Boolean.class, "Ignore loop dependency thresholds","Ignore loop dependency thresholds");
-		ParameterTypeBoolean parameterType8 = new ParameterTypeBoolean(parameter8.getNameParameter(), parameter8.getDescriptionParameter(), parameter8.getDefaultValueParameter());
-		parameterTypes.add(parameterType8);
-		parametersMineforaHeuristicsNetusingHeuristicsMiner.add(parameter8);
-
+		ParameterTypeBoolean parameter8 = new ParameterTypeBoolean(PARAMETER_8, PARAMETER_8, true);
+		parameterTypes.add(parameter8);
+		
+		
 		return parameterTypes;
 	}
 
-	private HeuristicsMinerSettings getConfiguration(List<Parameter> parametersMineforaHeuristicsNetusingHeuristicsMiner, XLog log) {
+	private HeuristicsMinerSettings getConfiguration(XLog log) {
 		HeuristicsMinerSettings heuristicsMinerSettings = new HeuristicsMinerSettings();
-		try {
-
-
-		Parameter parameter3 = parametersMineforaHeuristicsNetusingHeuristicsMiner.get(0);
-		double par3int = getParameterAsDouble(parameter3.getNameParameter());
-		heuristicsMinerSettings.setRelativeToBestThreshold(par3int/100d);
-
-		Parameter parameter4 = parametersMineforaHeuristicsNetusingHeuristicsMiner.get(1);
-		double par4int = getParameterAsDouble(parameter4.getNameParameter());
-		heuristicsMinerSettings.setDependencyThreshold(par4int/100d);
-
-		Parameter parameter5 = parametersMineforaHeuristicsNetusingHeuristicsMiner.get(2);
-		double par5int = getParameterAsDouble(parameter5.getNameParameter());
-		heuristicsMinerSettings.setL1lThreshold(par5int/100d);
-
-		Parameter parameter6 = parametersMineforaHeuristicsNetusingHeuristicsMiner.get(3);
-		double par6int = getParameterAsDouble(parameter6.getNameParameter());
-		heuristicsMinerSettings.setL2lThreshold(par6int/100d);
-
-		Parameter parameter7 = parametersMineforaHeuristicsNetusingHeuristicsMiner.get(4);
-		double par7int = getParameterAsDouble(parameter7.getNameParameter());
-		heuristicsMinerSettings.setLongDistanceThreshold(par7int/100d);
-
-		Parameter parameter8 = parametersMineforaHeuristicsNetusingHeuristicsMiner.get(5);
-		boolean valPar8 = getParameterAsBoolean(parameter8.getNameParameter());
-		heuristicsMinerSettings.setUseAllConnectedHeuristics(valPar8);
-
-		Parameter parameter10 = parametersMineforaHeuristicsNetusingHeuristicsMiner.get(6);
-		boolean valPar10 = getParameterAsBoolean(parameter10.getNameParameter());
-		heuristicsMinerSettings.setUseLongDistanceDependency(valPar10);
-
-		Parameter parameter11 = parametersMineforaHeuristicsNetusingHeuristicsMiner.get(7);
-		boolean valPar11 = getParameterAsBoolean(parameter11.getNameParameter());
-		heuristicsMinerSettings.setCheckBestAgainstL2L(valPar11);
-		
-		heuristicsMinerSettings.setAndThreshold(Double.NaN);
-		
-		
-		/*
-		 * XEventClassifier nameCl = new XEventNameClassifier();
-            XEventClassifier lifeTransCl = new XEventLifeTransClassifier();
-            XEventAttributeClassifier attrClass = new XEventAndClassifier(nameCl, lifeTransCl);
-		 */
-		for(XEventClassifier clas :  LogUtility.getEventClassifiers(log))
-			if(clas != null)
-			{
-				heuristicsMinerSettings.setClassifier(clas);
-				break;
-			}
-		
+		try {			
+			heuristicsMinerSettings.setRelativeToBestThreshold(getParameterAsDouble(PARAMETER_1)/100d);
+			heuristicsMinerSettings.setDependencyThreshold(getParameterAsDouble(PARAMETER_2)/100d);
+			heuristicsMinerSettings.setL1lThreshold(getParameterAsDouble(PARAMETER_3)/100d);
+			heuristicsMinerSettings.setL2lThreshold(getParameterAsDouble(PARAMETER_4)/100d);
+			heuristicsMinerSettings.setLongDistanceThreshold(getParameterAsDouble(PARAMETER_5)/100d);
+			heuristicsMinerSettings.setUseAllConnectedHeuristics(getParameterAsBoolean(PARAMETER_6));
+			heuristicsMinerSettings.setUseLongDistanceDependency(getParameterAsBoolean(PARAMETER_7));
+			heuristicsMinerSettings.setCheckBestAgainstL2L(getParameterAsBoolean(PARAMETER_8));
+			heuristicsMinerSettings.setAndThreshold(Double.NaN);			
+			
+			//for now it just uses the first classifier available in the xlog
+			for(XEventClassifier clas :  LogUtility.getEventClassifiers(log))
+				if(clas != null)
+				{
+					heuristicsMinerSettings.setClassifier(clas);
+					break;
+				}					
 		} catch (UndefinedParameterError e) {
 			e.printStackTrace();
-		}
-	return heuristicsMinerSettings;
-	}
-	
-	private void loadRequiredClasses () {
-		Utilities.loadRequiredClasses();
+		}		
+		return heuristicsMinerSettings;
 	}
 }

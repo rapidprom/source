@@ -14,11 +14,11 @@ import com.rapidminer.util.ProMIOObjectList;
 import org.processmining.framework.plugin.PluginContext;
 
 import com.rapidminer.ioobjects.ProMContextIOObject;
-import com.rapidminer.ioobjects.HeuristicsNetIOObject;
 import com.rapidminer.ioobjects.MarkingIOObject;
 
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.rapidprom.ioobjects.HeuristicsNetIOObject;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 

@@ -1,5 +1,6 @@
-package com.rapidminer.ioobjects;
+package org.rapidprom.ioobjects;
 
+import com.rapidminer.ioobjects.ProMIOObject;
 import com.rapidminer.operator.ResultObjectAdapter;
 
 import org.processmining.framework.plugin.PluginContext;

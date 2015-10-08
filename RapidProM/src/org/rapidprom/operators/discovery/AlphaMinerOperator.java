@@ -24,7 +24,6 @@ public class AlphaMinerOperator extends Operator {
 	/** defining the ports */
 	private InputPort inputLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
 	private OutputPort output = getOutputPorts().createPort("model (ProM Petri Net)");
-	private OutputPort outputMarking = getOutputPorts().createPort("marking (ProM marking)");
 
 	/**
 	 * The default constructor needed in exactly this signature
@@ -34,7 +33,6 @@ public class AlphaMinerOperator extends Operator {
 
 		/** Adding a rule for the output */
 		getTransformer().addRule( new GenerateNewMDRule(output, PetriNetIOObject.class));
-		getTransformer().addRule( new GenerateNewMDRule(outputMarking, MarkingIOObject.class));
 	}
 
 	@Override
@@ -54,11 +52,7 @@ public class AlphaMinerOperator extends Operator {
 			PetriNetIOObject petriNetIOObject = new PetriNetIOObject((Petrinet) result[0]);
 			petriNetIOObject.setPluginContext(pluginContext);
 
-			MarkingIOObject marking = new MarkingIOObject((Marking) result[1]);
-			marking.setPluginContext(pluginContext);
-
-			output.deliver(petriNetIOObject);
-			outputMarking.deliver(marking);
+			output.deliver(petriNetIOObject);			
 		}
 		catch(Exception e)
 		{

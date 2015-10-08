@@ -454,7 +454,7 @@
   	  </operator>
   	  
   	   <operator>
-        <name>Heuristics Miner (Heuristics Net)</name>
+        <name>Heuristics Miner</name>
         <synopsis>This operator can be used to execute the Heuristics Miner algorithm.</synopsis>
         <help>This operator can be used to execute the Heuristics Miner algorithm which provides a Heuristics Net. As input a ProM context and a log file is needed.</help>
     	<key>heuristics_miner</key>

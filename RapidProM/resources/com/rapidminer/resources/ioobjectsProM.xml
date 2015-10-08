@@ -139,9 +139,9 @@
 	
 	<ioobject
 		name="HeuristicsNetProM"
-		class="com.rapidminer.ioobjects.HeuristicsNetIOObject"
+		class="org.rapidprom.ioobjects.HeuristicsNetIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.HeuristicsNetIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.HeuristicsNetIOObjectRenderer</renderer>
 	</ioobject>
 	
 	<ioobject
