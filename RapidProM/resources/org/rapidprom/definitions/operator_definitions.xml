@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<operators name="ProMVersion6" version="5.0" docbundle="com/rapidminer/resources/i18n/OperatorsDocProM">
+<operators name="ProMVersion6" version="5.0" docbundle="org/rapidprom/descriptions/operator_descriptions">
     <group key="ProM6">
         <group key="import">
             <operator>
@@ -36,7 +36,7 @@
             </operator>
             <operator>
                 <key>ilp_miner</key>
-                <class>com.rapidminer.operator.miningplugins.ILPMinerTask</class>
+                <class>org.rapidprom.operators.discovery.ILPMinerOperator</class>
             </operator>
             <operator>
                 <key>genetic_miner</key>

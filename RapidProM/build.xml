@@ -16,13 +16,13 @@
     <property name="extension.dependencies" value=""/>
 
     <property name="extension.initClass" value="org.rapidprom.RapidProMInitializer"/>
-    <property name="extension.objectDefinition" value="/com/rapidminer/resources/ioobjectsProM.xml"/>
-    <property name="extension.operatorDefinition" value="/com/rapidminer/resources/OperatorsProM.xml"/>
-    <property name="extension.parseRuleDefinition" value="/com/rapidminer/resources/parserulesProM.xml"/>
-    <property name="extension.groupProperties" value="/com/rapidminer/resources/groupsProM.properties"/>
-    <property name="extension.errorDescription" value="/com/rapidminer/resources/i18n/ErrorsProM.properties"/>
-    <property name="extension.userErrors" value="/com/rapidminer/resources/i18n/UserErrorMessagesProM.properties"/>
-    <property name="extension.guiDescription" value="/com/rapidminer/resources/i18n/GUIProM.properties"/>
+    <property name="extension.objectDefinition" value="/org/rapidprom/definitions/ioobject_definitions.xml"/>
+    <property name="extension.operatorDefinition" value="/org/rapidprom/definitions/operator_definitions.xml"/>
+    <property name="extension.parseRuleDefinition" value="/org/rapidprom/parse_rules.xml"/>
+    <property name="extension.groupProperties" value="/org/rapidprom/properties/groups.properties"/>
+    <property name="extension.errorDescription" value="/org/rapidprom/properties/errors.properties"/>
+    <property name="extension.userErrors" value="/org/rapidprom/properties/user_error_messages.properties"/>
+    <property name="extension.guiDescription" value="/org/rapidprom/properties/gui.properties"/>
 
     <property name="ivy.lib.dir" value="ivy"/>
     <property name="ivy.lib.location" value="${user.home}/.ant/lib/ivy"/>
