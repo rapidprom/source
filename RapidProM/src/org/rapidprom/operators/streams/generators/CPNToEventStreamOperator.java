@@ -184,7 +184,7 @@ public class CPNToEventStreamOperator extends Operator {
 				PARAMETER_KEY_INCLUDE_ADDITIONAL_DATA,
 				PARAMETER_LABEL_INCLUDE_ADDITIONAL_DATA, false);
 		includeVariablesParam.setOptional(false);
-		includeVariablesParam.setExpert(true);
+		includeVariablesParam.setExpert(false);
 		parameterTypes.add(includeVariablesParam);
 		return parameterTypes;
 	}
@@ -194,7 +194,7 @@ public class CPNToEventStreamOperator extends Operator {
 		ParameterTypeCategory caseIdentificationCat = new ParameterTypeCategory(
 				PARAMETER_KEY_CASE_IDENTIFICATION,
 				PARAMETER_LABEL_CASE_IDENTIFICATION,
-				PARAMETER_OPTIONS_CASE_IDENTIFICATION, 0, true);
+				PARAMETER_OPTIONS_CASE_IDENTIFICATION, 0, false);
 
 		parameterTypes.add(caseIdentificationCat);
 
@@ -203,7 +203,7 @@ public class CPNToEventStreamOperator extends Operator {
 				PARAMETER_LABEL_CASE_IDENTIFICATION_VARIABLE,
 				new String(
 						PARAMETER_DEFAULT_VALUE_CASE_IDENTIFICATION_VARIABLE),
-				true);
+				false);
 		caseIdentificationVariable.setOptional(true);
 		caseIdentificationVariable
 				.registerDependencyCondition(new EqualStringCondition(this,
@@ -220,7 +220,7 @@ public class CPNToEventStreamOperator extends Operator {
 				PARAMETER_LABEL_COMMUNIATION_TYPE,
 				PARAMETER_OPTIONS_COMMUNICATION_TYPE, 0);
 		communicationTypeParam.setOptional(false);
-		communicationTypeParam.setExpert(true);
+		communicationTypeParam.setExpert(false);
 		parameterTypes.add(communicationTypeParam);
 		return parameterTypes;
 	}
@@ -229,7 +229,7 @@ public class CPNToEventStreamOperator extends Operator {
 			List<ParameterType> parameterTypes) {
 		ParameterTypeInt maxSteps = new ParameterTypeInt(
 				PARAMETER_KEY_MAX_STEPS, PARAMETER_LABEL_MAX_STEPS, -1,
-				Integer.MAX_VALUE, -1, true);
+				Integer.MAX_VALUE, -1, false);
 		maxSteps.setOptional(false);
 		parameterTypes.add(maxSteps);
 		return parameterTypes;
@@ -239,7 +239,7 @@ public class CPNToEventStreamOperator extends Operator {
 			List<ParameterType> parameterTypes) {
 		ParameterTypeInt repetitions = new ParameterTypeInt(
 				PARAMETER_KEY_REPETITIONS, PARAMETER_LABEL_REPETITIONS, 1,
-				Integer.MAX_VALUE, 1, true);
+				Integer.MAX_VALUE, 1, false);
 		repetitions.setOptional(false);
 		parameterTypes.add(repetitions);
 		return parameterTypes;
@@ -249,7 +249,7 @@ public class CPNToEventStreamOperator extends Operator {
 			List<ParameterType> parameterTypes) {
 		ParameterTypeInt stepDelay = new ParameterTypeInt(
 				PARAMETER_KEY_STEP_DELAY, PARAMETER_LABEL_STEP_DELAY, 0,
-				Integer.MAX_VALUE, 0, true);
+				Integer.MAX_VALUE, 0, false);
 		stepDelay.setOptional(false);
 		parameterTypes.add(stepDelay);
 		return parameterTypes;

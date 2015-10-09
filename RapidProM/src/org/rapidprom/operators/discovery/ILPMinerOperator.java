@@ -1,6 +1,6 @@
 package org.rapidprom.operators.discovery;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -22,6 +22,7 @@ import org.processmining.hybridilpminer.models.lp.configuration.parameters.Disco
 import org.processmining.hybridilpminer.models.lp.configuration.parameters.DiscoveryStrategyType;
 import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPConstraintType;
 import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPFilter;
+import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPFilterType;
 import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPObjectiveType;
 import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPVariableType;
 import org.processmining.hybridilpminer.plugins.HybridILPMinerPlugin;
@@ -31,33 +32,46 @@ import org.processmining.models.semantics.petrinet.Marking;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.XLogIOObject;
-import org.rapidprom.operators.abstr.AbstractRapidProMImportOperator;
 
 import com.rapidminer.ioobjects.MarkingIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.UserError;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
-import com.rapidminer.parameter.ParameterTypeAttribute;
+import com.rapidminer.parameter.ParameterTypeBoolean;
 import com.rapidminer.parameter.ParameterTypeCategory;
+import com.rapidminer.parameter.ParameterTypeDouble;
+import com.rapidminer.parameter.ParameterTypeValue;
+import com.rapidminer.parameter.UndefinedParameterError;
+import com.rapidminer.parameter.conditions.EqualStringCondition;
 import com.rapidminer.util.ProMIOObjectList;
 
 public class ILPMinerOperator extends Operator {
 
-	private InputPort inputXLog = getInputPorts().createPort(
-			"event log (ProM Event Log)", XLogIOObject.class);
-	private OutputPort outputPetrinet = getOutputPorts().createPort(
-			"model (ProM Petri Net)");
-	private OutputPort outputMarking = getOutputPorts().createPort(
-			"marking (ProM Marking)");
+	// TODO: figure out how to actually query the log for the user interface
+	private InputPort inputXLog = getInputPorts()
+			.createPort("event log (ProM Event Log)", XLogIOObject.class);
+	private OutputPort outputPetrinet = getOutputPorts()
+			.createPort("model (ProM Petri Net)");
+	private OutputPort outputMarking = getOutputPorts()
+			.createPort("marking (ProM Marking)");
 
-	private static final String PARAMETER_KEY_EVENT_CLASSIFIER = "classifier";
-	private static final String PARAMETER_DESC_EVENT_CLASSIFIER = "Indicates how to classify events within the event log";
-	private List<XEventClassifier> classifiers;
+	private static final String PARAMETER_KEY_EAC = "enforce_emptiness_after_completion";
+	private static final String PARAMETER_DESC_EAC = "Indicates whether the net is empty after replaying the event log";
+
+	private static final String PARAMETER_KEY_FILTER = "filter";
+	private static final String PARAMETER_DESC_FILTER = "We can either apply no filtering, which guarantees perfect replay-fitness, or filter using Sequence Encoding Filtering (SEF)";
+	private static final String[] PARAMETER_OPTIONS_FITLER = new String[] {
+			LPFilterType.NONE.toString(),
+			LPFilterType.SEQUENCE_ENCODING.toString() };
+	private static final LPFilterType[] PARAMETER_REFERENCE_FILTER = new LPFilterType[] {
+			LPFilterType.NONE, LPFilterType.SEQUENCE_ENCODING };
+
+	private static final String PARAMETER_KEY_FILTER_THRESHOLD = "filter_threshold";
+	private static final String PARAMETER_DESC_FILTER_THRESHOLD = "Set the sequence encoding threshold t, for which 0 <= t <= 1.";
 
 	public ILPMinerOperator(OperatorDescription description) {
 		super(description);
@@ -72,27 +86,20 @@ public class ILPMinerOperator extends Operator {
 				.getContext();
 		XLog log = ((XLogIOObject) inputXLog.getData(XLogIOObject.class))
 				.getData();
+
 		// TODO: ASK USER FOR CLASSIFIER
 		XEventClassifier classifier = getXEventClassifier();
-		MatrixMiner miner = getMatrixMiner();
-		MatrixMinerParameters minerParameters = getMatrixMinerParameters(log);
-		minerParameters.setClassifier(classifier);
-		CausalActivityMatrix matrix = miner.mineMatrix(context, log,
-				minerParameters);
-		ConvertCausalActivityMatrixToCausalActivityGraphPlugin creator = getMatrixToCagPlugin();
-		ConvertCausalActivityMatrixToCausalActivityGraphParameters creatorParameters = getMatrixToCagParameters();
-		creatorParameters.setZeroValue(miner.getZeroValue());
-		creatorParameters.setConcurrencyRatio(miner.getConcurrencyRatio());
-		creatorParameters.setIncludeThreshold(miner.getIncludeThreshold());
-		CausalActivityGraph graph = creator.run(context, matrix,
-				creatorParameters);
-		DiscoveryStrategy strategy = getDiscoveryStrategy();
-		strategy.setCausalActivityGraph(graph);
+		DiscoveryStrategy strategy = new DiscoveryStrategy(
+				DiscoveryStrategyType.CAUSAL);
+		CausalActivityGraph cag = getCausalActivityGraph(context, log,
+				classifier);
+		strategy.setCausalActivityGraph(cag);
 		LPMinerConfiguration configuration = LPMinerConfigurationFactory
 				.customConfiguration(log, EngineType.LPSOLVE, classifier,
-						strategy, EnumSet.allOf(LPConstraintType.class),
+						strategy, getConstraintTypes(),
 						LPObjectiveType.WEIGHTED_ABSOLUTE_PARIKH,
 						LPVariableType.DUAL, getFilter(), false);
+
 		Object[] pnAndMarking = HybridILPMinerPlugin.mine(
 				ProMPluginContextManager.instance().getContext(), log,
 				configuration);
@@ -111,46 +118,60 @@ public class ILPMinerOperator extends Operator {
 		outputMarking.deliver(markingIOObject);
 	}
 
-	@Override
-	public List<ParameterType> getParameterTypes() {
-		List<ParameterType> parameterTypes = super.getParameterTypes();
-		// parameterTypes = addClassifierParameter(parameterTypes);
-		parameterTypes.add(new ParameterTypeAttribute(
-				PARAMETER_KEY_EVENT_CLASSIFIER,
-				PARAMETER_DESC_EVENT_CLASSIFIER, inputXLog, false));
-		return parameterTypes;
+	private Collection<LPConstraintType> getConstraintTypes() {
+		Collection<LPConstraintType> constraints = EnumSet.of(
+				LPConstraintType.THEORY_OF_REGIONS,
+				LPConstraintType.NO_TRIVIAL_REGION);
+		if (getParameterAsBoolean(PARAMETER_KEY_EAC)) {
+			constraints.add(LPConstraintType.EMPTY_AFTER_COMPLETION);
+		}
+		return constraints;
 	}
 
-	private List<ParameterType> addClassifierParameter(
-			List<ParameterType> parameterTypes) {
-		classifiers = new ArrayList<XEventClassifier>();
-		String[] classifierNames = null;
-		try {
-			XLog log = ((XLogIOObject) inputXLog.getData(XLogIOObject.class))
-					.getData();
-			if (!(log.getClassifiers().isEmpty())) {
-				classifierNames = new String[log.getClassifiers().size()];
-				int i = 0;
-				for (XEventClassifier c : log.getClassifiers()) {
-					classifiers.add(c);
-					classifierNames[i] = c.toString();
-					i++;
-				}
-			}
-		} catch (UserError e) {
-			// NOP
-		}
-		if (classifierNames == null) {
-			XEventClassifier defaultClassifier = new XEventAndClassifier(
-					new XEventNameClassifier());
-			classifiers.add(defaultClassifier);
-			classifierNames = new String[] { defaultClassifier.toString() };
-		}
-		ParameterTypeCategory param = new ParameterTypeCategory(
-				PARAMETER_KEY_EVENT_CLASSIFIER,
-				PARAMETER_DESC_EVENT_CLASSIFIER, classifierNames, 0, false);
-		parameterTypes.add(param);
-		return parameterTypes;
+	private CausalActivityGraph getCausalActivityGraph(PluginContext context,
+			XLog log, XEventClassifier classifier) {
+		MatrixMiner miner = getMatrixMiner();
+		MatrixMinerParameters minerParameters = getMatrixMinerParameters(log);
+		minerParameters.setClassifier(classifier);
+		CausalActivityMatrix matrix = miner.mineMatrix(context, log,
+				minerParameters);
+		ConvertCausalActivityMatrixToCausalActivityGraphPlugin creator = getMatrixToCagPlugin();
+		ConvertCausalActivityMatrixToCausalActivityGraphParameters creatorParameters = getMatrixToCagParameters();
+		creatorParameters.setZeroValue(miner.getZeroValue());
+		creatorParameters.setConcurrencyRatio(miner.getConcurrencyRatio());
+		creatorParameters.setIncludeThreshold(miner.getIncludeThreshold());
+		return creator.run(context, matrix, creatorParameters);
+	}
+
+	@Override
+	public List<ParameterType> getParameterTypes() {
+		List<ParameterType> params = super.getParameterTypes();
+		params = addEmptinessAfterCompletionParameter(params);
+		params = addFilterParameter(params);
+		return params;
+	}
+
+	private List<ParameterType> addEmptinessAfterCompletionParameter(
+			List<ParameterType> params) {
+		params.add(new ParameterTypeBoolean(PARAMETER_KEY_EAC,
+				PARAMETER_DESC_EAC, false));
+		return params;
+	}
+
+	private List<ParameterType> addFilterParameter(List<ParameterType> params) {
+		params.add(new ParameterTypeCategory(PARAMETER_KEY_FILTER,
+				PARAMETER_DESC_FILTER, PARAMETER_OPTIONS_FITLER, 0, false));
+
+		ParameterType filterThreshold = new ParameterTypeDouble(
+				PARAMETER_KEY_FILTER_THRESHOLD, PARAMETER_DESC_FILTER_THRESHOLD,
+				0, 1, 0.25, false);
+		filterThreshold.setOptional(true);
+		filterThreshold.registerDependencyCondition(
+				new EqualStringCondition(this, PARAMETER_KEY_FILTER, true,
+						LPFilterType.SEQUENCE_ENCODING.toString()));
+
+		params.add(filterThreshold);
+		return params;
 	}
 
 	private XEventClassifier getXEventClassifier() {
@@ -173,12 +194,17 @@ public class ILPMinerOperator extends Operator {
 		return new ConvertCausalActivityMatrixToCausalActivityGraphParameters();
 	}
 
-	private LPFilter getFilter() {
-		return new LPFilter();
+	private LPFilter getFilter() throws UndefinedParameterError {
+		LPFilter filter = new LPFilter();
+		LPFilterType type = PARAMETER_REFERENCE_FILTER[getParameterAsInt(
+				PARAMETER_KEY_FILTER)];
+		filter.setFilterType(type);
+		switch (type) {
+		case SEQUENCE_ENCODING:
+			filter.setThreshold(
+					getParameterAsDouble(PARAMETER_KEY_FILTER_THRESHOLD));
+			break;
+		}
+		return filter;
 	}
-
-	private DiscoveryStrategy getDiscoveryStrategy() {
-		return new DiscoveryStrategy(DiscoveryStrategyType.CAUSAL);
-	}
-
 }
