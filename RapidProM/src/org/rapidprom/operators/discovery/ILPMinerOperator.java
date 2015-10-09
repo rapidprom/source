@@ -1,5 +1,6 @@
-package com.rapidminer.operator.miningplugins;
+package org.rapidprom.operators.discovery;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -29,30 +30,36 @@ import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
+import org.rapidprom.ioobjects.XLogIOObject;
 import org.rapidprom.operators.abstr.AbstractRapidProMImportOperator;
 
 import com.rapidminer.ioobjects.MarkingIOObject;
-import com.rapidminer.ioobjects.XLogIOObject;
+import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
+import com.rapidminer.operator.UserError;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
-import com.rapidminer.parameters.Parameter;
+import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeAttribute;
+import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.util.ProMIOObjectList;
 
-public class ILPMinerTask extends AbstractRapidProMImportOperator {
+public class ILPMinerOperator extends Operator {
 
-	private List<Parameter> parametersILPMiner = null;
+	private InputPort inputXLog = getInputPorts().createPort(
+			"event log (ProM Event Log)", XLogIOObject.class);
+	private OutputPort outputPetrinet = getOutputPorts().createPort(
+			"model (ProM Petri Net)");
+	private OutputPort outputMarking = getOutputPorts().createPort(
+			"marking (ProM Marking)");
 
-	private InputPort inputXLog = getInputPorts()
-			.createPort("event log (ProM Event Log)", XLogIOObject.class);
-	private OutputPort outputPetrinet = getOutputPorts()
-			.createPort("model (ProM Petri Net)");
-	private OutputPort outputMarking = getOutputPorts()
-			.createPort("marking (ProM Marking)");
+	private static final String PARAMETER_KEY_EVENT_CLASSIFIER = "classifier";
+	private static final String PARAMETER_DESC_EVENT_CLASSIFIER = "Indicates how to classify events within the event log";
+	private List<XEventClassifier> classifiers;
 
-	public ILPMinerTask(OperatorDescription description) {
+	public ILPMinerOperator(OperatorDescription description) {
 		super(description);
 		getTransformer().addRule(
 				new GenerateNewMDRule(outputPetrinet, PetriNetIOObject.class));
@@ -102,6 +109,48 @@ public class ILPMinerTask extends AbstractRapidProMImportOperator {
 		instance.addToList(markingIOObject);
 		instance.addToList(petrinetIOObject);
 		outputMarking.deliver(markingIOObject);
+	}
+
+	@Override
+	public List<ParameterType> getParameterTypes() {
+		List<ParameterType> parameterTypes = super.getParameterTypes();
+		// parameterTypes = addClassifierParameter(parameterTypes);
+		parameterTypes.add(new ParameterTypeAttribute(
+				PARAMETER_KEY_EVENT_CLASSIFIER,
+				PARAMETER_DESC_EVENT_CLASSIFIER, inputXLog, false));
+		return parameterTypes;
+	}
+
+	private List<ParameterType> addClassifierParameter(
+			List<ParameterType> parameterTypes) {
+		classifiers = new ArrayList<XEventClassifier>();
+		String[] classifierNames = null;
+		try {
+			XLog log = ((XLogIOObject) inputXLog.getData(XLogIOObject.class))
+					.getData();
+			if (!(log.getClassifiers().isEmpty())) {
+				classifierNames = new String[log.getClassifiers().size()];
+				int i = 0;
+				for (XEventClassifier c : log.getClassifiers()) {
+					classifiers.add(c);
+					classifierNames[i] = c.toString();
+					i++;
+				}
+			}
+		} catch (UserError e) {
+			// NOP
+		}
+		if (classifierNames == null) {
+			XEventClassifier defaultClassifier = new XEventAndClassifier(
+					new XEventNameClassifier());
+			classifiers.add(defaultClassifier);
+			classifierNames = new String[] { defaultClassifier.toString() };
+		}
+		ParameterTypeCategory param = new ParameterTypeCategory(
+				PARAMETER_KEY_EVENT_CLASSIFIER,
+				PARAMETER_DESC_EVENT_CLASSIFIER, classifierNames, 0, false);
+		parameterTypes.add(param);
+		return parameterTypes;
 	}
 
 	private XEventClassifier getXEventClassifier() {

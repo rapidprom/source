@@ -6,6 +6,7 @@ import org.processmining.framework.plugin.PluginContext;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
 import org.deckfour.xes.model.XLog;
 
+@Deprecated
 public class XLogIOObject extends ResultObjectAdapter implements ProMIOObject {
 
 	private static final long serialVersionUID = 1L;
