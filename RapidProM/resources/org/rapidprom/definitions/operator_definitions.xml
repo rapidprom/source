@@ -39,12 +39,8 @@
                 <class>org.rapidprom.operators.discovery.ILPMinerOperator</class>
             </operator>
             <operator>
-                <key>genetic_miner</key>
-                <class>com.rapidminer.operator.miningplugins.GeneticMinerTask</class>
-            </operator> 
-            <operator>
-                <key>mine_a_process_tree_using_the_etm_algorithm</key>
-                <class>com.rapidminer.operator.miningplugins.MineaProcessTreeusingtheETMalgorithmTask</class>
+                <key>etm_miner</key>
+                <class>org.rapidprom.operators.discovery.ETMdMinerOperator</class>
             </operator>
             <operator>
                 <key>heuristics_miner</key>

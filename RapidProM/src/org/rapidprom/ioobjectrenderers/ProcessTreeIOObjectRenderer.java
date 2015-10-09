@@ -1,4 +1,4 @@
-package com.rapidminer.ioobjectrenderers;
+package org.rapidprom.ioobjectrenderers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,10 @@ import javax.swing.JComponent;
 
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.processtree.ProcessTree;
+import org.rapidprom.ioobjects.ProcessTreeIOObject;
+import org.rapidprom.ioobjects.ProcessTreeIOObject.VisualizationType;
 import org.rapidprom.prom.CallProm;
 
-import com.rapidminer.ioobjects.ProcessTreeIOObject.VisualizationType;
-import com.rapidminer.ioobjects.ProcessTreeIOObject;
 import com.rapidminer.gui.renderer.AbstractRenderer;
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;
 import com.rapidminer.operator.IOContainer;

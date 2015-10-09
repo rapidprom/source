@@ -146,9 +146,9 @@
 	
 	<ioobject
 		name="ProcessTreeProM"
-		class="com.rapidminer.ioobjects.ProcessTreeIOObject"
+		class="org.rapidprom.ioobjects.ProcessTreeIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.ProcessTreeIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.ProcessTreeIOObjectRenderer</renderer>
 	</ioobject>
 	
 	<ioobject

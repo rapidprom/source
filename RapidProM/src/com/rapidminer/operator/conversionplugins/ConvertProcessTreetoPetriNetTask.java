@@ -14,12 +14,12 @@ import com.rapidminer.util.ProMIOObjectList;
 import org.processmining.framework.plugin.PluginContext;
 
 import com.rapidminer.ioobjects.ProMContextIOObject;
-import com.rapidminer.ioobjects.ProcessTreeIOObject;
 import com.rapidminer.ioobjects.MarkingIOObject;
 
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.rapidprom.ioobjects.PetriNetIOObject;
+import org.rapidprom.ioobjects.ProcessTreeIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class ConvertProcessTreetoPetriNetTask extends Operator {

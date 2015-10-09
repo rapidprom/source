@@ -29,12 +29,10 @@ import org.processmining.plugins.InductiveMiner.mining.MiningParametersIMin;
 import com.rapidminer.ioobjects.XLogIOObject;
 
 import org.deckfour.xes.model.XLog;
-
-import com.rapidminer.ioobjects.ProcessTreeIOObject;
-import com.rapidminer.ioobjectrenderers.ProcessTreeIOObjectRenderer;
-
 import org.processmining.processtree.ProcessTree;
+import org.rapidprom.ioobjectrenderers.ProcessTreeIOObjectRenderer;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer;
+import org.rapidprom.ioobjects.ProcessTreeIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class MineProcesstreewithInductiveMiner extends Operator {

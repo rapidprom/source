@@ -405,10 +405,10 @@
   </operator>
   
        <operator>
-        <name>Evolutionary Tree Miner (Process Tree)</name>
+        <name>Evolutionary Tree Miner</name>
         <synopsis>Mine a Process Using the ETM Algorithm.</synopsis>
         <help>Mine a Process Using the ETM Algorithm.</help>
-    	<key>mine_a_process_tree_using_the_etm_algorithm</key>
+    	<key>etm_miner</key>
   	  </operator>
   	  
   	  <operator>

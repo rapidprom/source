@@ -22,9 +22,9 @@ import org.processmining.plugins.etm.parameters.ETMParam;
 import org.processmining.plugins.etm.parameters.ETMParamFactory;
 
 import com.rapidminer.ioobjects.XLogIOObject;
-import com.rapidminer.ioobjects.ProcessTreeIOObject;
 
 import org.processmining.processtree.ProcessTree;
+import org.rapidprom.ioobjects.ProcessTreeIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class MineaProcessTreeusingtheETMalgorithmTask extends Operator {
