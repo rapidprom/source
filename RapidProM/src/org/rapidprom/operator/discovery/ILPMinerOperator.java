@@ -1,12 +1,10 @@
-package org.rapidprom.operators.discovery;
+package org.rapidprom.operator.discovery;
 
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 
-import org.deckfour.xes.classification.XEventAndClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.causalactivitygraph.models.CausalActivityGraph;
 import org.processmining.causalactivitygraphcreator.parameters.ConvertCausalActivityMatrixToCausalActivityGraphParameters;
@@ -31,33 +29,27 @@ import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
-import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.operator.abstr.AbstractRapidProMDiscoveryOperator;
 
 import com.rapidminer.ioobjects.MarkingIOObject;
-import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeBoolean;
 import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.parameter.ParameterTypeDouble;
-import com.rapidminer.parameter.ParameterTypeValue;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.parameter.conditions.EqualStringCondition;
 import com.rapidminer.util.ProMIOObjectList;
 
-public class ILPMinerOperator extends Operator {
+public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
-	// TODO: figure out how to actually query the log for the user interface
-	private InputPort inputXLog = getInputPorts()
-			.createPort("event log (ProM Event Log)", XLogIOObject.class);
-	private OutputPort outputPetrinet = getOutputPorts()
-			.createPort("model (ProM Petri Net)");
-	private OutputPort outputMarking = getOutputPorts()
-			.createPort("marking (ProM Marking)");
+	private OutputPort outputPetrinet = getOutputPorts().createPort(
+			"model (ProM Petri Net)");
+	private OutputPort outputMarking = getOutputPorts().createPort(
+			"marking (ProM Marking)");
 
 	private static final String PARAMETER_KEY_EAC = "enforce_emptiness_after_completion";
 	private static final String PARAMETER_DESC_EAC = "Indicates whether the net is empty after replaying the event log";
@@ -75,6 +67,7 @@ public class ILPMinerOperator extends Operator {
 
 	public ILPMinerOperator(OperatorDescription description) {
 		super(description);
+
 		getTransformer().addRule(
 				new GenerateNewMDRule(outputPetrinet, PetriNetIOObject.class));
 		getTransformer().addRule(
@@ -84,10 +77,7 @@ public class ILPMinerOperator extends Operator {
 	public void doWork() throws OperatorException {
 		PluginContext context = ProMPluginContextManager.instance()
 				.getContext();
-		XLog log = ((XLogIOObject) inputXLog.getData(XLogIOObject.class))
-				.getData();
-
-		// TODO: ASK USER FOR CLASSIFIER
+		XLog log = getXLog();
 		XEventClassifier classifier = getXEventClassifier();
 		DiscoveryStrategy strategy = new DiscoveryStrategy(
 				DiscoveryStrategyType.CAUSAL);
@@ -146,8 +136,8 @@ public class ILPMinerOperator extends Operator {
 	@Override
 	public List<ParameterType> getParameterTypes() {
 		List<ParameterType> params = super.getParameterTypes();
-		params = addEmptinessAfterCompletionParameter(params);
-		params = addFilterParameter(params);
+		addEmptinessAfterCompletionParameter(params);
+		addFilterParameter(params);
 		return params;
 	}
 
@@ -163,19 +153,15 @@ public class ILPMinerOperator extends Operator {
 				PARAMETER_DESC_FILTER, PARAMETER_OPTIONS_FITLER, 0, false));
 
 		ParameterType filterThreshold = new ParameterTypeDouble(
-				PARAMETER_KEY_FILTER_THRESHOLD, PARAMETER_DESC_FILTER_THRESHOLD,
-				0, 1, 0.25, false);
+				PARAMETER_KEY_FILTER_THRESHOLD,
+				PARAMETER_DESC_FILTER_THRESHOLD, 0, 1, 0.25, false);
 		filterThreshold.setOptional(true);
-		filterThreshold.registerDependencyCondition(
-				new EqualStringCondition(this, PARAMETER_KEY_FILTER, true,
-						LPFilterType.SEQUENCE_ENCODING.toString()));
+		filterThreshold.registerDependencyCondition(new EqualStringCondition(
+				this, PARAMETER_KEY_FILTER, true,
+				LPFilterType.SEQUENCE_ENCODING.toString()));
 
 		params.add(filterThreshold);
 		return params;
-	}
-
-	private XEventClassifier getXEventClassifier() {
-		return new XEventAndClassifier(new XEventNameClassifier());
 	}
 
 	private MatrixMiner getMatrixMiner() {
@@ -196,13 +182,13 @@ public class ILPMinerOperator extends Operator {
 
 	private LPFilter getFilter() throws UndefinedParameterError {
 		LPFilter filter = new LPFilter();
-		LPFilterType type = PARAMETER_REFERENCE_FILTER[getParameterAsInt(
-				PARAMETER_KEY_FILTER)];
+		LPFilterType type = PARAMETER_REFERENCE_FILTER[getParameterAsInt(PARAMETER_KEY_FILTER)];
 		filter.setFilterType(type);
 		switch (type) {
 		case SEQUENCE_ENCODING:
-			filter.setThreshold(
-					getParameterAsDouble(PARAMETER_KEY_FILTER_THRESHOLD));
+			filter.setThreshold(getParameterAsDouble(PARAMETER_KEY_FILTER_THRESHOLD));
+			break;
+		default:
 			break;
 		}
 		return filter;

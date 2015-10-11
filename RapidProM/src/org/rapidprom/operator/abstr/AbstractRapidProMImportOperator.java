@@ -1,4 +1,4 @@
-package org.rapidprom.operators.abstr;
+package org.rapidprom.operator.abstr;
 
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;

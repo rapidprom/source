@@ -1,4 +1,4 @@
-package org.rapidprom.operators.abstr;
+package org.rapidprom.operator.abstr;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;

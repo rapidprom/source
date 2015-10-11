@@ -1,8 +1,8 @@
-package org.rapidprom.operators.importers;
+package org.rapidprom.operator.extract;
 
 import java.io.File;
 
-import org.rapidprom.operators.abstr.AbstractImportXLogOperator;
+import org.rapidprom.operator.abstr.AbstractImportXLogOperator;
 
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;

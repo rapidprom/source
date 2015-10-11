@@ -1,4 +1,4 @@
-package org.rapidprom.operators.discovery;
+package org.rapidprom.operator.discovery;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;

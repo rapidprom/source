@@ -4,11 +4,11 @@
         <group key="import">
             <operator>
                 <key>import_xlog</key>
-                <class>org.rapidprom.operators.importers.ImportXLogOperator</class>
+                <class>org.rapidprom.operator.io.ImportXLogOperator</class>
             </operator>
             <operator>
                 <key>read_cpn</key>
-                <class>org.rapidprom.operators.importers.ImportCPNModelOperator</class>
+                <class>org.rapidprom.operator.io.ImportCPNModelOperator</class>
             </operator>
             <operator>
                 <key>read_pnml_file</key>
@@ -16,35 +16,35 @@
             </operator>
             <operator>
                 <key>extract_log_from_file</key>
-                <class>org.rapidprom.operators.importers.ExtractXLogOperator</class>
+                <class>org.rapidprom.operator.extract.ExtractXLogOperator</class>
             </operator>
             <operator>
                 <key>import_petri_net_from_pnml_file</key>
-                <class>org.rapidprom.operators.importers.ImportPetriNetOperator</class>
+                <class>org.rapidprom.operator.io.ImportPetriNetOperator</class>
             </operator>
         </group>
         <group key="streams">
             <operator>
                 <key>stream_from_cpn</key>
-                <class>org.rapidprom.operators.streams.generators.CPNToEventStreamOperator</class>
+                <class>org.rapidprom.operator.streams.generators.CPNToEventStreamOperator</class>
             </operator>
         </group>
         <group key="Discovery">
             <operator>
                 <key>alpha_miner</key>
-                <class>org.rapidprom.operators.discovery.AlphaMinerOperator</class>
+                <class>org.rapidprom.operator.discovery.AlphaMinerOperator</class>
             </operator>
             <operator>
                 <key>ilp_miner</key>
-                <class>org.rapidprom.operators.discovery.ILPMinerOperator</class>
+                <class>org.rapidprom.operator.discovery.ILPMinerOperator</class>
             </operator>
             <operator>
                 <key>etm_miner</key>
-                <class>org.rapidprom.operators.discovery.ETMdMinerOperator</class>
+                <class>org.rapidprom.operator.discovery.ETMdMinerOperator</class>
             </operator>
             <operator>
                 <key>heuristics_miner</key>
-                <class>org.rapidprom.operators.discovery.HeuristicsMinerOperator</class>
+                <class>org.rapidprom.operator.discovery.HeuristicsMinerOperator</class>
             </operator>
             <operator>
                 <key>dotted_chart_analysis</key>

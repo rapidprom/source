@@ -1,4 +1,4 @@
-package org.rapidprom.operators.importers;
+package org.rapidprom.operator.io;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import org.processmining.plugins.cpnet.ColouredPetriNet;
 import org.processmining.plugins.cpnet.LoadCPNModelFromFile;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.operators.abstr.AbstractRapidProMImportOperator;
+import org.rapidprom.operator.abstr.AbstractRapidProMImportOperator;
 
 import com.rapidminer.ioobjects.CPNModelIOObject;
 import com.rapidminer.operator.OperatorDescription;

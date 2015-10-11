@@ -1,4 +1,4 @@
-package org.rapidprom.operators.streams.generators;
+package org.rapidprom.operator.streams.generators;
 
 import java.util.List;
 import java.util.logging.Level;

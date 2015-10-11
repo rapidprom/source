@@ -1,4 +1,4 @@
-package org.rapidprom.operators.importers;
+package org.rapidprom.operator.io;
 
 import java.util.List;
 import java.util.logging.Level;
@@ -9,7 +9,7 @@ import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.plugins.pnml.importing.PnmlImportNet;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
-import org.rapidprom.operators.abstr.AbstractRapidProMImportOperator;
+import org.rapidprom.operator.abstr.AbstractRapidProMImportOperator;
 
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;

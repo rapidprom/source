@@ -1,4 +1,4 @@
-package org.rapidprom.operators.abstr;
+package org.rapidprom.operator.abstr;
 
 import java.io.File;
 import java.util.EnumSet;
