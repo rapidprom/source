@@ -52,7 +52,7 @@
             </operator>
             <operator>
                 <key>mine_petri_net_with_inductive_miner</key>
-                <class>com.rapidminer.operator.miningplugins.MinePetrinetwithInductiveMinerTask</class>
+                <class>org.rapidprom.operator.discovery.InductiveMinerPNOperator</class>
             </operator>
             <operator>
                 <key>mine_process_tree_with_inductive_miner</key>

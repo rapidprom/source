@@ -62,7 +62,7 @@ public class ETMdMinerOperator extends Operator {
 		long time = System.currentTimeMillis();
 
 		PluginContext pluginContext = ProMPluginContextManager.instance()
-				.getFutureResultAwareContext(ETMPlugin.class);
+				.getFutureResultAwareContext(ETMwithoutGUI.class);
 		XLogIOObject xLog = inputXLog.getData(XLogIOObject.class);
 		
 		ETMParam eTMParam = getConfiguration(xLog, pluginContext);
