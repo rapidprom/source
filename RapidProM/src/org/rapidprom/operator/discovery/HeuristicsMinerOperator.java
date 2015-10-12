@@ -4,27 +4,22 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.parameter.*;
 
-import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.heuristicsnet.miner.heuristics.miner.FlexibleHeuristicsMinerPlugin;
-import org.processmining.plugins.heuristicsnet.miner.heuristics.miner.LogUtility;
 import org.processmining.plugins.heuristicsnet.miner.heuristics.miner.settings.HeuristicsMinerSettings;
-
-import org.rapidprom.ioobjects.XLogIOObject;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.HeuristicsNetIOObject;
+import org.rapidprom.operator.abstr.AbstractRapidProMDiscoveryOperator;
 
-public class HeuristicsMinerOperator extends Operator {
+public class HeuristicsMinerOperator extends AbstractRapidProMDiscoveryOperator {
 	
 	//Parameter keys (also used as description)
 	public static final String
@@ -37,7 +32,6 @@ public class HeuristicsMinerOperator extends Operator {
 		PARAMETER_7 = "Long distance dependency",
 		PARAMETER_8 = "Ignore loop dependency thresholds";		
 
-	private InputPort inputXLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
 	private OutputPort outputHeuristicsNet = getOutputPorts().createPort("model (ProM Heuristics Net)");
 
 	public HeuristicsMinerOperator(OperatorDescription description) {
@@ -49,17 +43,23 @@ public class HeuristicsMinerOperator extends Operator {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO, "Start: heuristics miner");
 		long time = System.currentTimeMillis();
-		
-		PluginContext pluginContext = ProMPluginContextManager.instance().getFutureResultAwareContext(FlexibleHeuristicsMinerPlugin.class);	
-		XLogIOObject XLogdata = inputXLog.getData(XLogIOObject.class);
-		HeuristicsMinerSettings heuristicsMinerSettings = getConfiguration(XLogdata.getData());
-		
-		HeuristicsNetIOObject heuristicsNetIOObject = new HeuristicsNetIOObject(FlexibleHeuristicsMinerPlugin .run(pluginContext, XLogdata.getData(), heuristicsMinerSettings));
+
+		PluginContext pluginContext = ProMPluginContextManager.instance()
+				.getFutureResultAwareContext(
+						FlexibleHeuristicsMinerPlugin.class);
+
+		HeuristicsMinerSettings heuristicsMinerSettings = getConfiguration(getXLog());
+
+		HeuristicsNetIOObject heuristicsNetIOObject = new HeuristicsNetIOObject(
+				FlexibleHeuristicsMinerPlugin.run(pluginContext,
+						getXLog(), heuristicsMinerSettings));
 		heuristicsNetIOObject.setPluginContext(pluginContext);
-		
-		outputHeuristicsNet.deliver(heuristicsNetIOObject);	
-		
-		logger.log(Level.INFO, "End: heuristics miner (" + (System.currentTimeMillis() - time)/1000 + " sec)");
+
+		outputHeuristicsNet.deliver(heuristicsNetIOObject);
+
+		logger.log(Level.INFO,
+				"End: heuristics miner (" + (System.currentTimeMillis() - time)
+						/ 1000 + " sec)");
 	}
 
 	public List<ParameterType> getParameterTypes() {
@@ -105,14 +105,7 @@ public class HeuristicsMinerOperator extends Operator {
 			heuristicsMinerSettings.setUseLongDistanceDependency(getParameterAsBoolean(PARAMETER_7));
 			heuristicsMinerSettings.setCheckBestAgainstL2L(getParameterAsBoolean(PARAMETER_8));
 			heuristicsMinerSettings.setAndThreshold(Double.NaN);			
-			
-			//for now it just uses the first classifier available in the xlog
-			for(XEventClassifier clas :  LogUtility.getEventClassifiers(log))
-				if(clas != null)
-				{
-					heuristicsMinerSettings.setClassifier(clas);
-					break;
-				}					
+			heuristicsMinerSettings.setClassifier(getXEventClassifier());				
 		} catch (UndefinedParameterError e) {
 			e.printStackTrace();
 		}		
