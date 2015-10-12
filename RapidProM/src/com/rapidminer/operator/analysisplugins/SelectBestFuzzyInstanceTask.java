@@ -18,16 +18,14 @@ import com.rapidminer.ioobjects.ProMContextIOObject;
 import com.rapidminer.ioobjects.XLogIOObject;
 
 import org.processmining.models.graphbased.directed.fuzzymodel.metrics.MetricsRepository;
-
-import com.rapidminer.ioobjects.MetricsRepositoryIOObject;
-import com.rapidminer.ioobjectrenderers.MetricsRepositoryIOObjectRenderer;
-
 import org.processmining.models.graphbased.directed.fuzzymodel.metrics.MetricsRepository;
 
 import com.rapidminer.ioobjects.MutableFuzzyGraphIOObject;
 import com.rapidminer.ioobjectrenderers.MutableFuzzyGraphIOObjectRenderer;
 
 import org.processmining.models.graphbased.directed.fuzzymodel.MutableFuzzyGraph;
+import org.rapidprom.ioobjectrenderers.MetricsRepositoryIOObjectRenderer;
+import org.rapidprom.ioobjects.MetricsRepositoryIOObject;
 import org.rapidprom.prom.CallProm;
 
 public class SelectBestFuzzyInstanceTask extends Operator {

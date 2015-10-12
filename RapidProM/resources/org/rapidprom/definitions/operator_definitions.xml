@@ -88,7 +88,7 @@
             </operator>
             <operator>
                 <key>mine_fuzzy_model</key>
-                <class>com.rapidminer.operator.miningplugins.MineFuzzyModelTask</class>
+                <class>org.rapidprom.operator.discovery.FuzzyMinerOperator</class>
             </operator>
             <operator>
                 <key>sequence_miner</key>
