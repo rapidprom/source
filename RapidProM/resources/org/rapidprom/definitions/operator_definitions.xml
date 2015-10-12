@@ -56,7 +56,7 @@
             </operator>
             <operator>
                 <key>mine_process_tree_with_inductive_miner</key>
-                <class>com.rapidminer.operator.miningplugins.MineProcesstreewithInductiveMiner</class>
+                <class>org.rapidprom.operator.discovery.InductiveMinerPTOperator</class>
             </operator>
             <operator>
                 <key>mine_with_inductive_visual_miner</key>
