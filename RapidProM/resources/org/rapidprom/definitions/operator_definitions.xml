@@ -24,10 +24,18 @@
             </operator>
         </group>
         <group key="streams">
-            <operator>
-                <key>stream_from_cpn</key>
-                <class>org.rapidprom.operator.streams.generators.CPNToEventStreamOperator</class>
-            </operator>
+            <group key="generators">
+                <operator>
+                    <key>stream_from_cpn</key>
+                    <class>org.rapidprom.operator.streams.generators.CPNToEventStreamOperator</class>
+                </operator>
+            </group>
+            <group key="discovery">
+                <operator>
+                    <key>stream_inductive_miner</key>
+                    <class>org.rapidprom.operator.streams.discovery.StreamInductiveMinerOperator</class>
+                </operator>
+            </group>
         </group>
         <group key="Discovery">
             <operator>

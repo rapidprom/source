@@ -4,8 +4,9 @@ import org.processmining.framework.plugin.PluginContext;
 
 import com.rapidminer.operator.ResultObjectAdapter;
 
-public abstract class AbstractIOObject<T> extends ResultObjectAdapter implements
-		ProMIOObject {
+@Deprecated
+public abstract class AbstractIOObject<T> extends ResultObjectAdapter
+		implements ProMIOObject {
 
 	private static final long serialVersionUID = -7924883865640486269L;
 	protected T artifact = null;

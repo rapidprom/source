@@ -24,14 +24,7 @@
     -->
     
     <!-- IMPORTERS -->
-    
-    <operator>
-		<name>Generate stream from CPN</name>
-		<synopsis>Generate stream from CPN</synopsis>
-		<help></help>
-		<key>stream_from_cpn</key>
-	</operator>
-		
+
    <operator>
    		<name>Mine a sequential model</name>
         <synopsis>DO NOT USE THIS OPERATOR (Experimental)</synopsis>
@@ -577,6 +570,19 @@
         <synopsis>This operator mines a fuzzy model</synopsis>
         <help>A log is required for input</help>
     	<key>mine_fuzzy_model</key>
-  	</operator>  	
-
+  	</operator>
+  	
+  	<!-- STREAMS -->
+    <operator>
+        <name>Generate event stream from CPN</name>
+        <synopsis>Generate stream from CPN</synopsis>
+        <help></help>
+        <key>stream_from_cpn</key>
+    </operator>
+    <operator>
+        <name>Stream Inductive Miner</name>
+        <synopsis>Discover a Petri net from an event stream using a stream-based implementation of the inductive miner</synopsis>
+        <help />
+        <key>stream_inductive_miner</key>
+	</operator>
 </operatorHelp>

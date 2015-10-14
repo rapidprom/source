@@ -12,10 +12,9 @@ import org.processmining.framework.plugin.PluginContext;
 import org.processmining.stream.core.enums.CommunicationType;
 import org.processmining.stream.core.interfaces.XSPublisher;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjects.streams.XSEventStreamIOObject;
 
 import com.rapidminer.ioobjects.CPNModelIOObject;
-import com.rapidminer.ioobjects.MarkingIOObject;
-import com.rapidminer.ioobjects.XSEventStreamIOObject;
 import com.rapidminer.ioobjects.XSPublisherIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
@@ -82,12 +81,10 @@ public class CPNToEventStreamOperator extends Operator {
 
 	public CPNToEventStreamOperator(OperatorDescription description) {
 		super(description);
-
 		getTransformer().addRule(new GenerateNewMDRule(outputPublisher,
 				XSPublisherIOObject.class));
-		getTransformer().addRule(
-				new GenerateNewMDRule(outputStream, MarkingIOObject.class));
-		// TODO Auto-generated constructor stub
+		getTransformer().addRule(new GenerateNewMDRule(outputStream,
+				XSEventStreamIOObject.class));
 	}
 
 	private CPN2XSEventStreamParameters determineCaseIdentification(
@@ -127,22 +124,21 @@ public class CPNToEventStreamOperator extends Operator {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO, "start do work Stream Generator");
 
-		// ProMContextIOObject context =
-		// inputContext.getData(ProMContextIOObject.class);
-		PluginContext pluginContext = ProMPluginContextManager.instance()
-				.getContext();
+		PluginContext context = ProMPluginContextManager.instance()
+				.getFutureResultAwareContext(
+						CPNModelToXSEventStreamAuthorPlugin.class);
 
 		CPN2XSEventStreamParameters parameters = getStreamParameters();
 
 		Object[] result = CPNModelToXSEventStreamAuthorPlugin
-				.cpnToXSEventStreamPlugin(pluginContext,
+				.cpnToXSEventStreamPlugin(context,
 						inputCPNModel.getData(CPNModelIOObject.class).getData(),
 						parameters);
 
 		outputPublisher
 				.deliver(new XSPublisherIOObject((XSPublisher) result[0]));
-		outputStream
-				.deliver(new XSEventStreamIOObject((XSEventStream) result[1]));
+		outputStream.deliver(
+				new XSEventStreamIOObject((XSEventStream) result[1], context));
 
 		logger.log(Level.INFO, "start do work Stream Generator");
 	}

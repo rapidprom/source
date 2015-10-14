@@ -7,11 +7,11 @@ import javax.swing.JLabel;
 
 import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.framework.plugin.PluginContext;
+import org.rapidprom.ioobjects.streams.XSEventStreamIOObject;
 
 import com.rapidminer.gui.renderer.AbstractRenderer;
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;
 import com.rapidminer.gui.renderer.DefaultReadable;
-import com.rapidminer.ioobjects.XSEventStreamIOObject;
 import com.rapidminer.operator.IOContainer;
 import com.rapidminer.report.Reportable;
 import com.rapidminer.util.Utilities;
@@ -19,7 +19,7 @@ import com.rapidminer.util.Utilities;
 public class XSEventStreamIOObjectRenderer extends AbstractRenderer {
 
 	private static String GIVEN_NAME = "XSEventStreamIOObjectRenderer renderer";
-	
+
 	@Override
 	public String getName() {
 		return GIVEN_NAME;
@@ -38,16 +38,17 @@ public class XSEventStreamIOObjectRenderer extends AbstractRenderer {
 		if (renderable instanceof XSEventStreamIOObject) {
 			XSEventStreamIOObject object = (XSEventStreamIOObject) renderable;
 
-			JComponent panel = runVisualization(object.getData(),
+			JComponent panel = runVisualization(object.getArtifact(),
 					object.getPluginContext());
 			// put the thing in its own panel
-			return new DefaultComponentRenderable(Utilities.getSizedPanel(
-					panel, panel, desiredWidth, desiredHeight - 50));
+			return new DefaultComponentRenderable(Utilities.getSizedPanel(panel,
+					panel, desiredWidth, desiredHeight - 50));
 		}
 		return new DefaultReadable("No XSEventStream visualization available.");
 	}
 
-	public static JComponent runVisualization(XSEventStream pn, PluginContext pc) {
+	public static JComponent runVisualization(XSEventStream pn,
+			PluginContext pc) {
 		return new JLabel(GIVEN_NAME);
 	}
 

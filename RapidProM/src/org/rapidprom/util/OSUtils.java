@@ -1,4 +1,4 @@
-package org.rapidprom.os;
+package org.rapidprom.util;
 
 import java.io.File;
 import java.io.IOException;

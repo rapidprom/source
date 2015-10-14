@@ -1,17 +1,5 @@
 <ioobjects>
 	<ioobject
-		name="StreamPublisherProM"
-		class="com.rapidminer.ioobjects.XSPublisherIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.XSPublisherIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
-		name="XSEventStreamProm"
-		class="com.rapidminer.ioobjects.XSEventStreamIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.XSEventStreamIOObjectRenderer</renderer>
-	</ioobject>	
-	<ioobject
 		name="CPNModelProM"
 		class="com.rapidminer.ioobjects.CPNModelIOObject"
 		reportable="true">
@@ -226,6 +214,26 @@
 		reportable="true">
 		<renderer>com.rapidminer.ioobjectrenderers.DotPanelIOObjectRenderer</renderer>
 	</ioobject>
+	
+	<!-- STREAMS -->
+	<ioobject
+		name="Event Stream Publisher"
+		class="com.rapidminer.ioobjects.XSPublisherIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.XSPublisherIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="Event Stream"
+		class="org.rapidprom.ioobjects.streams.XSEventStreamIOObject"
+		reportable="true">
+		<renderer>com.rapidminer.ioobjectrenderers.XSEventStreamIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="Event Stream to Accepting Petri Net Reader"
+		class="org.rapidprom.ioobjects.streams.XSEventStreamToAcceptingPetriNetReaderIOObject"
+		reportable="false">
+		<renderer>org.rapidprom.ioobjectrenderers.streams.XSEventStreamToAcceptingPetriNetReaderIOObjectRenderer</renderer>
+	</ioobject>	
 
 <!--  
     This is an example how to specify IOObjects and theirs various renderers.

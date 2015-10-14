@@ -21,8 +21,8 @@ import org.processmining.framework.boot.Boot;
 import org.rapidprom.RapidProMInitializer;
 import org.rapidprom.external.connectors.ivy.IvyResolveException;
 import org.rapidprom.external.connectors.ivy.IvyStandAlone;
-import org.rapidprom.os.OSUtils;
 import org.rapidprom.properties.RapidProMProperties;
+import org.rapidprom.util.OSUtils;
 
 import com.rapidminer.gui.tools.ProgressThread;
 
