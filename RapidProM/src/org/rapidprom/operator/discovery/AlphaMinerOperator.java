@@ -8,21 +8,17 @@ import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.plugins.petrinet.mining.alphaminer.AlphaMiner;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
-import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.operator.abstr.AbstractRapidProMDiscoveryOperator;
 
-import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.tools.LogService;
 
-public class AlphaMinerOperator extends Operator {
+public class AlphaMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
-	/** defining the ports */
-	private InputPort inputLog = getInputPorts()
-			.createPort("event log (ProM Event Log)", XLogIOObject.class);
+	
 	private OutputPort output = getOutputPorts()
 			.createPort("model (ProM Petri Net)");
 
@@ -46,11 +42,10 @@ public class AlphaMinerOperator extends Operator {
 
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(AlphaMiner.class);
-		XLogIOObject log = inputLog.getData(XLogIOObject.class);
 		AlphaMiner miner = new AlphaMiner();
 
 		try {
-			Object[] result = miner.doMining(pluginContext, log.getXLog());
+			Object[] result = miner.doMining(pluginContext, getXLog());
 
 			PetriNetIOObject petriNetIOObject = new PetriNetIOObject(
 					(Petrinet) result[0]);

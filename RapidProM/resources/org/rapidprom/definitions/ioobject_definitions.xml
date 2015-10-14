@@ -204,9 +204,9 @@
 	
 	<ioobject
 		name="MetricsRepositoryProM"
-		class="com.rapidminer.ioobjects.MetricsRepositoryIOObject"
+		class="org.rapidprom.ioobjects.MetricsRepositoryIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.MetricsRepositoryIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.MetricsRepositoryIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="DotPanelProM"

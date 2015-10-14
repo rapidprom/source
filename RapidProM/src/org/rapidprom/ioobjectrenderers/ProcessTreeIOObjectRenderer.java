@@ -1,60 +1,83 @@
 package org.rapidprom.ioobjectrenderers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.awt.Component;
-
-import javax.swing.JComponent;
+import java.lang.ref.WeakReference;
+import java.util.EnumSet;
 
 import org.processmining.framework.plugin.PluginContext;
+import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizProcessTree;
 import org.processmining.processtree.ProcessTree;
+import org.processmining.processtree.visualization.tree.TreeVisualization;
+import org.rapidprom.AbstractMultipleVisualizersRenderer;
+import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.ProcessTreeIOObject;
-import org.rapidprom.ioobjects.ProcessTreeIOObject.VisualizationType;
-import org.rapidprom.prom.CallProm;
 
-import com.rapidminer.gui.renderer.AbstractRenderer;
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;
 import com.rapidminer.operator.IOContainer;
 import com.rapidminer.report.Reportable;
-import com.rapidminer.util.Utilities;
 
-public class ProcessTreeIOObjectRenderer extends AbstractRenderer {
+public class ProcessTreeIOObjectRenderer extends
+AbstractMultipleVisualizersRenderer<ProcessTreeIOObjectVisualizationType> {
 
-	public Component getVisualizationComponent(Object renderable, IOContainer ioContainer) {
-		if (renderable instanceof ProcessTreeIOObject) 
-		{
-			CallProm tp = new CallProm();
-			List<Object> parameters = new ArrayList<Object>();
-			ProcessTreeIOObject processtree = (ProcessTreeIOObject) renderable;
-			ProcessTree pt = processtree.getData();
-			parameters.add(pt);
-			
-			PluginContext pluginContext = processtree.getPluginContext();
-			
-			JComponent result;
-			
-			if(((ProcessTreeIOObject) renderable).getVisualizationType().equals(VisualizationType.Processtree)) 
-			{
-				Object[] runVisualizationPlugin = tp.runPlugin(pluginContext, "XX","Visualize Process tree as Tree" , parameters);
-				result = (JComponent) runVisualizationPlugin[0];
-			}
-			else
-			{
-				result = tp.runVisualizationPlugin(pluginContext,"x",parameters);
-			}
-			return result;
+	public ProcessTreeIOObjectRenderer() {
+		super(EnumSet.allOf(ProcessTreeIOObjectVisualizationType.class), "Process Tree renderer");
+	}
+	
+	private Component defaultComponent = null;
+	private WeakReference<ProcessTree> defaultProcessTree = null;
+	private Component dotComponent = null;
+	private WeakReference<ProcessTree> dotProcessTree = null;
+	
+	protected Component visualizeRendererOption(ProcessTreeIOObjectVisualizationType e,
+			Object renderable, IOContainer ioContainer) {
+		Component result;		
+		switch (e) {
+		case DEFAULT:
+			result = createDefaultComponet(renderable, ioContainer);
+			break;
+		default:
+		case DOT:
+			result = createDotComponent(renderable, ioContainer);
+			break;
 		}
-		
-		return null;
+		return result;
 	}
+	
+	public Component createDefaultComponet(Object renderable,
+			IOContainer ioContainer) {
+		ProcessTreeIOObject object = (ProcessTreeIOObject) renderable;
+		ProcessTree pt = object.getProcessTree();
+		if (defaultComponent == null || defaultProcessTree == null
+				|| !(pt.equals(defaultProcessTree.get()))) {
+			PluginContext pluginContext = ProMPluginContextManager
+					.instance().getContext();
+			TreeVisualization visualizer = new TreeVisualization();
+			defaultComponent = visualizer.visualize(pluginContext, pt);
+			defaultProcessTree = new WeakReference<ProcessTree>(pt);
+		}
+		return defaultComponent;
+	}
+	
+	public Component createDotComponent(Object renderable, IOContainer ioContainer) {
+		ProcessTreeIOObject object = (ProcessTreeIOObject) renderable;
+		ProcessTree pt = object.getProcessTree();
+		if (dotComponent == null || dotProcessTree == null
+				|| !(pt.equals(dotProcessTree.get()))) {
+			try {
+				PluginContext pluginContext = ProMPluginContextManager
+						.instance().getContext();
+				GraphvizProcessTree visualizer = new GraphvizProcessTree();				
+				dotComponent =  visualizer.visualize(pluginContext, pt);
+				dotProcessTree = new WeakReference<ProcessTree>(pt);			
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return defaultComponent;			
+	}
+	
 	public Reportable createReportable(Object renderable, IOContainer ioContainer, int desiredWidth, int desiredHeight) {
-		
-		JComponent panel = (JComponent) getVisualizationComponent(renderable, ioContainer);
-		return new DefaultComponentRenderable(Utilities.getSizedPanel(panel,panel, desiredWidth, desiredHeight));
+		return new DefaultComponentRenderable(
+				getVisualizationComponent(renderable, ioContainer));
 	}
-
-	public String getName() {
-		return "ProcessTreerenderer";
-	}
-
 }

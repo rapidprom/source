@@ -5,15 +5,18 @@ import com.rapidminer.operator.ResultObjectAdapter;
 
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.processtree.ProcessTree;
+import org.rapidprom.ioobjectrenderers.ProcessTreeIOObjectVisualizationType;
 
 public class ProcessTreeIOObject extends ResultObjectAdapter implements ProMIOObject{
 
-	public enum VisualizationType {Processtree, DOT};
 	private static final long serialVersionUID = 1L;
 
+	private ProcessTreeIOObjectVisualizationType vt = ProcessTreeIOObjectVisualizationType.DEFAULT;
 	private PluginContext pc = null;
 	private ProcessTree processTree = null;
-	private VisualizationType vt = VisualizationType.Processtree;
+	
+	public ProcessTreeIOObject(){		
+	}
 
 	public ProcessTreeIOObject (ProcessTree processTree) {
 		this.processTree = processTree;
@@ -44,11 +47,11 @@ public class ProcessTreeIOObject extends ResultObjectAdapter implements ProMIOOb
 		return processTree;
 	}
 	
-	public void setVisualizationType(VisualizationType vt) {
+	public void setVisualizationType(ProcessTreeIOObjectVisualizationType vt) {
 		this.vt = vt;
 	}
 	
-	public VisualizationType getVisualizationType () {
+	public ProcessTreeIOObjectVisualizationType getVisualizationType () {
 		return this.vt;
 	}
 

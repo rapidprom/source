@@ -16,7 +16,6 @@ public class XLogIOObject extends ResultObjectAdapter implements ProMIOObject {
 	private XLog xLog = null;
 
 	public XLogIOObject() {
-
 	}
 
 	public XLogIOObject(XLog xLog) {
