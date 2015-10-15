@@ -6,14 +6,15 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+import javax.swing.JComponent;
 import javax.swing.table.DefaultTableModel;
 
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.logprojection.LogProjectionPlugin;
 import org.processmining.logprojection.LogView;
+import org.processmining.logprojection.plugins.dottedchart.ui.DottedChartPanel;
 import org.processmining.plugins.dottedchartanalysis.DottedChartAnalysis;
-import org.processmining.plugins.dottedchartanalysis.DottedChartAnalysisPlugin;
 import org.processmining.plugins.dottedchartanalysis.model.DottedChartModel;
 import org.processmining.plugins.log.ui.logdialog.LogDialogInitializer;
 import org.processmining.plugins.log.ui.logdialog.SlickerOpenLogSettings;
@@ -49,6 +50,8 @@ public class XLogIOObjectRenderer extends
 
 	protected Component visualizeRendererOption(XLogIOObjectVisualizationType e,
 			Object renderable, IOContainer ioContainer) {
+		
+		System.out.println("looking for renderer!");
 		Component result;
 		switch (e) {		
 		case DOTTED_CHART:
@@ -132,8 +135,10 @@ public class XLogIOObjectRenderer extends
 				PluginContext pluginContext = ProMPluginContextManager
 						.instance().getContext();
 
-				LogView result = LogProjectionPlugin.logToDottedChart(pluginContext, xLog);
-				dottedChartComponent = LogProjectionPlugin.visualize(pluginContext, result);
+				
+				LogView result = new LogView(xLog);
+				DottedChartPanel panel = LogProjectionPlugin.visualize(pluginContext, result);
+				dottedChartComponent = (JComponent) panel;
 				dottedLog = new WeakReference<XLog>(xLog);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -152,9 +157,9 @@ public class XLogIOObjectRenderer extends
 			try {
 
 				PluginContext pluginContext = ProMPluginContextManager
-						.instance().getFutureResultAwareContext(DottedChartAnalysisPlugin.class);
+						.instance().getContext();
 
-				DottedChartModel result = DottedChartAnalysisPlugin.helloWorld(pluginContext, xLog);
+				DottedChartModel result = new DottedChartModel(pluginContext, xLog);
 				dottedChartLegacyComponent = new DottedChartAnalysis(pluginContext, result);
 				dottedLegacyLog = new WeakReference<XLog>(xLog);
 			} catch (Exception e) {

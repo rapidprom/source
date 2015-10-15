@@ -3,14 +3,12 @@ package org.rapidprom.ioobjects;
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
-
-import com.rapidminer.ioobjects.ProMIOObject;
 import com.rapidminer.operator.ResultObjectAdapter;
 
-public class XLogIOObject extends ResultObjectAdapter implements ProMIOObject {
+public class XLogIOObject extends ResultObjectAdapter {
 
-	private static final long serialVersionUID = 1L;
-
+	private static final long serialVersionUID = 4145371490998363462L;
+	
 	private XLogIOObjectVisualizationType vt = XLogIOObjectVisualizationType.DEFAULT;
 	private PluginContext pc = null;
 	private XLog xLog = null;
@@ -62,13 +60,4 @@ public class XLogIOObject extends ResultObjectAdapter implements ProMIOObject {
 	public XLogIOObjectVisualizationType getVisualizationType() {
 		return this.vt;
 	}
-
-	@Override
-	public void clear() {
-		this.pc = null;
-		xLog.clear();
-		this.xLog = null;
-		this.vt = null;
-	}
-
 }
