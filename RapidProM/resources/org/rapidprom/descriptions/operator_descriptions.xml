@@ -475,10 +475,10 @@
   </operator>
   
   	<operator>
-        <name>Social Network Miner (Handover-of-Work Social Network)</name>
+        <name>Social Network Miner (Social Network)</name>
         <synopsis>This operator can be used to execute the Handover-of-Work Social Network Miner in order to discover a Social Network.</synopsis>
         <help>This operator can be used to execute the Handover-of-Work Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
-    <key>social_network_how_miner</key>
+    <key>social_network_miner</key>
   </operator>
   
     <operator>

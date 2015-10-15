@@ -1,17 +1,17 @@
-package com.rapidminer.ioobjects;
+package org.rapidprom.ioobjects;
 
 import com.rapidminer.operator.ResultObjectAdapter;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.transitionsystem.miner.TSMinerTransitionSystem;
 
-public class TSMinerTransitionSystemIOObject extends ResultObjectAdapter {
+public class TransitionSystemIOObject extends ResultObjectAdapter {
 
 	private static final long serialVersionUID = 1L;
 
 	private PluginContext pc = null;
 	private TSMinerTransitionSystem tSMinerTransitionSystem = null;
 
-	public TSMinerTransitionSystemIOObject (TSMinerTransitionSystem tSMinerTransitionSystem) {
+	public TransitionSystemIOObject (TSMinerTransitionSystem tSMinerTransitionSystem) {
 		this.tSMinerTransitionSystem = tSMinerTransitionSystem;
 	}
 

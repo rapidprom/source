@@ -4,7 +4,7 @@ public enum XLogIOObjectVisualizationType {
 
 	DEFAULT("Default"), 
 	EXAMPLE_SET("Example Set"),
-	X_DOTTED_CHART("XDottedChart");
+	X_DOTTED_CHART("DottedChart");
 
 	private final String name;
 

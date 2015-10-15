@@ -161,10 +161,10 @@
 	</ioobject>
 
 	<ioobject
-		name="TSMinerTransitionSystemProM"
-		class="com.rapidminer.ioobjects.TSMinerTransitionSystemIOObject"
+		name="TransitionSystemProM"
+		class="org.rapidprom.ioobjects.TransitionSystemIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.TSMinerTransitionSystemIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.TransitionSystemIOObjectRenderer</renderer>
 	</ioobject>
 
 	<ioobject

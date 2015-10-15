@@ -75,8 +75,8 @@
                 <class>com.rapidminer.operator.miningplugins.SocialNetworkSTminerTask</class>
             </operator>
             <operator>
-                <key>social_network_how_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SocialNetworkHoWminerTask</class>
+                <key>social_network_miner</key>
+                <class>org.rapidprom.operator.discovery.SocialNetworkMinerOperator</class>
             </operator>
             <operator>
                 <key>social_network_sc_miner</key>
@@ -92,7 +92,7 @@
             </operator>
             <operator>
                 <key>mine_transition_system</key>
-                <class>com.rapidminer.operator.miningplugins.MineTransitionSystemTask</class>
+                <class>org.rapidprom.operator.discovery.TransitionSystemMinerOperator</class>
             </operator>
             <operator>
                 <key>mine_fuzzy_model</key>
