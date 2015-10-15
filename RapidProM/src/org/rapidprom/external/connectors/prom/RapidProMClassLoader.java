@@ -1,9 +1,6 @@
 package org.rapidprom.external.connectors.prom;
 
-import com.rapidminer.tools.plugin.Plugin;
-import org.rapidprom.properties.RapidProMProperties;
-
-import java.util.List;
+import org.rapidprom.util.RapidProMUtils;
 
 public class RapidProMClassLoader {
 
@@ -11,12 +8,7 @@ public class RapidProMClassLoader {
 
     public static ClassLoader getRapidMinerClassLoader() {
         if (loader == null) {
-            List<Plugin> allPlugins = Plugin.getAllPlugins();
-            for (Plugin plugin : allPlugins) {
-                if (plugin.getName().equals(RapidProMProperties.instance().getProperties().getProperty("extension.name"))) {
-                    loader = plugin.getClassLoader();
-                }
-            }
+            loader = RapidProMUtils.getRapidProMPlugin().getClassLoader();
         }
         return loader;
     }

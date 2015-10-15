@@ -1,9 +1,11 @@
 package org.rapidprom;
 
-import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.external.connectors.prom.ProMLibraryManager;
+import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.util.RapidProMUtils;
 
 import com.rapidminer.gui.MainFrame;
+import com.rapidminer.tools.plugin.PluginException;
 
 /**
  * This class provides hooks for initialization
@@ -32,11 +34,21 @@ public class RapidProMInitializer {
 	 * This method will be called directly after the extension is initialized.
 	 * This is the first hook during start up. No initialization of the
 	 * operators or renderers has taken place when this is called.
+	 * 
+	 * We re-register the renderers because at startup they get loaded without the needed classes
+	 * The re-registering of operators is commented as it causes them to get loaded twice
 	 */
 	public static void initPlugin() {
 		// !DO NOT MOVE THE CALLS FROM THIS HOOK!
 		(new ProMLibraryManager()).startAndWait();
 		ProMPluginContextManager.instance().startAndWait();
+
+		try {
+			RapidProMUtils.getRapidProMPlugin().registerDescriptions();
+//			RapidProMUtils.getRapidProMPlugin().registerOperators();
+		} catch (PluginException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -46,6 +58,5 @@ public class RapidProMInitializer {
 	 * it's a little bit misleading.
 	 */
 	public static void initPluginManager() {
-
 	}
 }
