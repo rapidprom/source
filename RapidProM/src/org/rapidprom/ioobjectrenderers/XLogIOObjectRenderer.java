@@ -42,8 +42,10 @@ public class XLogIOObjectRenderer extends
 	private WeakReference<XLog> exampleSetLog = null;
 	private Component defaultComponent = null;
 	private WeakReference<XLog> defaultLog = null;
-	private Component dottedChartComponent = null; //TO-DO
+	private Component dottedChartComponent = null;
 	private WeakReference<XLog> dottedLog = null;
+	private Component dottedChartLegacyComponent = null;
+	private WeakReference<XLog> dottedLegacyLog = null;
 
 	protected Component visualizeRendererOption(XLogIOObjectVisualizationType e,
 			Object renderable, IOContainer ioContainer) {
@@ -145,21 +147,21 @@ public class XLogIOObjectRenderer extends
 			IOContainer ioContainer) {
 		XLogIOObject logioobject = (XLogIOObject) renderable;
 		XLog xLog = logioobject.getXLog();
-		if (dottedChartComponent == null || dottedLog == null
-				|| !(xLog.equals(dottedLog.get()))) {
+		if (dottedChartLegacyComponent == null || dottedLegacyLog == null
+				|| !(xLog.equals(dottedLegacyLog.get()))) {
 			try {
 
 				PluginContext pluginContext = ProMPluginContextManager
 						.instance().getFutureResultAwareContext(DottedChartAnalysisPlugin.class);
 
 				DottedChartModel result = DottedChartAnalysisPlugin.helloWorld(pluginContext, xLog);
-				dottedChartComponent = new DottedChartAnalysis(pluginContext, result);
-				dottedLog = new WeakReference<XLog>(xLog);
+				dottedChartLegacyComponent = new DottedChartAnalysis(pluginContext, result);
+				dottedLegacyLog = new WeakReference<XLog>(xLog);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		return dottedChartComponent;
+		return dottedChartLegacyComponent;
 	
 	}
 
