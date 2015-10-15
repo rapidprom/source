@@ -4,8 +4,9 @@ public enum XLogIOObjectVisualizationType {
 
 	DEFAULT("Default"), 
 	EXAMPLE_SET("Example Set"),
-	X_DOTTED_CHART("DottedChart");
-
+	DOTTED_CHART("DottedChart"),
+	DOTTED_CHART_L("DottedChart (Legacy)");
+	
 	private final String name;
 
 	private XLogIOObjectVisualizationType(final String name) {

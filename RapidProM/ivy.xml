@@ -13,6 +13,7 @@
         <dependency org="org.rapidprom" name="CPNet" rev="6.5.61" />
         <dependency org="org.rapidprom" name="DataAwareReplayer" rev="6.5.270" />
         <dependency org="org.rapidprom" name="DataPetriNets" rev="6.5.188" />
+        <dependency org="org.rapidprom" name="DottedChart" rev="6.5.17" />
         <dependency org="org.rapidprom" name="EvolutionaryTreeMiner" rev="6.5.38" />
         <dependency org="org.rapidprom" name="EventStream" rev="6.5.39" />
         <dependency org="org.rapidprom" name="FeaturePrediction" rev="6.5.25" />
