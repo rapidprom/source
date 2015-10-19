@@ -87,9 +87,8 @@ public class ImportXLogOperator extends AbstractReader<XLogIOObject> {
 			xLogIOObject = new XLogIOObject(
 					importLog(
 							PARAMETER_OPTIONS_IMPORTER[getParameterAsInt(PARAMETER_KEY_IMPORTER)],
-							getParameterAsFile(PARAMETER_KEY_EVENT_LOG_FILE)));
-			xLogIOObject.setPluginContext(ProMPluginContextManager.instance()
-					.getContext());
+							getParameterAsFile(PARAMETER_KEY_EVENT_LOG_FILE)),
+					ProMPluginContextManager.instance().getContext());
 			xLogIOObject
 					.setVisualizationType(XLogIOObjectVisualizationType.DEFAULT);
 		} catch (Exception e) {

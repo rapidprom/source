@@ -53,7 +53,7 @@ public class AbstractRapidProMDiscoveryOperator extends Operator {
 	}
 
 	protected XLog getXLog() throws UserError {
-		return ((XLogIOObject) inputXLog.getData(XLogIOObject.class)).getData();
+		return ((XLogIOObject) inputXLog.getData(XLogIOObject.class)).getArtifact();
 	}
 
 }

@@ -74,18 +74,18 @@ public class XLogIOObjectRenderer extends
 	protected Component createExampleSetComponet(Object renderable,
 			IOContainer ioContainer) {
 		XLogIOObject object = (XLogIOObject) renderable;
-		XLog log = object.getXLog();
+		XLog log = object.getArtifact();
 		if (exampleSetComponent == null || exampleSetLog == null
 				|| !(log.equals(exampleSetLog.get()))) {
 			final List<String> columnNames = new ArrayList<String>();
 			System.out.println("Render!");
 			ColumnNamesLog columnNames2 = XLogUtils
-					.getColumnNames(object.getPromLog());
+					.getColumnNames(object.getArtifact());
 			columnNames.addAll(columnNames2.getAttribsTrace());
 			columnNames.addAll(columnNames2.getAttribsEvents());
 			try {
 				TableModelXLog convertLogToStringTable = XLogUtils
-						.convertLogToStringTable(object.getPromLog(), false);
+						.convertLogToStringTable(object.getArtifact(), false);
 				return new ExtendedJScrollPane(new ExtendedJTable(
 						convertLogToStringTable, true, true));
 			} catch (Exception error) {
@@ -102,7 +102,7 @@ public class XLogIOObjectRenderer extends
 	protected Component createDefaultVisualizerComponent(Object renderable,
 			IOContainer ioContainer) {
 		XLogIOObject logioobject = (XLogIOObject) renderable;
-		XLog xLog = logioobject.getXLog();
+		XLog xLog = logioobject.getArtifact();
 		if (defaultComponent == null || defaultLog == null
 				|| !(xLog.equals(defaultLog.get()))) {
 			try {
@@ -127,7 +127,7 @@ public class XLogIOObjectRenderer extends
 	protected Component createDottedChartVisualizerComponent(Object renderable,
 			IOContainer ioContainer) {
 		XLogIOObject logioobject = (XLogIOObject) renderable;
-		XLog xLog = logioobject.getXLog();
+		XLog xLog = logioobject.getArtifact();
 		if (dottedChartComponent == null || dottedLog == null
 				|| !(xLog.equals(dottedLog.get()))) {
 			try {
@@ -151,7 +151,7 @@ public class XLogIOObjectRenderer extends
 	protected Component createDottedChartLegacyVisualizerComponent(Object renderable,
 			IOContainer ioContainer) {
 		XLogIOObject logioobject = (XLogIOObject) renderable;
-		XLog xLog = logioobject.getXLog();
+		XLog xLog = logioobject.getArtifact();
 		if (dottedChartLegacyComponent == null || dottedLegacyLog == null
 				|| !(xLog.equals(dottedLegacyLog.get()))) {
 			try {

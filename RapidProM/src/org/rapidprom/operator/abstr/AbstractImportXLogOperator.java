@@ -53,9 +53,7 @@ public abstract class AbstractImportXLogOperator
 		XLog log;
 		if (checkFileParameterMetaData(PARAMETER_LABEL_FILENAME)) {
 			log = importLog(importPlugin, getFile());
-			XLogIOObject xLogIOObject = new XLogIOObject(log);
-			xLogIOObject.setPluginContext(
-					ProMPluginContextManager.instance().getContext());
+			XLogIOObject xLogIOObject = new XLogIOObject(log,ProMPluginContextManager.instance().getContext());
 			xLogIOObject.setVisualizationType(
 					XLogIOObjectVisualizationType.DEFAULT);
 			output.deliver(xLogIOObject);

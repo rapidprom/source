@@ -3,61 +3,25 @@ package org.rapidprom.ioobjects;
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
-import com.rapidminer.operator.ResultObjectAdapter;
+import org.rapidprom.ioobjects.abstr.AbstractRapidProMIOObject;
 
-public class XLogIOObject extends ResultObjectAdapter {
+public class XLogIOObject extends AbstractRapidProMIOObject<XLog> {
 
-	private static final long serialVersionUID = 4145371490998363462L;
+	private static final long serialVersionUID = -1323690731245887615L;
 	
-	private XLogIOObjectVisualizationType vt = XLogIOObjectVisualizationType.DEFAULT;
-	private PluginContext pc = null;
-	private XLog xLog = null;
+	private XLogIOObjectVisualizationType visType;
 
-	public XLogIOObject() {
+	public XLogIOObject(XLog t, PluginContext context) {
+		super(t, context);
 	}
 
-	public XLogIOObject(XLog xLog) {
-		this.xLog = xLog;
+	public void setVisualizationType(XLogIOObjectVisualizationType visType) {
+		this.visType = visType;
+		
+	}
+	public XLogIOObjectVisualizationType getVisualizationType(){
+		return visType;
 	}
 
-	public void setPluginContext(PluginContext pc) {
-		this.pc = pc;
-	}
-
-	public PluginContext getPluginContext() {
-		return this.pc;
-	}
-
-	public void setXLog(XLog xLog) {
-		this.xLog = xLog;
-	}
-
-	public XLog getXLog() {
-		return xLog;
-	}
-
-	public String toResultString() {
-		String extractName = xLog.toString();
-		return "XLogIOObject:" + extractName;
-	}
-
-	public XLog getData() {
-		return xLog;
-	}
-
-	public XLog getPromLog() {
-		return xLog;
-	}
-
-	public void setPromLog(XLog log) {
-		this.xLog = log;
-	}
-
-	public void setVisualizationType(XLogIOObjectVisualizationType vt) {
-		this.vt = vt;
-	}
-
-	public XLogIOObjectVisualizationType getVisualizationType() {
-		return this.vt;
-	}
+	
 }
