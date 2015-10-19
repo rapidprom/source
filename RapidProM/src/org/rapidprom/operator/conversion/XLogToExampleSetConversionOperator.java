@@ -1,10 +1,13 @@
-package com.rapidminer.operator.conversionplugins;
+package org.rapidprom.operator.conversion;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.deckfour.xes.model.XLog;
+import org.rapidprom.ioobjects.XLogIOObject;
 
 import com.rapidminer.example.Attribute;
 import com.rapidminer.example.ExampleSet;
@@ -12,7 +15,6 @@ import com.rapidminer.example.table.AttributeFactory;
 import com.rapidminer.example.table.DataRow;
 import com.rapidminer.example.table.DataRowFactory;
 import com.rapidminer.example.table.MemoryExampleTable;
-import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -21,7 +23,6 @@ import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.AttributeMetaData;
 import com.rapidminer.operator.ports.metadata.ExampleSetMetaData;
-import com.rapidminer.operator.ports.metadata.ExampleSetPrecondition;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.operator.ports.metadata.MDInteger;
 import com.rapidminer.operator.ports.metadata.SetRelation;
@@ -32,7 +33,7 @@ import com.rapidminer.util.XLogUtils;
 import com.rapidminer.util.XLogUtils.AttributeTypes;
 import com.rapidminer.util.XLogUtils.TableModelXLog;
 
-public class XLogToExampleSet extends Operator {
+public class XLogToExampleSetConversionOperator extends Operator {
 	
 	private final String CONCEPT_NAME_TRACE = "T:concept:name";
 	private final String CONCEPT_NAME_EVENT = "E:concept:name";
@@ -48,7 +49,7 @@ public class XLogToExampleSet extends Operator {
 	/**
 	 * The default constructor needed in exactly this signature
 	 */
-	public XLogToExampleSet(OperatorDescription description) {
+	public XLogToExampleSetConversionOperator(OperatorDescription description) {
 		super(description);
 		
 		/** Adding a rule for the output */
@@ -71,12 +72,12 @@ public class XLogToExampleSet extends Operator {
 	
 	@Override
 	public void doWork() throws OperatorException {
-		// get ProMContext
-		LogService logService = LogService.getGlobal();
-		logService.log("start do transformation XLog to ExampleSet", LogService.NOTE);
-		// get the log
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "Start: Event Log to Table conversion");
+		long time = System.currentTimeMillis();
+		
 		XLogIOObject log = inputLog.getData(XLogIOObject.class);
-		XLog promLog = log.getPromLog();
+		XLog promLog = log.getArtifact();
 		TableModelXLog convertedLog = null;
 		MemoryExampleTable table = null;
 		ExampleSet es = null;
@@ -95,7 +96,9 @@ public class XLogToExampleSet extends Operator {
 		/** Adding a rule for the output */
 		getTransformer().addRule( new GenerateNewMDRule(output, this.metaData));
 		output.deliver(es);
-		logService.log("end do transformation XLog to ExampleSet", LogService.NOTE);
+		
+		logger.log(Level.INFO, "End: Event Log to Table conversion ("
+				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 
 	}
 	

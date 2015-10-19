@@ -24,10 +24,10 @@
 		<renderer>com.rapidminer.ioobjectrenderers.WoflanDiagnosisIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
-		name="BPMNDiagramProM"
-		class="com.rapidminer.ioobjects.BPMNDiagramIOObject"
+		name="BPMN"
+		class="org.rapidprom.ioobjects.BPMNIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.BPMNDiagramIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.BPMNIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="PredictorProM"

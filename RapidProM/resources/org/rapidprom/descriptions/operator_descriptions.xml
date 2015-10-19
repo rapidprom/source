@@ -251,15 +251,15 @@
   </operator>
   
 	<operator>
-        <name>Log to Exampleset</name>
-        <synopsis>This operator can be used to convert a ProM log into an Exampleset.</synopsis>
+        <name>Event Log to Data Table (Exampleset)</name>
+        <synopsis>This operator can be used to convert a ProM log into an Exampleset (data table).</synopsis>
         <help>This operator can be used to convert a ProM log into an Exampleset. As input a log is needed. Each event of the log is converted into a single row in the Exampleset. Trace attributes are repeated in each row that is created for an event of that trace.</help>
     <key>xlog_to_exampleset</key>
   </operator>
   
 	<operator>
-        <name>Exampleset to Log</name>
-        <synopsis>This operator can be used to convert an Exampleset into an ProM log.</synopsis>
+        <name>Data Table to Event Log (XLog)</name>
+        <synopsis>This operator can be used to convert an Exampleset (data table) into an ProM log.</synopsis>
         <help>This operator can be used to convert an Exampleset into an ProM log. As input an Exampleset is needed. Each row of the exampleset is converted into a event belonging to a trace. For the conversion it is important that the following columns exist: T:concept:name (the concept name attribute of the trace), E:concept:name (the concept name attribute of the event), E:lifecycle:transition (the life cycle attribute of the event), E:org:resource (the resource attribute of the event), E:org:role (the role attribute of the event), E:org:group (the group attribute of the event), and E:time:time (the time attribute of the event).</help>
     <key>exampleset_to_xlog</key>
   </operator>

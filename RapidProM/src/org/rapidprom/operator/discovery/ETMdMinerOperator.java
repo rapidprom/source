@@ -68,7 +68,7 @@ public class ETMdMinerOperator extends Operator {
 		ETMParam eTMParam = getConfiguration(xLog, pluginContext);
 
 		ProcessTreeIOObject processTreeIOObject = new ProcessTreeIOObject(
-				ETMwithoutGUI.minePTWithParameters(pluginContext, xLog.getXLog(),
+				ETMwithoutGUI.minePTWithParameters(pluginContext, xLog.getArtifact(),
 						new XEventAndClassifier(new XEventNameClassifier()),
 						eTMParam));
 		processTreeIOObject.setPluginContext(pluginContext);
@@ -144,7 +144,7 @@ public class ETMdMinerOperator extends Operator {
 		ETMParam param;
 		try {
 			 param = ETMParamFactory.buildParam(
-				    log.getData(),
+				    log.getArtifact(),
 					context,
 					getParameterAsInt(PARAMETER_1),
 					getParameterAsInt(PARAMETER_2),
