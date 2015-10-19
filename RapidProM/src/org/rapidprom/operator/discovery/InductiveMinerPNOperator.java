@@ -37,8 +37,7 @@ public class InductiveMinerPNOperator extends AbstractInductiveMinerOperator {
 		
 		Object[] result = IMPetriNet.minePetriNet(pluginContext, getXLog(), param);
 		
-		PetriNetIOObject petrinet = new PetriNetIOObject((Petrinet) result[0]);
-		petrinet.setPluginContext(pluginContext);
+		PetriNetIOObject petrinet = new PetriNetIOObject((Petrinet) result[0],pluginContext);
 		
 		output.deliver(petrinet);		
 		logger.log(Level.INFO, "End: inductive miner - pn ("

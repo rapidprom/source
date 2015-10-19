@@ -95,16 +95,12 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 				configuration);
 
 		Petrinet pn = (Petrinet) pnAndMarking[0];
-		PetriNetIOObject petrinetIOObject = new PetriNetIOObject(pn);
-		petrinetIOObject.setPluginContext(context);
+		PetriNetIOObject petrinetIOObject = new PetriNetIOObject(pn,context);
 		outputPetrinet.deliver(petrinetIOObject);
 		MarkingIOObject markingIOObject = new MarkingIOObject(
 				(Marking) pnAndMarking[1]);
 		markingIOObject.setPluginContext(context);
-		// add to list so that afterwards it can be cleared if needed
-		ProMIOObjectList instance = ProMIOObjectList.getInstance();
-		instance.addToList(markingIOObject);
-		instance.addToList(petrinetIOObject);
+		
 		outputMarking.deliver(markingIOObject);
 	}
 

@@ -54,8 +54,7 @@ public class MineaProcessTreeusingtheETMalgorithmTask extends Operator {
 		CallProm cp = new CallProm();
 		//Object[] runPlugin = cp.runPlugin(pluginContext, "XX", "Mine a Process Tree with ETMd", pars);
 		Object[] runPlugin = cp.runPlugin(pluginContext, "XX", "Mine a Process Tree using the ETM algorithm", pars);
-		ProcessTreeIOObject processTreeIOObject = new ProcessTreeIOObject((ProcessTree) runPlugin[0]);
-		processTreeIOObject.setPluginContext(pluginContext);
+		ProcessTreeIOObject processTreeIOObject = new ProcessTreeIOObject((ProcessTree) runPlugin[0],pluginContext);
 	
 		outputProcessTree.deliver(processTreeIOObject);
 		logService.log("end do work Mine a Process Tree using the ETM algorithm", LogService.NOTE);

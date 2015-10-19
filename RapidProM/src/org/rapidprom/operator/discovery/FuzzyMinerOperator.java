@@ -63,8 +63,7 @@ public class FuzzyMinerOperator extends AbstractRapidProMDiscoveryOperator {
 		FuzzyMinerPlugin executer = new FuzzyMinerPlugin();
 		MetricsRepositoryIOObject metricsRepositoryIOObject = new MetricsRepositoryIOObject(
 				executer.mineGeneric(pluginContext, getXLog(),
-						metricsRepository, attenuation, maxDistance));
-		metricsRepositoryIOObject.setPluginContext(pluginContext);
+						metricsRepository, attenuation, maxDistance),pluginContext);
 
 		outputMetricsRepository.deliver(metricsRepositoryIOObject);
 		logger.log(Level.INFO,

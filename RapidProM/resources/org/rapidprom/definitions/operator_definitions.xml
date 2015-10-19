@@ -212,7 +212,7 @@
             </operator>
             <operator>
                 <key>convert_heuristics_net_into_petri_net</key>
-                <class>com.rapidminer.operator.conversionplugins.ConvertHeuristicsnetintoPetrinetTask</class>
+                <class>org.rapidprom.operator.conversion.HeuristicNetToPetriNetConversionOperator</class>
             </operator> 
             <operator>
                 <key>convert_process_tree_to_petri_net</key>

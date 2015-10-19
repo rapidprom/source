@@ -44,12 +44,11 @@ public class ConvertProcessTreetoPetriNetTask extends Operator {
 		PluginContext pluginContext = context.getPluginContext();
 		List<Object> pars = new ArrayList<Object>();
 		ProcessTreeIOObject ProcessTreedata = inputProcessTree.getData(ProcessTreeIOObject.class);
-		pars.add(ProcessTreedata.getData());
+		pars.add(ProcessTreedata.getArtifact());
 
 		CallProm cp = new CallProm();
 		Object[] runPlugin = cp.runPlugin(pluginContext, "XX", "Convert Process Tree to Petri Net", pars);
-		PetriNetIOObject petrinetIOObject = new PetriNetIOObject((Petrinet) runPlugin[0]);
-		petrinetIOObject.setPluginContext(pluginContext);
+		PetriNetIOObject petrinetIOObject = new PetriNetIOObject((Petrinet) runPlugin[0],pluginContext);
 		outputPetrinet.deliver(petrinetIOObject);
 		MarkingIOObject markingIOObjectInitial = new MarkingIOObject((Marking) runPlugin[1]);
 		markingIOObjectInitial.setPluginContext(pluginContext);
@@ -58,10 +57,7 @@ public class ConvertProcessTreetoPetriNetTask extends Operator {
 		markingIOObjectFinal.setPluginContext(pluginContext);
 		outputMarkingFinal.deliver(markingIOObjectFinal);
 		// add to list so that afterwards it can be cleared if needed
-		ProMIOObjectList instance = ProMIOObjectList.getInstance();
-		instance.addToList(markingIOObjectFinal);
-		instance.addToList(markingIOObjectInitial);
-		instance.addToList(petrinetIOObject);
+		
 		logService.log("end do work Convert Process Tree to Petri Net", LogService.NOTE);
 	}
 

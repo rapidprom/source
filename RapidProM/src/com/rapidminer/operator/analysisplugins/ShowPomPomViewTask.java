@@ -40,7 +40,7 @@ public class ShowPomPomViewTask extends Operator {
 		
 		List<Object> pars = new ArrayList<Object>();
 		PetriNetIOObject Petrinetdata = inputPetrinet.getData(PetriNetIOObject.class);
-		pars.add(Petrinetdata.getData());
+		pars.add(Petrinetdata.getArtifact());
 
 		XLogIOObject XLogdata = inputXLog.getData(XLogIOObject.class);
 		pars.add(XLogdata.getData());

@@ -47,7 +47,7 @@ public class PetriNetToBpmnConversionOperator extends Operator {
 
 		PetriNetToBPMNConverterPlugin converter = new PetriNetToBPMNConverterPlugin();
 		Object[] result = converter.convert((UIPluginContext) pluginContext,
-				input.getData(PetriNetIOObject.class).getData());
+				input.getData(PetriNetIOObject.class).getArtifact());
 		// BPMN2PetriNetConverter_Plugin converter = new
 		// BPMN2PetriNetConverter_Plugin();
 		// Object[] result = converter.convert(pluginContext,

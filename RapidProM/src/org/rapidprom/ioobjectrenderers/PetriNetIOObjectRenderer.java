@@ -1,38 +1,24 @@
 package org.rapidprom.ioobjectrenderers;
 
+import javax.swing.JComponent;
 
-import java.awt.Component;
 import org.processmining.plugins.petrinet.PetriNetVisualization;
+import org.rapidprom.ioobjectrenderers.abstr.AbstractRapidProMIOObjectRenderer;
 import org.rapidprom.ioobjects.PetriNetIOObject;
-import com.rapidminer.gui.renderer.AbstractRenderer;
-import com.rapidminer.gui.renderer.DefaultComponentRenderable;
-import com.rapidminer.gui.renderer.DefaultReadable;
-import com.rapidminer.operator.IOContainer;
-import com.rapidminer.report.Reportable;
 
-
-public class PetriNetIOObjectRenderer extends AbstractRenderer {
+public class PetriNetIOObjectRenderer extends
+		AbstractRapidProMIOObjectRenderer<PetriNetIOObject> {
 
 	@Override
 	public String getName() {
-		return "Petri net renderer";
+		return "Petri Net renderer";
 	}
 
 	@Override
-	public Component getVisualizationComponent(Object renderable, IOContainer ioContainer) {
-		if (renderable instanceof PetriNetIOObject) {
-			PetriNetIOObject object = (PetriNetIOObject) renderable;
-			PetriNetVisualization visualizer = new PetriNetVisualization();
-			return visualizer.visualize(object.getPluginContext(), object.getPn());
-		}
-		return null;
+	protected JComponent runVisualization(PetriNetIOObject artifact) {
+		PetriNetVisualization visualizer = new PetriNetVisualization();
+		return visualizer.visualize(artifact.getPluginContext(),
+				artifact.getArtifact());
 	}
 
-	@Override
-	public Reportable createReportable(Object renderable, IOContainer ioContainer, int desiredWidth, int desiredHeight) {
-		if (renderable instanceof PetriNetIOObject) {									
-			return new DefaultComponentRenderable(getVisualizationComponent(renderable, ioContainer));
-		}
-		return new DefaultReadable("No Petri Net visualization available.");
-	}
 }

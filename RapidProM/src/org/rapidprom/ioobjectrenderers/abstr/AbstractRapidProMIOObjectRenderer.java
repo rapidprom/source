@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JComponent;
 
-import org.processmining.framework.plugin.PluginContext;
 import org.rapidprom.ioobjects.abstr.AbstractRapidProMIOObject;
 
 import com.rapidminer.gui.renderer.AbstractRenderer;
@@ -21,8 +20,7 @@ public abstract class AbstractRapidProMIOObjectRenderer<T extends AbstractRapidP
 			IOContainer ioContainer) {
 		if (renderable instanceof AbstractRapidProMIOObject<?>) {
 			T object = (T) renderable;
-			JComponent panel = runVisualization(
-					(T) object.getArtifact(), object.getPluginContext());
+			JComponent panel = runVisualization(object);
 			return panel;
 		}
 		return null;
@@ -35,6 +33,5 @@ public abstract class AbstractRapidProMIOObjectRenderer<T extends AbstractRapidP
 				renderable, ioContainer));
 	}
 
-	protected abstract JComponent runVisualization(T artifact,
-			PluginContext pluginContext);
+	protected abstract JComponent runVisualization(T artifact);
 }

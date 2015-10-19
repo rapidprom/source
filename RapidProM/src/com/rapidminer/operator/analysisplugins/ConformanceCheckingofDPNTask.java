@@ -228,7 +228,7 @@ public class ConformanceCheckingofDPNTask extends Operator {
 		try
 		{
 			//PetriNetWithDataFactory dpnFactory = new PetriNetWithDataFactory(net.getData(), net.getData().getLabel(), false);
-			PetriNetWithDataFactory dpnFactory = new PetriNetWithDataFactory((PetrinetGraph) net.getPn().getGraph(), net.getData().getLabel(), false);
+			PetriNetWithDataFactory dpnFactory = new PetriNetWithDataFactory((PetrinetGraph) net.getArtifact().getGraph(), net.getArtifact().getLabel(), false);
 			dpnNet = dpnFactory.getRetValue();
 		}
 		catch(Exception e)

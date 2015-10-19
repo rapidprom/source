@@ -37,8 +37,7 @@ public class InductiveMinerPTOperator extends AbstractInductiveMinerOperator {
 		MiningParameters param = getConfiguration();
 
 		ProcessTreeIOObject result = new ProcessTreeIOObject(
-				IMProcessTree.mineProcessTree(getXLog(), param));
-		result.setPluginContext(pluginContext);
+				IMProcessTree.mineProcessTree(getXLog(), param),pluginContext);
 		result.setVisualizationType(ProcessTreeIOObjectVisualizationType.DEFAULT);
 
 		output.deliver(result);

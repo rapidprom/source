@@ -70,8 +70,7 @@ public class ETMdMinerOperator extends Operator {
 		ProcessTreeIOObject processTreeIOObject = new ProcessTreeIOObject(
 				ETMwithoutGUI.minePTWithParameters(pluginContext, xLog.getArtifact(),
 						new XEventAndClassifier(new XEventNameClassifier()),
-						eTMParam));
-		processTreeIOObject.setPluginContext(pluginContext);
+						eTMParam),pluginContext);
 		outputProcessTree.deliver(processTreeIOObject);
 
 		logger.log(

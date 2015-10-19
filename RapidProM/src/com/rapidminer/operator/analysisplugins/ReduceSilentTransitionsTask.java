@@ -43,24 +43,19 @@ public class ReduceSilentTransitionsTask extends Operator {
 		PluginContext pluginContext = context.getPluginContext();
 		List<Object> pars = new ArrayList<Object>();
 		PetriNetIOObject Petrinetdata = inputPetrinet.getData(PetriNetIOObject.class);
-		pars.add(Petrinetdata.getData());
+		pars.add(Petrinetdata.getArtifact());
 
 		MarkingIOObject Markingdata = inputMarking.getData(MarkingIOObject.class);
 		pars.add(Markingdata.getData());
 
 		CallProm cp = new CallProm();
 		Object[] runPlugin = cp.runPlugin(pluginContext, "XX", "Reduce Silent Transitions", pars);
-		PetriNetIOObject petrinetIOObject = new PetriNetIOObject((Petrinet) runPlugin[0]);
-		petrinetIOObject.setPluginContext(pluginContext);
+		PetriNetIOObject petrinetIOObject = new PetriNetIOObject((Petrinet) runPlugin[0],pluginContext);
 		outputPetrinet.deliver(petrinetIOObject);
 		MarkingIOObject markingIOObject = new MarkingIOObject((Marking) runPlugin[1]);
 		markingIOObject.setPluginContext(pluginContext);
 		outputMarking.deliver(markingIOObject);
-		// add to list so that afterwards it can be cleared if needed
-		ProMIOObjectList instance = ProMIOObjectList.getInstance();
-		instance.addToList(markingIOObject);
-		instance.addToList(petrinetIOObject);
-		//logService.log("end do work Reduce Silent Transitions", LogService.NOTE);
+		
 	}
 
 }

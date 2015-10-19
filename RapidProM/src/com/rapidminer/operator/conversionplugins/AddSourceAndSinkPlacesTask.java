@@ -33,7 +33,7 @@ public class AddSourceAndSinkPlacesTask extends Operator {
 	public void doWork() throws OperatorException {
 		
 		PetriNetIOObject petrinet = inputPN.getData(PetriNetIOObject.class);
-		Petrinet pn = petrinet.getPn();
+		Petrinet pn = petrinet.getArtifact();
 		
 		Place[] sources = getSources(pn);
 		Place[] sinks = getSinks(pn);

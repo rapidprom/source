@@ -48,7 +48,7 @@ public class ReplayaLogonPetriNetforPerformance_ConformanceAnalysisTask extends 
 		PluginContext pluginContext = context.getPluginContext();
 		List<Object> pars = new ArrayList<Object>();
 		PetriNetIOObject PetrinetGraphdata = inputPetrinetGraph.getData(PetriNetIOObject.class);
-		pars.add(PetrinetGraphdata.getData());
+		pars.add(PetrinetGraphdata.getArtifact());
 
 		XLogIOObject XLogdata = inputXLog.getData(XLogIOObject.class);
 		pars.add(XLogdata.getData());

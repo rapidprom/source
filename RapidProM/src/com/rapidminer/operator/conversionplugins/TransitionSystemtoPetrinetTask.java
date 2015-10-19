@@ -49,8 +49,7 @@ public class TransitionSystemtoPetrinetTask extends Operator {
 		CallProm cp = new CallProm();
 		Object[] runPlugin = cp.runPlugin(pluginContext, "XX", "Transition System to Petrinet", pars);
 		
-		PetriNetIOObject petrinetIOObject = new PetriNetIOObject((Petrinet) runPlugin[0]);
-		petrinetIOObject.setPluginContext(pluginContext);
+		PetriNetIOObject petrinetIOObject = new PetriNetIOObject((Petrinet) runPlugin[0],pluginContext);
 		outputPetrinet.deliver(petrinetIOObject);
 		
 		MarkingIOObject markingIOObject = new MarkingIOObject((Marking) runPlugin[1]);

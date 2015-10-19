@@ -103,8 +103,7 @@ public class NameListToPetrinetTask extends Operator{
 		a.addArc(last, in);
 		a.addArc(in,first);
 		
-		PetriNetIOObject outputnet = new PetriNetIOObject(a);
-		outputnet.setPluginContext(pluginContext);
+		PetriNetIOObject outputnet = new PetriNetIOObject(a, pluginContext);
 		output.deliver(outputnet);
 		
 		Object[][] output = new Object[list.length][1];

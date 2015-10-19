@@ -60,7 +60,7 @@ public class AnalyzewithWoflanTask extends Operator {
 		PluginContext pluginContext = context.getPluginContext();
 		List<Object> pars = new ArrayList<Object>();
 		PetriNetIOObject Petrinetdata = inputPetrinet.getData(PetriNetIOObject.class);
-		pars.add(Petrinetdata.getData());
+		pars.add(Petrinetdata.getArtifact());
 		WoflanDiagnosisIOObject woflanDiagnosisIOObject = null;
 
 		SimpleTimeLimiter limiter = new SimpleTimeLimiter();
@@ -73,7 +73,7 @@ public class AnalyzewithWoflanTask extends Operator {
 		} 
 		catch (Exception e) 
 		{
-			woflanDiagnosisIOObject = new WoflanDiagnosisIOObject(new WoflanDiagnosis(Petrinetdata.getData()));
+			woflanDiagnosisIOObject = new WoflanDiagnosisIOObject(new WoflanDiagnosis(Petrinetdata.getArtifact()));
 			e.printStackTrace();
 		}
 		
@@ -129,7 +129,7 @@ public class AnalyzewithWoflanTask extends Operator {
 		public WoflanDiagnosisIOObject call() throws Exception {
 			CallProm cp = new CallProm();
 			List<Object> pars = new ArrayList<Object>();
-			pars.add(pn.getData());
+			pars.add(pn.getArtifact());
 			Object[] runPlugin = cp.runPlugin(pc, "XX", "Analyze with Woflan", pars);
 			WoflanDiagnosisIOObject woflanDiagnosisIOObject = new WoflanDiagnosisIOObject((WoflanDiagnosis) runPlugin[0]);
 			return woflanDiagnosisIOObject;

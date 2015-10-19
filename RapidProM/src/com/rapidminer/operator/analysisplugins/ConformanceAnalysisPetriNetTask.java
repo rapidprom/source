@@ -218,7 +218,7 @@ public class ConformanceAnalysisPetriNetTask extends Operator {
 		XLog promLog = log.getPromLog();
 		// get the petri net
 		PetriNetIOObject data = inputPN.getData(PetriNetIOObject.class);
-		Petrinet pn = data.getPn();
+		Petrinet pn = data.getArtifact();
 		// run the plugin
 		int maxNumberStates = getConfigurationMaxNumberStates(parameters);
 		boolean noFinalMarking = getConfigurationFinalMarking(parameters);

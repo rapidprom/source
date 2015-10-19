@@ -52,9 +52,8 @@ public class ImportPetriNetOperator extends AbstractRapidProMImportOperator {
 				e.printStackTrace();
 			}
 			PetriNetIOObject petriNetIOObject = new PetriNetIOObject(
-					(Petrinet) result[0]);
-			petriNetIOObject.setPluginContext(
-					ProMPluginContextManager.instance().getContext());
+					(Petrinet) result[0], ProMPluginContextManager.instance().getContext());
+
 			outputPetriNet.deliver(petriNetIOObject);
 
 			logger.log(Level.INFO, "End: importing petri net ("

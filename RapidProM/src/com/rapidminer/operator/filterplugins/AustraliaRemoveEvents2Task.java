@@ -43,7 +43,7 @@ public class AustraliaRemoveEvents2Task extends Operator {
 		pars.add(XLogdata.getData());
 
 		PetriNetIOObject Petrinetdata = inputPetrinet.getData(PetriNetIOObject.class);
-		pars.add(Petrinetdata.getData());
+		pars.add(Petrinetdata.getArtifact());
 
 		CallProm cp = new CallProm();
 		Object[] runPlugin = cp.runPlugin(pluginContext, "XX", "Australia Remove Events2", pars);

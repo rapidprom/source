@@ -48,9 +48,7 @@ public class AlphaMinerOperator extends AbstractRapidProMDiscoveryOperator {
 			Object[] result = miner.doMining(pluginContext, getXLog());
 
 			PetriNetIOObject petriNetIOObject = new PetriNetIOObject(
-					(Petrinet) result[0]);
-			petriNetIOObject.setPluginContext(pluginContext);
-
+					(Petrinet) result[0],pluginContext);
 			output.deliver(petriNetIOObject);
 		} catch (Exception e) {
 			throw new OperatorException(e.getMessage());

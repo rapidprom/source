@@ -46,7 +46,7 @@ AbstractMultipleVisualizersRenderer<ProcessTreeIOObjectVisualizationType> {
 	public Component createDefaultComponet(Object renderable,
 			IOContainer ioContainer) {
 		ProcessTreeIOObject object = (ProcessTreeIOObject) renderable;
-		ProcessTree pt = object.getProcessTree();
+		ProcessTree pt = object.getArtifact();
 		if (defaultComponent == null || defaultProcessTree == null
 				|| !(pt.equals(defaultProcessTree.get()))) {
 			PluginContext pluginContext = ProMPluginContextManager
@@ -60,7 +60,7 @@ AbstractMultipleVisualizersRenderer<ProcessTreeIOObjectVisualizationType> {
 	
 	public Component createDotComponent(Object renderable, IOContainer ioContainer) {
 		ProcessTreeIOObject object = (ProcessTreeIOObject) renderable;
-		ProcessTree pt = object.getProcessTree();
+		ProcessTree pt = object.getArtifact();
 		if (dotComponent == null || dotProcessTree == null
 				|| !(pt.equals(dotProcessTree.get()))) {
 			try {

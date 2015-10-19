@@ -44,12 +44,12 @@ public class ConstructReachabilityGraphofaPetriNetTask extends Operator {
 		List<Object> pars = new ArrayList<Object>();
 		
 		PetriNetIOObject Petrinetdata = inputPetrinet.getData(PetriNetIOObject.class);
-		pars.add(Petrinetdata.getData());
+		pars.add(Petrinetdata.getArtifact());
 
 		MarkingIOObject Markingdata = inputMarking.getData(MarkingIOObject.class);
 		pars.add(Markingdata.getData());
 		
-		if(Petrinetdata.getData() == null || Markingdata.getData() == null)
+		if(Petrinetdata.getArtifact() == null || Markingdata.getData() == null)
 			System.out.println("Inputs are null");
 		
 

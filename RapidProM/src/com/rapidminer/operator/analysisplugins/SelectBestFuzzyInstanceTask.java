@@ -46,7 +46,7 @@ public class SelectBestFuzzyInstanceTask extends Operator {
 		PluginContext pluginContext = context.getPluginContext();
 		List<Object> pars = new ArrayList<Object>();
 		MetricsRepositoryIOObject MetricsRepositorydata = inputMetricsRepository.getData(MetricsRepositoryIOObject.class);
-		pars.add(MetricsRepositorydata.getData());
+		pars.add(MetricsRepositorydata.getArtifact());
 
 		CallProm cp = new CallProm();
 		Object[] runPlugin = cp.runPlugin(pluginContext, "XX", "Select Best Fuzzy Instance", pars);

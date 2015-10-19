@@ -43,9 +43,8 @@ public class ExportToPNML_PetriNet extends Operator {
 		PluginContext pluginContext = context.getPluginContext();
 		// get the pn
 		PetriNetIOObject pn = inputLog.getData(PetriNetIOObject.class);
-		Petrinet pnProM = pn.getPn();
-		// do the visualisation
-		pn.setPluginContext(pluginContext);
+		Petrinet pnProM = pn.getArtifact();
+		
 		//PetriNetIOObjectRenderer.runVisualization(pn.getPn(), pluginContext);
 		CallProm tp = new CallProm();
 		List<Object> pars2 = new ArrayList<Object>();
