@@ -3,7 +3,7 @@
     <settings defaultResolver="default" />
     <resolvers>
          <url name="rapidprom" checkmodified="true">
-            <ivy pattern="https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision].xml" />
+            <ivy pattern="https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-[release].xml" />
             <artifact pattern="https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision].[ext]" />
         </url>
         <url name="rapidprom-thirdparty-lib" checkmodified="true">
