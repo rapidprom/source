@@ -4,11 +4,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.models.graphbased.directed.petrinet.Petrinet;
-import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet.InvalidProcessTreeException;
-import org.processmining.processtree.conversion.ProcessTree2Petrinet.NotYetImplementedException;
+import org.processmining.ptconversions.pn.ProcessTree2Petrinet;
+import org.processmining.ptconversions.pn.ProcessTree2Petrinet.PetrinetWithMarkings;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.ProcessTreeIOObject;
@@ -41,27 +38,25 @@ public class ProcessTreeToPetriNetConversionOperator extends Operator {
 		long time = System.currentTimeMillis();
 
 		PluginContext pluginContext = ProMPluginContextManager.instance()
-				.getFutureResultAwareContext(ProcessTree2Petrinet.class);
+				.getContext();
 
-		ProcessTree2Petrinet converter = new ProcessTree2Petrinet();
-
-		Object[] result = null;
+		PetrinetWithMarkings result = null;
 		try {
-			result = converter.convert(pluginContext,
-					input.getData(ProcessTreeIOObject.class).getArtifact());
+			result = ProcessTree2Petrinet.convert(input.getData(
+					ProcessTreeIOObject.class).getArtifact());
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new OperatorException("Invalid Process Tree");
+			throw new OperatorException(
+					"The process tree could not be converted to a petri net");
 		}
 
-		PetriNetIOObject petriNet = new PetriNetIOObject((Petrinet) result[0],
+		PetriNetIOObject petriNet = new PetriNetIOObject(result.petrinet,
 				pluginContext);
-		petriNet.setInitialMarking((Marking) result[1]);
+		petriNet.setInitialMarking(result.initialMarking);
 
 		output.deliver(petriNet);
 
 		logger.log(Level.INFO, "End: Process Tree to Petri Net conversion ("
 				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
-
 }
