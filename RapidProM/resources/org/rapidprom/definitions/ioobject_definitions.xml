@@ -60,9 +60,9 @@
 	</ioobject>
 	<ioobject
 		name="ReachabilityGraphProM"
-		class="com.rapidminer.ioobjects.ReachabilityGraphIOObject"
+		class="org.rapidprom.ioobjects.ReachabilityGraphIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.ReachabilityGraphIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.ReachabilityGraphIOObjectRenderer</renderer>
 	</ioobject>
     <ioobject
 		name="FuzzyAnimationProM"
@@ -110,13 +110,6 @@
         reportable="true">
         <renderer>com.rapidminer.ioobjectrenderers.GuideTreeIOObjectRenderer</renderer>
     </ioobject>
-	
-	<ioobject
-		name="MarkingProM"
-		class="com.rapidminer.ioobjects.MarkingIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.MarkingIOObjectRenderer</renderer>
-	</ioobject>
 	
 	<ioobject
 		name="HeuristicsNetArrayObjectProM"

@@ -31,7 +31,6 @@ import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.operator.abstr.AbstractRapidProMDiscoveryOperator;
 
-import com.rapidminer.ioobjects.MarkingIOObject;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.OutputPort;
@@ -42,14 +41,11 @@ import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.parameter.ParameterTypeDouble;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.parameter.conditions.EqualStringCondition;
-import com.rapidminer.util.ProMIOObjectList;
 
 public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
 	private OutputPort outputPetrinet = getOutputPorts().createPort(
 			"model (ProM Petri Net)");
-	private OutputPort outputMarking = getOutputPorts().createPort(
-			"marking (ProM Marking)");
 
 	private static final String PARAMETER_KEY_EAC = "enforce_emptiness_after_completion";
 	private static final String PARAMETER_DESC_EAC = "Indicates whether the net is empty after replaying the event log";
@@ -70,8 +66,6 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
 		getTransformer().addRule(
 				new GenerateNewMDRule(outputPetrinet, PetriNetIOObject.class));
-		getTransformer().addRule(
-				new GenerateNewMDRule(outputMarking, MarkingIOObject.class));
 	}
 
 	public void doWork() throws OperatorException {
@@ -95,13 +89,9 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 				configuration);
 
 		Petrinet pn = (Petrinet) pnAndMarking[0];
-		PetriNetIOObject petrinetIOObject = new PetriNetIOObject(pn,context);
+		PetriNetIOObject petrinetIOObject = new PetriNetIOObject(pn, context);
+		petrinetIOObject.setInitialMarking((Marking) pnAndMarking[1]);
 		outputPetrinet.deliver(petrinetIOObject);
-		MarkingIOObject markingIOObject = new MarkingIOObject(
-				(Marking) pnAndMarking[1]);
-		markingIOObject.setPluginContext(context);
-		
-		outputMarking.deliver(markingIOObject);
 	}
 
 	private Collection<LPConstraintType> getConstraintTypes() {

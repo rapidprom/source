@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
+import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.petrinet.mining.alphaminer.AlphaMiner;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
@@ -49,6 +50,8 @@ public class AlphaMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
 			PetriNetIOObject petriNetIOObject = new PetriNetIOObject(
 					(Petrinet) result[0],pluginContext);
+			petriNetIOObject.setInitialMarking((Marking)result[1]);
+			
 			output.deliver(petriNetIOObject);
 		} catch (Exception e) {
 			throw new OperatorException(e.getMessage());

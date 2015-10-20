@@ -11,6 +11,7 @@ import com.rapidminer.tools.LogService;
 
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
+import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.InductiveMiner.mining.MiningParameters;
 import org.processmining.plugins.InductiveMiner.plugins.IMPetriNet;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
@@ -38,6 +39,7 @@ public class InductiveMinerPNOperator extends AbstractInductiveMinerOperator {
 		Object[] result = IMPetriNet.minePetriNet(pluginContext, getXLog(), param);
 		
 		PetriNetIOObject petrinet = new PetriNetIOObject((Petrinet) result[0],pluginContext);
+		petrinet.setInitialMarking((Marking) result[1]);
 		
 		output.deliver(petrinet);		
 		logger.log(Level.INFO, "End: inductive miner - pn ("
