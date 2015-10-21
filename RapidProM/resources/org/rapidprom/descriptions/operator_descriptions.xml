@@ -80,7 +80,7 @@
         <key>clear_context</key>
      </operator>
   <operator>
-  		<name>WOFLAN (Soundness)</name>
+  		<name>Soundness analysis (WOFLAN)</name>
         <synopsis>This operator analyzes the soundness of a petri net</synopsis>
         <help>For using this operator, you need a context and a petri net. </help>
 		<key>analyze_with_woflan</key>
@@ -128,7 +128,7 @@
 		<key>convert_petrinet_to_bpmn</key>
 	</operator>
   <operator>
-  		<name>Reachability Graph to Petri Net (Regions)</name>
+  		<name>Transition System to Petri Net </name>
         <synopsis>This operator transforms a Transition System (Reachability Graph) into a petri net</synopsis>
         <help>For using this operator, you need a context and a transition system (reachability graph). </help>
 		<key>transition_system_to_petrinet</key>

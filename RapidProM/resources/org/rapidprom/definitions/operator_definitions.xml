@@ -110,7 +110,7 @@
             </operator>
             <operator>
                 <key>analyze_with_woflan</key>
-                <class>com.rapidminer.operator.analysisplugins.AnalyzewithWoflanTask</class>
+                <class>org.rapidprom.operator.analysis.WoflanAnalysisOperator</class>
             </operator>
             <operator>
                 <key>show_pompom_view</key>
@@ -196,7 +196,7 @@
             </operator>
             <operator>
                 <key>transition_system_to_petrinet</key>
-                <class>com.rapidminer.operator.conversionplugins.TransitionSystemtoPetrinetTask</class>
+                <class>org.rapidprom.operator.conversion.TransitionSystemtoPetriNetConversionOperator</class>
             </operator>
             <operator>
                 <key>construct_reachability_graph_of_a_petri_net</key>

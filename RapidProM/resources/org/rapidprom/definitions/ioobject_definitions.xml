@@ -19,9 +19,9 @@
 	</ioobject>
 	<ioobject
 		name="WoflanDiagnosisProM"
-		class="com.rapidminer.ioobjects.WoflanDiagnosisIOObject"
+		class="org.rapidprom.ioobjects.WoflanDiagnosisIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.WoflanDiagnosisIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.WoflanDiagnosisIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="BPMN"
