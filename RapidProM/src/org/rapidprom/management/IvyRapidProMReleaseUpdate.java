@@ -43,7 +43,7 @@ public class IvyRapidProMReleaseUpdate {
 
 	}
 
-	public void recurse(File f) {
+	private void recurse(File f) {
 		for (File child : f.listFiles()) {
 			if (child.isDirectory() && !(child.getName().equals(GIT_FOLDER_NAME)
 					|| child.getName().equals(THIRDPARTY_FOLDER_NAME))) {
@@ -52,7 +52,6 @@ public class IvyRapidProMReleaseUpdate {
 				if (child.getName().matches(ivyRegex)) {
 					try {
 						updateRapidProMRelease(copyOldIvyFile(child));
-
 					} catch (FileNotFoundException e) {
 					} catch (IOException e) {
 						e.printStackTrace();
