@@ -42,15 +42,16 @@ public class ShowPomPomViewOperator extends AbstractRapidProMDiscoveryOperator {
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(PomPomView.class);
 		PomPomViewIOObject result = null;
-		result = new PomPomViewIOObject(
-		// new PomPomView(pluginContext, inputPetrinet.getData(
-		// PetriNetIOObject.class).getArtifact(),
-		// inputPetrinet.getData(PetriNetIOObject.class)
-		// .getInitialMarking(), getXLog(),
-		// getXEventClassifier())
-				PomPomView.plugin(pluginContext,
-						inputPetrinet.getData(PetriNetIOObject.class)
-								.getArtifact(), getXLog()), pluginContext);
+		try {
+			result = new PomPomViewIOObject(
+					new PomPomView(pluginContext, inputPetrinet.getData(
+							PetriNetIOObject.class).getArtifact(),
+							inputPetrinet.getData(PetriNetIOObject.class)
+									.getInitialMarking(), getXLog(),
+							getXEventClassifier()), pluginContext);
+		} catch (ObjectNotFoundException e) {
+			e.printStackTrace();
+		}
 
 		outputPomPomView.deliver(result);
 
