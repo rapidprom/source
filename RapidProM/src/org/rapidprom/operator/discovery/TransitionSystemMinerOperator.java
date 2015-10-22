@@ -35,8 +35,7 @@ public class TransitionSystemMinerOperator extends AbstractRapidProMDiscoveryOpe
 		Object[] result = TSMinerPlugin.main(pluginContext, getXLog());
 
 		//TO-DO: for now we use default parameters, we should use the same parameters used in prom.
-		TransitionSystemIOObject ts = new TransitionSystemIOObject((TSMinerTransitionSystem) result[0]);
-		ts.setPluginContext(pluginContext);
+		TransitionSystemIOObject ts = new TransitionSystemIOObject((TSMinerTransitionSystem) result[0],pluginContext);
 		output.deliver(ts);
 		
 		logger.log(Level.INFO, "End: transition system miner ("

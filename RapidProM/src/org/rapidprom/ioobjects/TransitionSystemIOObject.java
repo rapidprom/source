@@ -1,43 +1,18 @@
 package org.rapidprom.ioobjects;
 
-import com.rapidminer.operator.ResultObjectAdapter;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.transitionsystem.miner.TSMinerTransitionSystem;
+import org.rapidprom.ioobjects.abstr.AbstractRapidProMIOObject;
 
-public class TransitionSystemIOObject extends ResultObjectAdapter {
+public class TransitionSystemIOObject extends AbstractRapidProMIOObject<TSMinerTransitionSystem> {
 
-	private static final long serialVersionUID = 1L;
 
-	private PluginContext pc = null;
-	private TSMinerTransitionSystem tSMinerTransitionSystem = null;
+	private static final long serialVersionUID = 7513635369374245933L;
 
-	public TransitionSystemIOObject (TSMinerTransitionSystem tSMinerTransitionSystem) {
-		this.tSMinerTransitionSystem = tSMinerTransitionSystem;
+	public TransitionSystemIOObject(TSMinerTransitionSystem t,
+			PluginContext context) {
+		super(t, context);
 	}
 
-	public void setPluginContext (PluginContext pc) {
-		this.pc = pc;
-	}
-
-	public PluginContext getPluginContext () {
-		return this.pc;
-	}
-
-	public void setTSMinerTransitionSystem(TSMinerTransitionSystem tSMinerTransitionSystem) {
-		this.tSMinerTransitionSystem = tSMinerTransitionSystem;
-	}
-
-	public TSMinerTransitionSystem getTSMinerTransitionSystem() {
-		return tSMinerTransitionSystem;
-	}
-
-	public String toResultString() {
-		String extractName = tSMinerTransitionSystem.toString();
-		return "TSMinerTransitionSystemIOObject:" + extractName;
-	}
-
-	public TSMinerTransitionSystem getData() {
-		return tSMinerTransitionSystem;
-	}
-
+	
 }

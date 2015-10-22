@@ -22,7 +22,7 @@ public class TransitionSystemIOObjectRenderer extends AbstractRenderer {
 		if (renderable instanceof TransitionSystemIOObject) {
 			try{
 			TransitionSystemIOObject object = (TransitionSystemIOObject)  renderable;
-			JComponent panel = runVisualization(object.getData(), object.getPluginContext());
+			JComponent panel = runVisualization(object.getArtifact(), object.getPluginContext());
 			return panel;
 			}
 			catch(Exception e)
@@ -34,7 +34,7 @@ public class TransitionSystemIOObjectRenderer extends AbstractRenderer {
 	public Reportable createReportable(Object renderable, IOContainer ioContainer, int desiredWidth, int desiredHeight) {
 		if (renderable instanceof TransitionSystemIOObject) {
 			TransitionSystemIOObject object = (TransitionSystemIOObject) renderable;
-			return new DefaultComponentRenderable(runVisualization(object.getData(), object.getPluginContext()));
+			return new DefaultComponentRenderable(runVisualization(object.getArtifact(), object.getPluginContext()));
 		}
 		return new DefaultReadable("No Transition System visualization available.");
 	}
