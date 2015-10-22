@@ -52,7 +52,6 @@ public class IvyRapidProMReleaseUpdate {
 				if (child.getName().matches(ivyRegex)) {
 					try {
 						updateRapidProMRelease(copyOldIvyFile(child));
-
 					} catch (FileNotFoundException e) {
 					} catch (IOException e) {
 						e.printStackTrace();
