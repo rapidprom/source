@@ -504,7 +504,7 @@
         <name>Add Noise (Log)</name>
         <synopsis>This filter randomly adds noise to the log.</synopsis>
         <help>This operator can be used to add noise to a log. There are 5 possible noise types: remove head, remove body, swap tasks, remove task, and add task. The noise types remove head and remove body respectively remove at most the first or second 1/3 of a trace. The noise type swap randomly swaps two event in a trace. The noise type remove randomly removes event from a trace. The add type randomly adds an event to a trace. As input a log file is needed.</help>
-    	<key>add_noise_log_filter</key>
+    	<key>add_noise_log</key>
   	</operator>
   	
   	<operator>

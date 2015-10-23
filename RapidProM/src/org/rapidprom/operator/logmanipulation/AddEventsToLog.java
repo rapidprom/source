@@ -1,4 +1,4 @@
-package com.rapidminer.operator.conversionplugins;
+package org.rapidprom.operator.logmanipulation;
 
 import java.util.ArrayList;
 import java.util.Date;

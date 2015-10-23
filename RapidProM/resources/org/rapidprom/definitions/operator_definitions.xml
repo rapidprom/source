@@ -181,14 +181,14 @@
                 <class>org.rapidprom.operators.io.ExportXLogOperator</class>
             </operator>
         </group>
-        <group key="filtering">
+        <group key="Log Manipulation">
         <operator>
-            <key>add_noise_filter_log</key>
-            <class>com.rapidminer.operator.filterplugins.AddNoiseLogFilter</class>
+            <key>add_noise_log</key>
+            <class>org.rapidprom.operator.logmanipulation.AddNoiseOperator</class>
         </operator>   
         <operator>
             <key>add_artificial_start_end_event_filter</key>
-            <class>com.rapidminer.operator.filterplugins.AddArtificialStartEndEvent</class>
+            <class>org.rapidprom.operator.logmanipulation.AddArtificialStartEndEventOperator</class>
         </operator>
         <operator>
             <key>check_timestamp_filter</key>

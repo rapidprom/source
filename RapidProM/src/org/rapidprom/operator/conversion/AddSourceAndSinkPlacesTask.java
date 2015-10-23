@@ -1,4 +1,4 @@
-package com.rapidminer.operator.conversionplugins;
+package org.rapidprom.operator.conversion;
 
 import java.util.ArrayList;
 import java.util.Collection;

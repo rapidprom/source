@@ -1,9 +1,10 @@
-package com.rapidminer.operator.filterplugins;
+package org.rapidprom.operator.logmanipulation;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.extension.std.XTimeExtension;
@@ -18,8 +19,8 @@ import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
 import org.deckfour.xes.model.impl.XEventImpl;
 import org.deckfour.xes.model.impl.XLogImpl;
 import org.deckfour.xes.model.impl.XTraceImpl;
+import org.rapidprom.ioobjects.XLogIOObject;
 
-import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -28,62 +29,54 @@ import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeBoolean;
-import com.rapidminer.parameter.ParameterTypeInt;
-import com.rapidminer.parameters.Parameter;
-import com.rapidminer.parameters.ParameterBoolean;
-import com.rapidminer.parameters.ParameterInteger;
 import com.rapidminer.tools.LogService;
 
-public class AddArtificialStartEndEvent extends Operator {
-	
-	private InputPort inputXLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
-	private OutputPort outputEventLog = getOutputPorts().createPort("event log (ProM Event Log)");
-	
-	private List<Parameter> parameters = null;
-	
-	public AddArtificialStartEndEvent(OperatorDescription description) {
+public class AddArtificialStartEndEventOperator extends Operator {
+
+	private static final String PARAMETER_1 = "Add Start Event",
+			PARAMETER_2 = "Add End Event";
+
+	private InputPort inputXLog = getInputPorts().createPort(
+			"event log (ProM Event Log)", XLogIOObject.class);
+	private OutputPort outputEventLog = getOutputPorts().createPort(
+			"event log (ProM Event Log)");
+
+	public AddArtificialStartEndEventOperator(OperatorDescription description) {
 		super(description);
-		getTransformer().addRule( new GenerateNewMDRule(outputEventLog, XLogIOObject.class));
+		getTransformer().addRule(
+				new GenerateNewMDRule(outputEventLog, XLogIOObject.class));
 	}
-	
+
 	public void doWork() throws OperatorException {
-		LogService logService = LogService.getGlobal();
-		logService.log("start add artificial event Filter", LogService.NOTE);
-		XLogIOObject XLogdata = inputXLog.getData(XLogIOObject.class);
-		XLog log = XLogdata.getData();
-		XLog filterLog = filterLog(log);
-		XLogIOObject result = new XLogIOObject(filterLog);
+
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO,
+				"Start: add artificial start and end event to all traces");
+		long time = System.currentTimeMillis();
+
+		XLogIOObject xLogIOObject = inputXLog.getData(XLogIOObject.class);
+		XLog logOriginal = xLogIOObject.getArtifact();
+		XLog logModified = filterLog(logOriginal);
+		XLogIOObject result = new XLogIOObject(logModified,
+				xLogIOObject.getPluginContext());
 		outputEventLog.deliver(result);
-		logService.log("end do work Add Noise Log Filter", LogService.NOTE);
+		logger.log(Level.INFO,
+				"End: add artificial start and end event to all traces ("
+						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
-	
+
 	public List<ParameterType> getParameterTypes() {
-		this.parameters = new ArrayList<Parameter>();
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
-		ParameterBoolean parameter1 = new ParameterBoolean(true, Boolean.class, "Add Start Event", "Add Start Event");
-		ParameterTypeBoolean parameterType1 = new ParameterTypeBoolean(parameter1.getNameParameter(), parameter1.getDescriptionParameter(), parameter1.getDefaultValueParameter());
+		ParameterTypeBoolean parameterType1 = new ParameterTypeBoolean(
+				PARAMETER_1, PARAMETER_1, true);
 		parameterTypes.add(parameterType1);
-		parameters.add(parameter1);
-		
-		ParameterBoolean parameter3 = new ParameterBoolean(true, Boolean.class, "Add End Event", "Add End Event");
-		ParameterTypeBoolean parameterType3 = new ParameterTypeBoolean(parameter3.getNameParameter(), parameter3.getDescriptionParameter(), parameter3.getDefaultValueParameter());
+
+		ParameterTypeBoolean parameterType3 = new ParameterTypeBoolean(
+				PARAMETER_2, PARAMETER_2, true);
 		parameterTypes.add(parameterType3);
-		parameters.add(parameter3);
-		
+
 		return parameterTypes;
-	}
-	
-	private boolean getStartValue(List<Parameter> parameters) {
-		Parameter parameter1 = parameters.get(0);
-		Boolean valPar1 = getParameterAsBoolean(parameter1.getNameParameter());
-		return valPar1;
-	}
-	
-	private boolean getEndValue(List<Parameter> parameters) {
-		Parameter parameter1 = parameters.get(1);
-		Boolean valPar1 = getParameterAsBoolean(parameter1.getNameParameter());
-		return valPar1;
 	}
 
 	private XLog filterLog(XLog log) {
@@ -91,55 +84,54 @@ public class AddArtificialStartEndEvent extends Operator {
 		XLog newLog = new XLogImpl(logattlist);
 		for (int i = 0; i < log.size(); i++) {
 			XTrace oldTrace = log.get(i);
-			XTrace newTrace = new XTraceImpl(copyAttMap(oldTrace.getAttributes()));
+			XTrace newTrace = new XTraceImpl(
+					copyAttMap(oldTrace.getAttributes()));
 			String name = XConceptExtension.instance().extractName(oldTrace);
-			System.out.println("ADD ARTIFICIAL EVENT: TRACE" + name + ", size: " + oldTrace.size());
+			System.out.println("ADD ARTIFICIAL EVENT: TRACE" + name
+					+ ", size: " + oldTrace.size());
 			// add start event
-		
+
 			Date time = new Date();
 			boolean changed = false;
-			if(getStartValue(parameters))
-			{
+			if (getParameterAsBoolean(PARAMETER_1)) {
 				try {
 					time = getTime(oldTrace.get(0));
 					if (time != null) {
 						time.setTime(time.getTime() - 1);
 					}
-				} 
-				catch (Exception ex) {
+				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 				newTrace.add(makeEvent("START", time));
 				for (int j = 0; j < oldTrace.size(); j++) {
 					XEvent oldEvent = oldTrace.get(j);
-					XEvent newEvent = new XEventImpl(copyAttMap(oldEvent.getAttributes()));
+					XEvent newEvent = new XEventImpl(
+							copyAttMap(oldEvent.getAttributes()));
 					newTrace.add(newEvent);
 				}
 				changed = true;
 			}
-			
+
 			// add end event
-			if(getEndValue(parameters))
-			{
+			if (getParameterAsBoolean(PARAMETER_2)) {
 				time = new Date();
 				try {
 					time = getTime(oldTrace.get(oldTrace.size() - 1));
 					if (time != null) {
 						time.setTime(time.getTime() + 1);
 					}
-				} 
-				catch (Exception ex) {
+				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
 				newTrace.add(makeEvent("END", time));
 				changed = true;
 			}
-			if(changed)
+			if (changed)
 				newLog.add(newTrace);
 		}
 		return newLog;
 	}
-	
+
 	private XEvent makeEvent(String name, Date time) {
 		XAttributeMap attMap = new XAttributeMapImpl();
 		putLiteral(attMap, "concept:name", name);
@@ -151,7 +143,7 @@ public class AddArtificialStartEndEvent extends Operator {
 		XEvent newEvent = new XEventImpl(attMap);
 		return newEvent;
 	}
-	
+
 	public static XAttributeMap copyAttMap(XAttributeMap srcAttMap) {
 		XAttributeMap destAttMap = new XAttributeMapImpl();
 		Iterator<XAttribute> attit = srcAttMap.values().iterator();
@@ -163,20 +155,20 @@ public class AddArtificialStartEndEvent extends Operator {
 		}
 		return destAttMap;
 	}
-	
+
 	public static Date getTime(XEvent event) {
 		Date res = new Date();
 		try {
-			res = XTimeExtension.instance().extractTimestamp(event); 
+			res = XTimeExtension.instance().extractTimestamp(event);
 		} catch (Exception ex) {
 		}
 		return res;
 	}
-	
+
 	public static void putLiteral(XAttributeMap attMap, String key, String value) {
 		attMap.put(key, new XAttributeLiteralImpl(key, value));
 	}
-	
+
 	public static void putTimestamp(XAttributeMap attMap, String key, Date value) {
 		attMap.put(key, new XAttributeTimestampImpl(key, value));
 	}

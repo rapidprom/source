@@ -37,7 +37,7 @@
         <dependency org="org.rapidprom" name="StreamAnalysis" rev="6.5.6" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="StreamInductiveMiner" rev="6.5.27" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="TransitionSystems" rev="6.5.36" rapidprom:release="2.1.0" />
-        <dependency org="org.rapidprom" name="TSPetriNet" rev="6.5.16" rapidprom:release="2.1.0" />
+        <dependency org="org.rapidprom" name="TSPetriNet" rev="6.5.25" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="Uma" rev="6.5.28" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="Woflan" rev="6.5.25" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="XESLite" rev="6.5.115" rapidprom:release="2.1.0" />

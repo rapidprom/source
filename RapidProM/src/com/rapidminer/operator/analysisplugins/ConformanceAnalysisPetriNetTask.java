@@ -1,6 +1,5 @@
 package com.rapidminer.operator.analysisplugins;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,8 +32,6 @@ import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.prom.CallProm;
 
-import com.rapidminer.callprom.ClassLoaderUtils;
-import com.rapidminer.configuration.GlobalProMParameters;
 import com.rapidminer.example.Attribute;
 import com.rapidminer.example.ExampleSet;
 import com.rapidminer.example.ExampleSetFactory;
@@ -47,8 +44,6 @@ import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.conversionplugins.NameListToPetrinetTask;
-import com.rapidminer.operator.conversionplugins.NameListToPetrinetTask.NameComparator;
 import com.rapidminer.operator.io.AbstractDataReader.AttributeColumn;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
@@ -63,11 +58,10 @@ import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.parameters.Parameter;
 import com.rapidminer.parameters.ParameterBoolean;
 import com.rapidminer.parameters.ParameterInteger;
-import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
-import com.rapidminer.tools.config.ConfigurationManager;
-import com.rapidminer.util.ProMIOObjectList;
 import com.rapidminer.util.Utilities;
+
+import daikon.Ppt.NameComparator;
 
 public class ConformanceAnalysisPetriNetTask extends Operator {
 
@@ -402,7 +396,7 @@ public class ConformanceAnalysisPetriNetTask extends Operator {
 		Map<String,Integer> moves_mod = new HashMap<String,Integer>();
 		Map<String,Integer> moves_sync = new HashMap<String,Integer>();
 		
-		SortedSet<String> sorted = new TreeSet<String>(new NameComparator());
+		SortedSet<String> sorted = new TreeSet<String>();
 		
 		while(iterator4.hasNext())
 		{
