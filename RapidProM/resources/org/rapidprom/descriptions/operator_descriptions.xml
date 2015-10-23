@@ -110,7 +110,7 @@
 		<key>mine_with_inductive_visual_miner</key>
 	</operator>
   <operator>
-  		<name>PomPom (visualization)</name>
+  		<name>Visualize Model using PomPom (visualization)</name>
         <synopsis>This operator shows a PomPom view over a PetriNet</synopsis>
         <help>For using this operator, you need a context, a petri net and a log. </help>
 		<key>show_pompom_view</key>
@@ -147,7 +147,7 @@
 		<key>import_petri_net_from_pnml_file</key>
 	</operator>
   <operator>
-  		<name>Animate Log in Fuzzy Instance</name>
+  		<name>Animate Log in Fuzzy Model</name>
         <synopsis>This operator is used to animate (replay) an event log into a selected fuzzy instance</synopsis>
         <help>For using this operator, a context, an event log, and a Fuzzy Instance (MutableFuzzyGraph object) are necessary as inputs. </help>
 		<key>animate_event_log_in_fuzzy_instance</key>

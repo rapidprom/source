@@ -31,15 +31,15 @@
 	</ioobject>
 	<ioobject
 		name="PredictorProM"
-		class="com.rapidminer.ioobjects.PredictorIOObject"
+		class="org.rapidprom.ioobjects.PredictorIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.PredictorIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.PredictorIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="PomPomViewProM"
-		class="com.rapidminer.ioobjects.PomPomViewIOObject"
+		class="org.rapidprom.ioobjects.PomPomViewIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.PomPomViewIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.PomPomViewIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="ClassifierProM"
@@ -66,15 +66,9 @@
 	</ioobject>
     <ioobject
 		name="FuzzyAnimationProM"
-		class="com.rapidminer.ioobjects.FuzzyAnimationIOObject"
+		class="org.rapidprom.ioobjects.FuzzyAnimationIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.FuzzyAnimationIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
-		name="MutableFuzzyGraphProM"
-		class="com.rapidminer.ioobjects.MutableFuzzyGraphIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.MutableFuzzyGraphIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.FuzzyAnimationIOObjectRenderer</renderer>
 	</ioobject>
    <ioobject
         name="CLIPluginContext"

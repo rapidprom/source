@@ -114,15 +114,11 @@
             </operator>
             <operator>
                 <key>show_pompom_view</key>
-                <class>com.rapidminer.operator.analysisplugins.ShowPomPomViewTask</class>
+                <class>org.rapidprom.operator.analysis.ShowPomPomViewOperator</class>
             </operator>
             <operator>
                 <key>animate_event_log_in_fuzzy_instance</key>
-                <class>com.rapidminer.operator.analysisplugins.AnimateEventLoginFuzzyInstanceTask</class>
-            </operator>
-            <operator>
-                <key>select_best_fuzzy_instance</key>
-                <class>com.rapidminer.operator.analysisplugins.SelectBestFuzzyInstanceTask</class>
+                <class>org.rapidprom.operator.analysis.AnimateLogInFuzzyModelAnalysisOperator</class>
             </operator>
             <operator>
                 <key>replay_a_log_on_petri_net_for_conformance_analysis</key>
@@ -142,7 +138,7 @@
         </operator>    
         <operator>
             <key>perform_predictions_of_business_process_features</key>
-            <class>com.rapidminer.operator.analysisplugins.PerformPredictionsofBusinessProcessFeaturesTask</class>
+            <class>org.rapidprom.operator.analysis.FeaturePredictionAnalysisOperator</class>
         </operator>
         </group>
         <group key="export">
