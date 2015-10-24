@@ -9,7 +9,6 @@ import org.deckfour.xes.classification.XEventNameClassifier;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.etm.parameters.ETMParam;
 import org.processmining.plugins.etm.parameters.ETMParamFactory;
-import org.processmining.plugins.etm.ui.plugins.ETMPlugin;
 import org.processmining.plugins.etm.ui.plugins.ETMwithoutGUI;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.ProcessTreeIOObject;

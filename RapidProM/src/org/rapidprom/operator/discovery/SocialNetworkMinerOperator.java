@@ -1,21 +1,21 @@
 package org.rapidprom.operator.discovery;
 
-import java.util.*;
+import java.util.List;
 
+import org.rapidprom.operator.abstr.AbstractRapidProMDiscoveryOperator;
+
+import com.rapidminer.ioobjects.SocialNetworkIOObject;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
-import com.rapidminer.util.Utilities;
-import com.rapidminer.parameter.*;
+import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeBoolean;
+import com.rapidminer.parameter.ParameterTypeCategory;
+import com.rapidminer.parameter.ParameterTypeDouble;
+import com.rapidminer.parameter.ParameterTypeInt;
 import com.rapidminer.parameter.conditions.BooleanParameterCondition;
 import com.rapidminer.parameter.conditions.EqualTypeCondition;
-
-import org.processmining.plugins.socialnetwork.miner.gui.PanelHandoverOfWork;
-
-import com.rapidminer.ioobjects.SocialNetworkIOObject;
-
-import org.rapidprom.operator.abstr.AbstractRapidProMDiscoveryOperator;
 
 public class SocialNetworkMinerOperator extends AbstractRapidProMDiscoveryOperator {
 

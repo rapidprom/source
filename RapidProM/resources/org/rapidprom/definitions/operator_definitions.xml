@@ -1,108 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<operators name="ProMVersion6" version="5.0" docbundle="org/rapidprom/descriptions/operator_descriptions">
-    <group key="ProM6">
-        <group key="import">
-            <operator>
-                <key>import_xlog</key>
-                <class>org.rapidprom.operator.io.ImportXLogOperator</class>
-            </operator>
-            <operator>
-                <key>read_cpn</key>
-                <class>org.rapidprom.operator.io.ImportCPNModelOperator</class>
-            </operator>
-            <operator>
-                <key>read_pnml_file</key>
-                <class>com.rapidminer.operator.importplugins.ReadPetrinetTask</class>
-            </operator>
-            <operator>
-                <key>extract_log_from_file</key>
-                <class>org.rapidprom.operator.extract.ExtractXLogOperator</class>
-            </operator>
-            <operator>
-                <key>import_petri_net_from_pnml_file</key>
-                <class>org.rapidprom.operator.io.ImportPetriNetOperator</class>
-            </operator>
-        </group>
-        <group key="streams">
-            <group key="generators">
-                <operator>
-                    <key>stream_from_cpn</key>
-                    <class>org.rapidprom.operator.streams.generators.CPNToEventStreamOperator</class>
-                </operator>
-            </group>
-            <group key="discovery">
-                <operator>
-                    <key>stream_inductive_miner</key>
-                    <class>org.rapidprom.operator.streams.discovery.StreamInductiveMinerOperator</class>
-                </operator>
-            </group>
-        </group>
-        <group key="Discovery">
-            <operator>
-                <key>alpha_miner</key>
-                <class>org.rapidprom.operator.discovery.AlphaMinerOperator</class>
-            </operator>
-            <operator>
-                <key>ilp_miner</key>
-                <class>org.rapidprom.operator.discovery.ILPMinerOperator</class>
-            </operator>
-            <operator>
-                <key>etm_miner</key>
-                <class>org.rapidprom.operator.discovery.ETMdMinerOperator</class>
-            </operator>
-            <operator>
-                <key>heuristics_miner</key>
-                <class>org.rapidprom.operator.discovery.HeuristicsMinerOperator</class>
-            </operator>
-            <operator>
-                <key>dotted_chart_analysis</key>
-                <class>com.rapidminer.operator.miningplugins.DottedChartAnalysisTask</class>
-            </operator>
-            <operator>
-                <key>mine_petri_net_with_inductive_miner</key>
-                <class>org.rapidprom.operator.discovery.InductiveMinerPNOperator</class>
-            </operator>
-            <operator>
-                <key>mine_process_tree_with_inductive_miner</key>
-                <class>org.rapidprom.operator.discovery.InductiveMinerPTOperator</class>
-            </operator>
-            <operator>
-                <key>mine_with_inductive_visual_miner</key>
-                <class>com.rapidminer.operator.miningplugins.MinewithInductivevisualMinerTask</class>
-            </operator>
-            <operator>
-                <key>social_network_st_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SocialNetworkSTminerTask</class>
-            </operator>
-            <operator>
-                <key>social_network_miner</key>
-                <class>org.rapidprom.operator.discovery.SocialNetworkMinerOperator</class>
-            </operator>
-            <operator>
-                <key>social_network_sc_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SocialNetworkSCminerTask</class>
-            </operator>
-            <operator>
-                <key>social_network_wt_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SocialNetworkWTminerTask</class>
-            </operator>
-            <operator>
-                <key>social_network_ra_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SocialNetworkRAminerTask</class>
-            </operator>
-            <operator>
-                <key>mine_transition_system</key>
-                <class>org.rapidprom.operator.discovery.TransitionSystemMinerOperator</class>
-            </operator>
-            <operator>
-                <key>mine_fuzzy_model</key>
-                <class>org.rapidprom.operator.discovery.FuzzyMinerOperator</class>
-            </operator>
-            <operator>
-                <key>sequence_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SequencePainterTask</class>
-            </operator>
-        </group>
+<operators name="RapidProM" version="5.0" docbundle="org/rapidprom/descriptions/operator_descriptions">
+    <group key="process mining">
         <group key="analysis">
             <operator>
                 <key>conformance_checking_of_dpn_(balanced)</key>
@@ -126,49 +24,21 @@
             </operator>
             <operator>
                 <key>repair_model</key>
-            <class>com.rapidminer.operator.analysisplugins.RepairModelTask</class>
-        </operator>
-        <operator>
-            <key>reduce_silent_transitions</key>
-            <class>com.rapidminer.operator.analysisplugins.ReduceSilentTransitionsTask</class>
-        </operator>
-        <operator>
-            <key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
-            <class>com.rapidminer.operator.analysisplugins.ReplayaLogonPetriNetforPerformance_ConformanceAnalysisTask</class>
-        </operator>    
-        <operator>
-            <key>perform_predictions_of_business_process_features</key>
-            <class>org.rapidprom.operator.analysis.FeaturePredictionAnalysisOperator</class>
-        </operator>
-        </group>
-        <group key="export">
-            <operator>
-                <key>PNML_export</key>
-                <class>com.rapidminer.operator.exportplugins.ExportToPNML_PetriNet</class>
+                <class>com.rapidminer.operator.analysisplugins.RepairModelTask</class>
             </operator>
             <operator>
-                <key>export_log_to_compressed_XES_file</key>
-                <class>com.rapidminer.operator.exportplugins.ExportToXESGZ_XLog</class>
+                <key>reduce_silent_transitions</key>
+                <class>com.rapidminer.operator.analysisplugins.ReduceSilentTransitionsTask</class>
+            </operator>
+            <operator>
+                <key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
+                <class>com.rapidminer.operator.analysisplugins.ReplayaLogonPetriNetforPerformance_ConformanceAnalysisTask</class>
+            </operator>    
+            <operator>
+                <key>perform_predictions_of_business_process_features</key>
+                <class>org.rapidprom.operator.analysis.FeaturePredictionAnalysisOperator</class>
             </operator>
         </group>
-        <group key="filtering">
-        <operator>
-            <key>add_noise_filter_log</key>
-            <class>com.rapidminer.operator.filterplugins.AddNoiseLogFilter</class>
-        </operator>   
-        <operator>
-            <key>add_artificial_start_end_event_filter</key>
-            <class>com.rapidminer.operator.filterplugins.AddArtificialStartEndEvent</class>
-        </operator>
-        <operator>
-            <key>check_timestamp_filter</key>
-            <class>com.rapidminer.operator.filterplugins.CheckTimestampFilterTask</class>
-        </operator> 
-        <operator>
-            <key>timestamp_sort</key>
-            <class>com.rapidminer.operator.filterplugins.TimestampSort</class>
-        </operator> -->
-      </group> 
         <group key="conversion">
             <operator>
                 <key>add_source_sink</key>
@@ -234,7 +104,127 @@
                 <key>merge_two_event_logs</key>
                 <class>com.rapidminer.operator.conversionplugins.MergeTwoEventLogs</class>
             </operator>
-      </group>
+        </group>
+        <group key="discovery">
+            <operator>
+                <key>alpha_miner</key>
+                <class>org.rapidprom.operator.discovery.AlphaMinerOperator</class>
+            </operator>
+            <operator>
+                <key>ilp_miner</key>
+                <class>org.rapidprom.operator.discovery.ILPMinerOperator</class>
+            </operator>
+            <operator>
+                <key>etm_miner</key>
+                <class>org.rapidprom.operator.discovery.ETMdMinerOperator</class>
+            </operator>
+            <operator>
+                <key>heuristics_miner</key>
+                <class>org.rapidprom.operator.discovery.HeuristicsMinerOperator</class>
+            </operator>
+            <operator>
+                <key>dotted_chart_analysis</key>
+                <class>com.rapidminer.operator.miningplugins.DottedChartAnalysisTask</class>
+            </operator>
+            <operator>
+                <key>mine_petri_net_with_inductive_miner</key>
+                <class>org.rapidprom.operator.discovery.InductiveMinerPNOperator</class>
+            </operator>
+            <operator>
+                <key>mine_process_tree_with_inductive_miner</key>
+                <class>org.rapidprom.operator.discovery.InductiveMinerPTOperator</class>
+            </operator>
+            <operator>
+                <key>mine_with_inductive_visual_miner</key>
+                <class>com.rapidminer.operator.miningplugins.MinewithInductivevisualMinerTask</class>
+            </operator>
+            <operator>
+                <key>social_network_st_miner</key>
+                <class>com.rapidminer.operator.miningplugins.SocialNetworkSTminerTask</class>
+            </operator>
+            <operator>
+                <key>social_network_miner</key>
+                <class>org.rapidprom.operator.discovery.SocialNetworkMinerOperator</class>
+            </operator>
+            <operator>
+                <key>social_network_sc_miner</key>
+                <class>com.rapidminer.operator.miningplugins.SocialNetworkSCminerTask</class>
+            </operator>
+            <operator>
+                <key>social_network_wt_miner</key>
+                <class>com.rapidminer.operator.miningplugins.SocialNetworkWTminerTask</class>
+            </operator>
+            <operator>
+                <key>social_network_ra_miner</key>
+                <class>com.rapidminer.operator.miningplugins.SocialNetworkRAminerTask</class>
+            </operator>
+            <operator>
+                <key>mine_transition_system</key>
+                <class>org.rapidprom.operator.discovery.TransitionSystemMinerOperator</class>
+            </operator>
+            <operator>
+                <key>mine_fuzzy_model</key>
+                <class>org.rapidprom.operator.discovery.FuzzyMinerOperator</class>
+            </operator>
+            <operator>
+                <key>sequence_miner</key>
+                <class>com.rapidminer.operator.miningplugins.SequencePainterTask</class>
+            </operator>
+        </group>
+        <group key="export">
+            <operator>
+                <key>PNML_export</key>
+                <class>com.rapidminer.operator.exportplugins.ExportToPNML_PetriNet</class>
+            </operator>
+            <operator>
+                <key>export_log_to_compressed_XES_file</key>
+                <class>com.rapidminer.operator.exportplugins.ExportToXESGZ_XLog</class>
+            </operator>
+            <operator>
+                <key>export_log</key>
+                <class>org.rapidprom.operator.io.ExportXLogOperator</class>
+            </operator>
+        </group>
+        <group key="filtering">
+        <operator>
+            <key>add_noise_filter_log</key>
+            <class>com.rapidminer.operator.filterplugins.AddNoiseLogFilter</class>
+        </operator>   
+        <operator>
+            <key>add_artificial_start_end_event_filter</key>
+            <class>com.rapidminer.operator.filterplugins.AddArtificialStartEndEvent</class>
+        </operator>
+        <operator>
+            <key>check_timestamp_filter</key>
+            <class>com.rapidminer.operator.filterplugins.CheckTimestampFilterTask</class>
+        </operator> 
+        <operator>
+            <key>timestamp_sort</key>
+            <class>com.rapidminer.operator.filterplugins.TimestampSort</class>
+        </operator>
+      </group> 
+        <group key="import">
+            <operator>
+                <key>import_xlog</key>
+                <class>org.rapidprom.operator.io.ImportXLogOperator</class>
+            </operator>
+            <operator>
+                <key>read_cpn</key>
+                <class>org.rapidprom.operator.io.ImportCPNModelOperator</class>
+            </operator>
+            <operator>
+                <key>read_pnml_file</key>
+                <class>com.rapidminer.operator.importplugins.ReadPetrinetTask</class>
+            </operator>
+            <operator>
+                <key>extract_log_from_file</key>
+                <class>org.rapidprom.operator.extract.ExtractXLogOperator</class>
+            </operator>
+            <operator>
+                <key>import_petri_net_from_pnml_file</key>
+                <class>org.rapidprom.operator.io.ImportPetriNetOperator</class>
+            </operator>
+        </group>
         <group key="parallel">
             <operator>
                 <key>collection_iteration_parallel</key>
@@ -244,16 +234,20 @@
                 <key>collection_iteration_parallel2</key>
                 <class>com.rapidminer.operator.parallel.CollectionIterationParallelOperator2</class>
             </operator>
-        </group> 
+        </group>
+        <group key="streams">
+            <group key="generators">
+                <operator>
+                    <key>stream_from_cpn</key>
+                    <class>org.rapidprom.operator.streams.generators.CPNToEventStreamOperator</class>
+                </operator>
+            </group>
+            <group key="discovery">
+                <operator>
+                    <key>stream_inductive_miner</key>
+                    <class>org.rapidprom.operator.streams.discovery.StreamInductiveMinerOperator</class>
+                </operator>
+            </group>
+        </group>
     </group>
-   <!-- group key="context">
-         <operator>
-            <key>prom_context</key>
-            <class>com.rapidminer.promcontext.ProMContextTask</class>
-         </operator>
-         <operator>
-            <key>clear_context</key>
-            <class>com.rapidminer.promcontext.ClearContextTask</class>
-         </operator>
-    </group-->
 </operators>

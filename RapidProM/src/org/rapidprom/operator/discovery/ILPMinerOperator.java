@@ -5,7 +5,9 @@ import java.util.EnumSet;
 import java.util.List;
 
 import org.deckfour.xes.classification.XEventClassifier;
+import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 import org.processmining.causalactivitygraph.models.CausalActivityGraph;
 import org.processmining.causalactivitygraphcreator.parameters.ConvertCausalActivityMatrixToCausalActivityGraphParameters;
 import org.processmining.causalactivitygraphcreator.plugins.ConvertCausalActivityMatrixToCausalActivityGraphPlugin;
@@ -73,6 +75,11 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 				.getContext();
 		XLog log = getXLog();
 		XEventClassifier classifier = getXEventClassifier();
+		for (XTrace t : log) {
+			for (XEvent e : t) {
+				System.out.println(classifier.getClassIdentity(e).toString());
+			}
+		}
 		DiscoveryStrategy strategy = new DiscoveryStrategy(
 				DiscoveryStrategyType.CAUSAL);
 		CausalActivityGraph cag = getCausalActivityGraph(context, log,

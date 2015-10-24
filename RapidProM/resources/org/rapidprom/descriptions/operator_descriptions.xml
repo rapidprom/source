@@ -241,15 +241,13 @@
         <synopsis>This operator can be used to export a Petri Net to a PNML file.</synopsis>
         <help>This operator can be used to export a Petri Net to a PNML file. As input a ProM context and a Petri Net is needed.</help>
     <key>PNML_export</key>
-  </operator>
-  
+  </operator>  
 	<operator>
-        <name>Export Log</name>
-        <synopsis>This operator can be used to export a log.</synopsis>
-        <help>This operator can be used to export a log. As log format XES, XES.GZ, MXML, and MXML.GZ are available. As input a ProM context and a log is needed.</help>
-    <key>export_log_to_compressed_XES_file</key>
-  </operator>
-  
+		<name>Export Log</name>
+		<synopsis>This operator can be used to export a log.</synopsis>
+        <help>This operator can be used to export a log. As log format XES, XES.GZ, MXML, and MXML.GZ are available. As input this operator needs an event log.</help>
+		<key>export_log</key>
+	</operator>  
 	<operator>
         <name>Event Log to Data Table (Exampleset)</name>
         <synopsis>This operator can be used to convert a ProM log into an Exampleset (data table).</synopsis>

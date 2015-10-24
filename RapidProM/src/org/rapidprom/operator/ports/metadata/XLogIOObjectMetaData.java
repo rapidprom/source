@@ -20,10 +20,15 @@ public class XLogIOObjectMetaData extends MetaData {
 		classifiers = new ArrayList<XEventClassifier>();
 	}
 
+	@Deprecated
 	public XLogIOObjectMetaData(XLog log) {
 		super(XLogIOObject.class);
 		classifiers = log.getClassifiers();
-		System.out.println("New meta data: " + classifiers.toString());
+	}
+
+	public XLogIOObjectMetaData(List<XEventClassifier> classifiers) {
+		super(XLogIOObject.class);
+		this.classifiers = classifiers;
 	}
 
 	public List<XEventClassifier> getXEventClassifiers() {
