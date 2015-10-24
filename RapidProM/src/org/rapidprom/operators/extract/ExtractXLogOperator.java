@@ -15,7 +15,7 @@ import org.processmining.xeslite.plugin.OpenLogFileLiteImplPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
 import org.rapidprom.ioobjects.XLogIOObject;
-import org.rapidprom.operators.abstr.AbstractExtractor;
+import org.rapidprom.operators.abstr.AbstractRapidProMExtractor;
 import org.rapidprom.operators.ports.metadata.XLogIOObjectMetaData;
 
 import com.rapidminer.operator.OperatorDescription;
@@ -33,7 +33,8 @@ import com.rapidminer.tools.LogService;
  * importers.
  *
  */
-public class ExtractXLogOperator extends AbstractExtractor<XLogIOObject> {
+public class ExtractXLogOperator
+		extends AbstractRapidProMExtractor<XLogIOObject> {
 
 	public static enum ImplementingPlugin {
 		LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs"), MAP_DB(
@@ -149,8 +150,6 @@ public class ExtractXLogOperator extends AbstractExtractor<XLogIOObject> {
 
 	protected File getFile() throws UserError {
 		try {
-			MetaData test = inputfile.getMetaData();
-			System.out.println(test.toString());
 			File file = inputfile.getData(FileObject.class).getFile();
 			this.currentFile = file;
 		} catch (OperatorException e) {

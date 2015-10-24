@@ -173,12 +173,8 @@
         </group>
         <group key="export">
             <operator>
-                <key>PNML_export</key>
-                <class>com.rapidminer.operator.exportplugins.ExportToPNML_PetriNet</class>
-            </operator>
-            <operator>
-                <key>export_log_to_compressed_XES_file</key>
-                <class>com.rapidminer.operator.exportplugins.ExportToXESGZ_XLog</class>
+                <key>export_petri_net</key>
+                <class>org.rapidprom.operators.io.ExportPetriNetOperator</class>
             </operator>
             <operator>
                 <key>export_log</key>
