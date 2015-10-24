@@ -8,15 +8,15 @@
             </operator>
             <operator>
                 <key>analyze_with_woflan</key>
-                <class>org.rapidprom.operator.analysis.WoflanAnalysisOperator</class>
+                <class>org.rapidprom.operators.analysis.WoflanAnalysisOperator</class>
             </operator>
             <operator>
                 <key>show_pompom_view</key>
-                <class>org.rapidprom.operator.analysis.ShowPomPomViewOperator</class>
+                <class>org.rapidprom.operators.analysis.ShowPomPomViewOperator</class>
             </operator>
             <operator>
                 <key>animate_event_log_in_fuzzy_instance</key>
-                <class>org.rapidprom.operator.analysis.AnimateLogInFuzzyModelAnalysisOperator</class>
+                <class>org.rapidprom.operators.analysis.AnimateLogInFuzzyModelAnalysisOperator</class>
             </operator>
             <operator>
                 <key>replay_a_log_on_petri_net_for_conformance_analysis</key>
@@ -36,7 +36,7 @@
             </operator>    
             <operator>
                 <key>perform_predictions_of_business_process_features</key>
-                <class>org.rapidprom.operator.analysis.FeaturePredictionAnalysisOperator</class>
+                <class>org.rapidprom.operators.analysis.FeaturePredictionAnalysisOperator</class>
             </operator>
         </group>
         <group key="conversion">
@@ -58,31 +58,31 @@
             </operator>
             <operator>
                 <key>convert_petrinet_to_bpmn</key>
-                <class>org.rapidprom.operator.conversion.PetriNetToBpmnConversionOperator</class>
+                <class>org.rapidprom.operators.conversion.PetriNetToBpmnConversionOperator</class>
             </operator>
             <operator>
                 <key>transition_system_to_petrinet</key>
-                <class>org.rapidprom.operator.conversion.TransitionSystemtoPetriNetConversionOperator</class>
+                <class>org.rapidprom.operators.conversion.TransitionSystemtoPetriNetConversionOperator</class>
             </operator>
             <operator>
                 <key>construct_reachability_graph_of_a_petri_net</key>
-                <class>org.rapidprom.operator.conversion.PetriNetToReachabilityGraphConversionOperator</class>
+                <class>org.rapidprom.operators.conversion.PetriNetToReachabilityGraphConversionOperator</class>
             </operator>
             <operator>
                 <key>xlog_to_exampleset</key>
-                <class>org.rapidprom.operator.conversion.XLogToExampleSetConversionOperator</class>
+                <class>org.rapidprom.operators.conversion.XLogToExampleSetConversionOperator</class>
             </operator>
             <operator>
                 <key>exampleset_to_xlog</key>
-                <class>org.rapidprom.operator.conversion.ExampleSetToXLogConversionOperator</class>
+                <class>org.rapidprom.operators.conversion.ExampleSetToXLogConversionOperator</class>
             </operator>
             <operator>
                 <key>convert_heuristics_net_into_petri_net</key>
-                <class>org.rapidprom.operator.conversion.HeuristicNetToPetriNetConversionOperator</class>
+                <class>org.rapidprom.operators.conversion.HeuristicNetToPetriNetConversionOperator</class>
             </operator> 
             <operator>
                 <key>convert_process_tree_to_petri_net</key>
-                <class>org.rapidprom.operator.conversion.ProcessTreeToPetriNetConversionOperator</class>
+                <class>org.rapidprom.operators.conversion.ProcessTreeToPetriNetConversionOperator</class>
             </operator>
             <operator>
                 <key>add_table_column_to_log</key>
@@ -108,19 +108,19 @@
         <group key="discovery">
             <operator>
                 <key>alpha_miner</key>
-                <class>org.rapidprom.operator.discovery.AlphaMinerOperator</class>
+                <class>org.rapidprom.operators.discovery.AlphaMinerOperator</class>
             </operator>
             <operator>
                 <key>ilp_miner</key>
-                <class>org.rapidprom.operator.discovery.ILPMinerOperator</class>
+                <class>org.rapidprom.operators.discovery.ILPMinerOperator</class>
             </operator>
             <operator>
                 <key>etm_miner</key>
-                <class>org.rapidprom.operator.discovery.ETMdMinerOperator</class>
+                <class>org.rapidprom.operators.discovery.ETMdMinerOperator</class>
             </operator>
             <operator>
                 <key>heuristics_miner</key>
-                <class>org.rapidprom.operator.discovery.HeuristicsMinerOperator</class>
+                <class>org.rapidprom.operators.discovery.HeuristicsMinerOperator</class>
             </operator>
             <operator>
                 <key>dotted_chart_analysis</key>
@@ -128,11 +128,11 @@
             </operator>
             <operator>
                 <key>mine_petri_net_with_inductive_miner</key>
-                <class>org.rapidprom.operator.discovery.InductiveMinerPNOperator</class>
+                <class>org.rapidprom.operators.discovery.InductiveMinerPNOperator</class>
             </operator>
             <operator>
                 <key>mine_process_tree_with_inductive_miner</key>
-                <class>org.rapidprom.operator.discovery.InductiveMinerPTOperator</class>
+                <class>org.rapidprom.operators.discovery.InductiveMinerPTOperator</class>
             </operator>
             <operator>
                 <key>mine_with_inductive_visual_miner</key>
@@ -144,7 +144,7 @@
             </operator>
             <operator>
                 <key>social_network_miner</key>
-                <class>org.rapidprom.operator.discovery.SocialNetworkMinerOperator</class>
+                <class>org.rapidprom.operators.discovery.SocialNetworkMinerOperator</class>
             </operator>
             <operator>
                 <key>social_network_sc_miner</key>
@@ -160,11 +160,11 @@
             </operator>
             <operator>
                 <key>mine_transition_system</key>
-                <class>org.rapidprom.operator.discovery.TransitionSystemMinerOperator</class>
+                <class>org.rapidprom.operators.discovery.TransitionSystemMinerOperator</class>
             </operator>
             <operator>
                 <key>mine_fuzzy_model</key>
-                <class>org.rapidprom.operator.discovery.FuzzyMinerOperator</class>
+                <class>org.rapidprom.operators.discovery.FuzzyMinerOperator</class>
             </operator>
             <operator>
                 <key>sequence_miner</key>
@@ -182,7 +182,7 @@
             </operator>
             <operator>
                 <key>export_log</key>
-                <class>org.rapidprom.operator.io.ExportXLogOperator</class>
+                <class>org.rapidprom.operators.io.ExportXLogOperator</class>
             </operator>
         </group>
         <group key="filtering">
@@ -206,11 +206,11 @@
         <group key="import">
             <operator>
                 <key>import_xlog</key>
-                <class>org.rapidprom.operator.io.ImportXLogOperator</class>
+                <class>org.rapidprom.operators.io.ImportXLogOperator</class>
             </operator>
             <operator>
                 <key>read_cpn</key>
-                <class>org.rapidprom.operator.io.ImportCPNModelOperator</class>
+                <class>org.rapidprom.operators.io.ImportCPNModelOperator</class>
             </operator>
             <operator>
                 <key>read_pnml_file</key>
@@ -218,11 +218,11 @@
             </operator>
             <operator>
                 <key>extract_log_from_file</key>
-                <class>org.rapidprom.operator.extract.ExtractXLogOperator</class>
+                <class>org.rapidprom.operators.extract.ExtractXLogOperator</class>
             </operator>
             <operator>
                 <key>import_petri_net_from_pnml_file</key>
-                <class>org.rapidprom.operator.io.ImportPetriNetOperator</class>
+                <class>org.rapidprom.operators.io.ImportPetriNetOperator</class>
             </operator>
         </group>
         <group key="parallel">
@@ -239,13 +239,13 @@
             <group key="generators">
                 <operator>
                     <key>stream_from_cpn</key>
-                    <class>org.rapidprom.operator.streams.generators.CPNToEventStreamOperator</class>
+                    <class>org.rapidprom.operators.streams.generators.CPNToEventStreamOperator</class>
                 </operator>
             </group>
             <group key="discovery">
                 <operator>
                     <key>stream_inductive_miner</key>
-                    <class>org.rapidprom.operator.streams.discovery.StreamInductiveMinerOperator</class>
+                    <class>org.rapidprom.operators.streams.discovery.StreamInductiveMinerOperator</class>
                 </operator>
             </group>
         </group>

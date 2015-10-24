@@ -1,7 +1,7 @@
 package org.rapidprom.parameter;
 
 import org.deckfour.xes.classification.XEventClassifier;
-import org.rapidprom.operator.ports.metadata.XLogIOObjectMetaData;
+import org.rapidprom.operators.ports.metadata.XLogIOObjectMetaData;
 
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.metadata.MetaData;
