@@ -74,8 +74,7 @@ public class IvyRapidProMPackageUpdate {
 							start = content.indexOf(DEPENDENCY_PATTERN,
 									start + 1);
 						}
-						OutputStream os = new FileOutputStream(child);
-						IOUtils.write(content, os);
+						IOUtils.write(content, new FileOutputStream(child));
 					} catch (IOException e) {
 						e.printStackTrace();
 					}

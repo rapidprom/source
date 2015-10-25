@@ -2,7 +2,7 @@ package org.rapidprom.ioobjectrenderers.streams;
 
 import java.awt.Component;
 
-import org.processmining.eventstream.readers.petrinet.views.XSEventStreamToPetriNetVisualizer;
+import org.processmining.eventstream.readers.acceptingpetrinet.views.XSEventStreamToAcceptingPetriNetVisualizer;
 import org.rapidprom.ioobjects.streams.XSEventStreamToAcceptingPetriNetReaderIOObject;
 
 import com.rapidminer.gui.renderer.AbstractRenderer;
@@ -22,7 +22,7 @@ public class XSEventStreamToAcceptingPetriNetReaderIOObjectRenderer
 			IOContainer ioContainer) {
 		if (renderable instanceof XSEventStreamToAcceptingPetriNetReaderIOObject) {
 			XSEventStreamToAcceptingPetriNetReaderIOObject obj = (XSEventStreamToAcceptingPetriNetReaderIOObject) renderable;
-			XSEventStreamToPetriNetVisualizer visualizer = new XSEventStreamToPetriNetVisualizer();
+			XSEventStreamToAcceptingPetriNetVisualizer visualizer = new XSEventStreamToAcceptingPetriNetVisualizer();
 			return visualizer.visualize(obj.getPluginContext(),
 					obj.getArtifact());
 		}
