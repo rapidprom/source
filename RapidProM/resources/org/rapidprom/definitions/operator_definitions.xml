@@ -87,10 +87,6 @@
                 <class>org.rapidprom.operators.discovery.HeuristicsMinerOperator</class>
             </operator>
             <operator>
-                <key>dotted_chart_analysis</key>
-                <class>com.rapidminer.operator.miningplugins.DottedChartAnalysisTask</class>
-            </operator>
-            <operator>
                 <key>mine_petri_net_with_inductive_miner</key>
                 <class>org.rapidprom.operators.discovery.InductiveMinerPNOperator</class>
             </operator>
@@ -103,24 +99,8 @@
                 <class>com.rapidminer.operator.miningplugins.MinewithInductivevisualMinerTask</class>
             </operator>
             <operator>
-                <key>social_network_st_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SocialNetworkSTminerTask</class>
-            </operator>
-            <operator>
                 <key>social_network_miner</key>
                 <class>org.rapidprom.operators.discovery.SocialNetworkMinerOperator</class>
-            </operator>
-            <operator>
-                <key>social_network_sc_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SocialNetworkSCminerTask</class>
-            </operator>
-            <operator>
-                <key>social_network_wt_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SocialNetworkWTminerTask</class>
-            </operator>
-            <operator>
-                <key>social_network_ra_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SocialNetworkRAminerTask</class>
             </operator>
             <operator>
                 <key>mine_transition_system</key>
@@ -185,26 +165,12 @@
                 <class>org.rapidprom.operators.io.ImportCPNModelOperator</class>
             </operator>
             <operator>
-                <key>read_pnml_file</key>
-                <class>com.rapidminer.operator.importplugins.ReadPetrinetTask</class>
-            </operator>
-            <operator>
                 <key>extract_log_from_file</key>
                 <class>org.rapidprom.operators.extract.ExtractXLogOperator</class>
             </operator>
             <operator>
                 <key>import_petri_net_from_pnml_file</key>
                 <class>org.rapidprom.operators.io.ImportPetriNetOperator</class>
-            </operator>
-        </group>
-        <group key="parallel">
-            <operator>
-                <key>collection_iteration_parallel</key>
-                <class>com.rapidminer.operator.parallel.CollectionIterationParallelOperator</class>
-            </operator>
-            <operator>
-                <key>collection_iteration_parallel2</key>
-                <class>com.rapidminer.operator.parallel.CollectionIterationParallelOperator2</class>
             </operator>
         </group>
         <group key="streams">

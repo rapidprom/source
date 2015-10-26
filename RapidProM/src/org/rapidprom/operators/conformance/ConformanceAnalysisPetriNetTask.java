@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClasses;
@@ -25,11 +27,15 @@ import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
+import org.processmining.plugins.petrinet.reduction.Murata;
+import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.petrinet.replayresult.StepTypes;
 import org.processmining.plugins.pnalignanalysis.conformance.AlignmentPrecGenRes;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
+import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
+import org.rapidprom.ioobjects.XLogIOObject;
 import org.rapidprom.prom.CallProm;
 
 import com.rapidminer.example.Attribute;
@@ -40,7 +46,6 @@ import com.rapidminer.example.table.DataRow;
 import com.rapidminer.example.table.DataRowFactory;
 import com.rapidminer.example.table.MemoryExampleTable;
 import com.rapidminer.ioobjects.ProMContextIOObject;
-import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -58,6 +63,7 @@ import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.parameters.Parameter;
 import com.rapidminer.parameters.ParameterBoolean;
 import com.rapidminer.parameters.ParameterInteger;
+import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
 import com.rapidminer.util.Utilities;
 
@@ -77,8 +83,6 @@ public class ConformanceAnalysisPetriNetTask extends Operator {
 	
 	private List<Parameter> parameters = null;
 	
-	/** defining the ports */
-	private InputPort inputContext = getInputPorts().createPort("context (ProM Context)", ProMContextIOObject.class);
 	private InputPort inputLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
 	private InputPort inputPN = getInputPorts().createPort("model (ProM Petri Net)", PetriNetIOObject.class);
 	private OutputPort output = getOutputPorts().createPort("example set with metrics (Data Table)");
@@ -202,14 +206,17 @@ public class ConformanceAnalysisPetriNetTask extends Operator {
 	
 	@Override
 	public void doWork() throws OperatorException {
-//		LogService logService = LogService.getGlobal();
-//		logService.log("start do Conformance analysis", LogService.NOTE);
-		// get the plugincontext
-		ProMContextIOObject context = inputContext.getData(ProMContextIOObject.class);
-		PluginContext pluginContext = context.getPluginContext();
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO,
+				"Start: replay log on petri net for conformance checking");
+		long time = System.currentTimeMillis();
+		
+		
+		PluginContext pluginContext = ProMPluginContextManager.instance()
+				.getFutureResultAwareContext(PNLogReplayer .class);
 		// get the log
 		XLogIOObject log = inputLog.getData(XLogIOObject.class);
-		XLog promLog = log.getPromLog();
+		XLog promLog = log.getArtifact();
 		// get the petri net
 		PetriNetIOObject data = inputPN.getData(PetriNetIOObject.class);
 		Petrinet pn = data.getArtifact();
@@ -517,6 +524,11 @@ public class ConformanceAnalysisPetriNetTask extends Operator {
 		
 		ExampleSet es5 =	ExampleSetFactory.createExampleSet(moves);
 		outputActivityAlignment.deliver(es5);
+		
+		logger.log(
+				Level.INFO,
+				"End: replay log on petri net for conformance checking ("
+						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
 	
 	private List<Integer> convertIntListToArray(String s) {
