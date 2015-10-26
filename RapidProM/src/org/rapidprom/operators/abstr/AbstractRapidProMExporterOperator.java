@@ -25,7 +25,7 @@ import com.rapidminer.parameter.ParameterTypeString;
  * @param <F>
  *            FileFormat, assumes: toString(); gives the file format.
  */
-public abstract class AbstractRapidProMExporter<T extends AbstractRapidProMIOObject<T2>, T2, F>
+public abstract class AbstractRapidProMExporterOperator<T extends AbstractRapidProMIOObject<T2>, T2, F>
 		extends AbstractWriter<T> {
 
 	protected final static String PARAMETER_KEY_FOLDER = "folder";
@@ -40,7 +40,7 @@ public abstract class AbstractRapidProMExporter<T extends AbstractRapidProMIOObj
 	protected final F[] PARAMETER_VALUES_FILE_FORMAT;
 	protected final F defaultFileFormat;
 
-	public AbstractRapidProMExporter(OperatorDescription description,
+	public AbstractRapidProMExporterOperator(OperatorDescription description,
 			Class<T> savedClass, F[] fileFormats, F defaultFileFormat) {
 		super(description, savedClass);
 		assert (Arrays.asList(fileFormats).contains(defaultFileFormat));

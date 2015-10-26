@@ -11,12 +11,12 @@ import org.processmining.plugins.log.exporting.ExportLogMxmlGz;
 import org.processmining.plugins.log.exporting.ExportLogXes;
 import org.processmining.plugins.log.exporting.ExportLogXesGz;
 import org.rapidprom.ioobjects.XLogIOObject;
-import org.rapidprom.operators.abstr.AbstractRapidProMExporter;
+import org.rapidprom.operators.abstr.AbstractRapidProMExporterOperator;
 
 import com.rapidminer.operator.OperatorDescription;
 
 public class ExportXLogOperator
-		extends AbstractRapidProMExporter<XLogIOObject, XLog, FileFormat> {
+		extends AbstractRapidProMExporterOperator<XLogIOObject, XLog, FileFormat> {
 
 	public ExportXLogOperator(OperatorDescription description) {
 		super(description, XLogIOObject.class,

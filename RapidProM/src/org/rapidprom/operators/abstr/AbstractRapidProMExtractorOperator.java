@@ -30,7 +30,7 @@ import com.rapidminer.tools.Observer;
  *
  * @param <T>
  */
-public abstract class AbstractRapidProMExtractor<T extends IOObject>
+public abstract class AbstractRapidProMExtractorOperator<T extends IOObject>
 		extends Operator {
 
 	protected final InputPort inputfile = getInputPorts().createPort("file",
@@ -43,7 +43,7 @@ public abstract class AbstractRapidProMExtractor<T extends IOObject>
 	protected MetaData cachedMetaData;
 	protected MetaDataError cachedError;
 
-	public AbstractRapidProMExtractor(OperatorDescription description,
+	public AbstractRapidProMExtractorOperator(OperatorDescription description,
 			Class<? extends IOObject> generatedClass) {
 		super(description);
 		this.generatedClass = generatedClass;
@@ -52,12 +52,12 @@ public abstract class AbstractRapidProMExtractor<T extends IOObject>
 			public void transformMD() {
 				if (cacheDirty || !isMetaDataCacheable()) {
 					try {
-						cachedMetaData = AbstractRapidProMExtractor.this
+						cachedMetaData = AbstractRapidProMExtractorOperator.this
 								.getGeneratedMetaData();
 						cachedError = null;
 					} catch (OperatorException e) {
 						cachedMetaData = new MetaData(
-								AbstractRapidProMExtractor.this.generatedClass);
+								AbstractRapidProMExtractorOperator.this.generatedClass);
 						String msg = e.getMessage();
 						if ((msg == null) || (msg.length() == 0)) {
 							msg = e.toString();
@@ -116,12 +116,12 @@ public abstract class AbstractRapidProMExtractor<T extends IOObject>
 	/** Describes an operator that can read certain file types. */
 	public static class ExtractorDescription {
 		private final String fileExtension;
-		private final Class<? extends AbstractRapidProMExtractor<?>> extractorClass;
+		private final Class<? extends AbstractRapidProMExtractorOperator<?>> extractorClass;
 		/** This parameter must be set to the file name. */
 		private final String fileParameterKey;
 
 		public ExtractorDescription(String fileExtension,
-				Class<? extends AbstractRapidProMExtractor<?>> extractorClass,
+				Class<? extends AbstractRapidProMExtractorOperator<?>> extractorClass,
 				String fileParameterKey) {
 			super();
 			this.fileExtension = fileExtension;

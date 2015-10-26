@@ -15,7 +15,7 @@ import org.processmining.xeslite.plugin.OpenLogFileLiteImplPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
 import org.rapidprom.ioobjects.XLogIOObject;
-import org.rapidprom.operators.abstr.AbstractRapidProMExtractor;
+import org.rapidprom.operators.abstr.AbstractRapidProMExtractorOperator;
 import org.rapidprom.operators.ports.metadata.XLogIOObjectMetaData;
 
 import com.rapidminer.operator.OperatorDescription;
@@ -34,7 +34,7 @@ import com.rapidminer.tools.LogService;
  *
  */
 public class ExtractXLogOperator
-		extends AbstractRapidProMExtractor<XLogIOObject> {
+		extends AbstractRapidProMExtractorOperator<XLogIOObject> {
 
 	public static enum ImplementingPlugin {
 		LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs"), MAP_DB(

@@ -10,13 +10,13 @@ import org.processmining.plugins.pnml.exporting.PnmlExportNetToEPNML;
 import org.processmining.plugins.pnml.exporting.PnmlExportNetToPNML;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
-import org.rapidprom.operators.abstr.AbstractRapidProMExporter;
+import org.rapidprom.operators.abstr.AbstractRapidProMExporterOperator;
 
 import com.rapidminer.operator.OperatorDescription;
 
 public class ExportPetriNetOperator
 		extends
-		AbstractRapidProMExporter<PetriNetIOObject, Petrinet, PetriNetFileFormat> {
+		AbstractRapidProMExporterOperator<PetriNetIOObject, Petrinet, PetriNetFileFormat> {
 
 	public ExportPetriNetOperator(OperatorDescription description) {
 		super(description, PetriNetIOObject.class, EnumSet.allOf(

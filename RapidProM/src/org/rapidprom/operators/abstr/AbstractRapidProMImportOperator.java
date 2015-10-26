@@ -43,13 +43,15 @@ public abstract class AbstractRapidProMImportOperator<T extends IOObject>
 	@Override
 	public T read() throws OperatorException {
 		Logger logger = LogService.getRoot();
-		logger.log(Level.INFO, "Start: importing petri net");
+		logger.log(Level.INFO, "Start: importing " + generatedClass.getName());
 		long time = System.currentTimeMillis();
 		if (checkFileParameterMetaData(PARAMETER_KEY_FILE)) {
 			try {
 				T result = read(getFile());
-				logger.log(Level.INFO, "End: importing petri net ("
-						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
+				logger.log(Level.INFO,
+						"End: importing " + generatedClass.getName() + "("
+								+ (System.currentTimeMillis() - time) / 1000
+								+ " sec)");
 				return result;
 			} catch (Exception e) {
 				throw new OperatorException("Import Failed: " + e.getMessage());
