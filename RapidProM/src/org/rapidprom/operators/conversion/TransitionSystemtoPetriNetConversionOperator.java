@@ -3,9 +3,11 @@ package org.rapidprom.operators.conversion;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.transitionsystem.regions.TransitionSystem2Petrinet;
+import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.TransitionSystemIOObject;
 
@@ -24,7 +26,8 @@ public class TransitionSystemtoPetriNetConversionOperator extends Operator {
 	private OutputPort output = getOutputPorts().createPort(
 			"model (ProM Petri Net)");
 
-	public TransitionSystemtoPetriNetConversionOperator(OperatorDescription description) {
+	public TransitionSystemtoPetriNetConversionOperator(
+			OperatorDescription description) {
 		super(description);
 		getTransformer().addRule(
 				new GenerateNewMDRule(output, PetriNetIOObject.class));
@@ -38,10 +41,13 @@ public class TransitionSystemtoPetriNetConversionOperator extends Operator {
 
 		TransitionSystem2Petrinet converter = new TransitionSystem2Petrinet();
 
+		PluginContext pluginContext = ProMPluginContextManager.instance()
+				.getFutureResultAwareContext(TransitionSystem2Petrinet.class);
+
 		Object[] result;
 		try {
 			result = converter
-					.convertToPetrinet(input.getData(TransitionSystemIOObject.class).getPluginContext(),
+					.convertToPetrinet(pluginContext,
 							input.getData(TransitionSystemIOObject.class)
 									.getArtifact());
 		} catch (Exception e) {
@@ -51,7 +57,8 @@ public class TransitionSystemtoPetriNetConversionOperator extends Operator {
 		}
 
 		PetriNetIOObject petriNet = new PetriNetIOObject((Petrinet) result[0],
-				input.getData(TransitionSystemIOObject.class).getPluginContext());
+				input.getData(TransitionSystemIOObject.class)
+						.getPluginContext());
 		petriNet.setInitialMarking((Marking) result[1]);
 
 		output.deliver(petriNet);

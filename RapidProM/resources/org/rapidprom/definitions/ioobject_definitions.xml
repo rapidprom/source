@@ -106,13 +106,6 @@
     </ioobject>
 	
 	<ioobject
-		name="HeuristicsNetArrayObjectProM"
-		class="com.rapidminer.ioobjects.HeuristicsNetArrayObjectIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.HeuristicsNetArrayObjectIOObjectRenderer</renderer>
-	</ioobject>
-	
-	<ioobject
 		name="HeuristicsNetProM"
 		class="org.rapidprom.ioobjects.HeuristicsNetIOObject"
 		reportable="true">

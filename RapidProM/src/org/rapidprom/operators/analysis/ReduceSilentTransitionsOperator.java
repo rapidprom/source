@@ -31,29 +31,34 @@ public class ReduceSilentTransitionsOperator extends Operator {
 				new GenerateNewMDRule(outputPetrinet, PetriNetIOObject.class));
 	}
 
-	//TO-DO : add parameters
-	public void doWork() throws OperatorException { 
+	// TO-DO : add parameters
+	public void doWork() throws OperatorException {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO, "Start: reduce silent transitions");
 		long time = System.currentTimeMillis();
-		PluginContext pluginContext = ProMPluginContextManager.instance().getContext();
+		PluginContext pluginContext = ProMPluginContextManager.instance()
+				.getFutureResultAwareContext(Murata.class);
 		Murata reducer = new Murata();
 		Object[] result = null;
 		try {
-			 result = reducer.run(pluginContext,
-					inputPetrinet.getData(PetriNetIOObject.class).getArtifact(),
-					inputPetrinet.getData(PetriNetIOObject.class)
-							.getInitialMarking());
+			result = reducer
+					.run(pluginContext,
+							inputPetrinet.getData(PetriNetIOObject.class)
+									.getArtifact(),
+							inputPetrinet.getData(PetriNetIOObject.class)
+									.getInitialMarking());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		PetriNetIOObject pn = new PetriNetIOObject((Petrinet) result[0],pluginContext);
+		PetriNetIOObject pn = new PetriNetIOObject((Petrinet) result[0],
+				pluginContext);
 		pn.setInitialMarking((Marking) result[1]);
 		outputPetrinet.deliver(pn);
-		
-		logger.log(Level.INFO,
-				"End: reduce silent transitions (" + (System.currentTimeMillis() - time)
-						/ 1000 + " sec)");
+
+		logger.log(
+				Level.INFO,
+				"End: reduce silent transitions ("
+						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 
 	}
 
