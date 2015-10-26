@@ -1,4 +1,4 @@
-package com.rapidminer.operator.analysisplugins;
+package org.rapidprom.operators.conformance;
 
 import java.util.ArrayList;
 import java.util.Collection;
