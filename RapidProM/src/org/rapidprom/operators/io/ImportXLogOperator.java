@@ -1,5 +1,6 @@
 package org.rapidprom.operators.io;
 
+import java.io.File;
 import java.util.List;
 
 import org.deckfour.xes.classification.XEventClassifier;
@@ -7,12 +8,12 @@ import org.processmining.log.plugins.ImportXEventClassifierListPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
 import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.operators.abstr.AbstractRapidProMImportOperator;
 import org.rapidprom.operators.extract.ExtractXLogOperator;
 import org.rapidprom.operators.ports.metadata.XLogIOObjectMetaData;
 
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.io.AbstractReader;
 import com.rapidminer.operator.ports.metadata.MetaData;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeFile;
@@ -22,21 +23,15 @@ import com.rapidminer.parameter.ParameterTypeFile;
  * {@link ExtractXLogOperator} for actually importing the event log. This is
  * mainly due to the fact that java does not support multiple-inheritance.
  * 
- * @author svzelst
- *
  */
-public class ImportXLogOperator extends AbstractReader<XLogIOObject> {
+public class ImportXLogOperator
+		extends AbstractRapidProMImportOperator<XLogIOObject> {
 
-	private final static String PARAMETER_KEY_EVENT_LOG_FILE = "file";
-	private final static String PARAMETER_DESC_EVENT_LOG_FILE = "Select a file (.xes, .xez or .xes.gz) that represents an event log.";
-	private final static String[] SUPPORTED_EVENT_LOG_FORMATS = new String[] {
-			"xes", "xez", "xes.gz" };
+	private final static String[] SUPPORTED_FILE_FORMATS = new String[] { "xes",
+			"xez", "xes.gz" };
 
 	static {
-		for (String ext : SUPPORTED_EVENT_LOG_FORMATS) {
-			AbstractReader.registerReaderDescription(new ReaderDescription(ext,
-					ImportXLogOperator.class, PARAMETER_KEY_EVENT_LOG_FILE));
-		}
+		registerExtentions(SUPPORTED_FILE_FORMATS);
 	}
 
 	public ImportXLogOperator(OperatorDescription description) {
@@ -54,7 +49,7 @@ public class ImportXLogOperator extends AbstractReader<XLogIOObject> {
 					ProMPluginContextManager.instance()
 							.getFutureResultAwareContext(
 									ImportXEventClassifierListPlugin.class),
-					getParameterAsFile(PARAMETER_KEY_EVENT_LOG_FILE));
+					getParameterAsFile(PARAMETER_KEY_FILE));
 		} catch (Exception e) {
 			return new XLogIOObjectMetaData();
 		}
@@ -64,31 +59,24 @@ public class ImportXLogOperator extends AbstractReader<XLogIOObject> {
 			return new XLogIOObjectMetaData();
 	}
 
-	@Override
-	public XLogIOObject read() throws OperatorException {
-		XLogIOObject xLogIOObject = null;
-		try {
-			xLogIOObject = new XLogIOObject(
-					ExtractXLogOperator.importLog(
-							ExtractXLogOperator.PARAMETER_OPTIONS_IMPORTER[getParameterAsInt(
-									ExtractXLogOperator.PARAMETER_KEY_IMPORTER)],
-							getParameterAsFile(PARAMETER_KEY_EVENT_LOG_FILE)),
-					ProMPluginContextManager.instance().getContext());
-			xLogIOObject.setVisualizationType(
-					XLogIOObjectVisualizationType.DEFAULT);
-		} catch (Exception e) {
-			throw new OperatorException(
-					"Importing XLog failed, please check if the file specified exists");
-		}
-		return xLogIOObject;
+	protected XLogIOObject read(File file) throws Exception {
+		XLogIOObject obj = new XLogIOObject(
+				ExtractXLogOperator.importLog(
+						ExtractXLogOperator.PARAMETER_OPTIONS_IMPORTER[getParameterAsInt(
+								ExtractXLogOperator.PARAMETER_KEY_IMPORTER)],
+						getParameterAsFile(PARAMETER_KEY_FILE)),
+				ProMPluginContextManager.instance().getContext());
+		obj.setVisualizationType(XLogIOObjectVisualizationType.DEFAULT);
+		return obj;
 	}
 
 	@Override
 	public List<ParameterType> getParameterTypes() {
 		List<ParameterType> types = super.getParameterTypes();
-		types.add(new ParameterTypeFile(PARAMETER_KEY_EVENT_LOG_FILE,
-				PARAMETER_DESC_EVENT_LOG_FILE, false,
-				SUPPORTED_EVENT_LOG_FORMATS));
+		// we can not implement this in the super class due to a cyclic
+		// call to getParameterTypes()
+		types.add(new ParameterTypeFile(PARAMETER_KEY_FILE, PARAMETER_DESC_FILE,
+				false, SUPPORTED_FILE_FORMATS));
 		types.add(ExtractXLogOperator.createImporterParameterTypeCategory(
 				ExtractXLogOperator.PARAMETER_KEY_IMPORTER,
 				ExtractXLogOperator.PARAMETER_DESC_IMPORTER,

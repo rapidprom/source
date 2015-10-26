@@ -217,8 +217,12 @@
                 <class>org.rapidprom.operators.extract.ExtractXLogOperator</class>
             </operator>
             <operator>
-                <key>import_petri_net_from_pnml_file</key>
+                <key>import_petri_net</key>
                 <class>org.rapidprom.operators.io.ImportPetriNetOperator</class>
+            </operator>
+            <operator>
+                <key>import_petri_net_list</key>
+                <class>org.rapidprom.operators.io.ImportPetriNetListOperator</class>
             </operator>
         </group>
         <group key="parallel">

@@ -4,28 +4,27 @@ import java.io.File;
 import java.util.List;
 
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.models.graphbased.directed.petrinet.Petrinet;
-import org.processmining.plugins.pnml.importing.PnmlImportNet;
+import org.processmining.petrinets.list.PetriNetList;
+import org.processmining.petrinets.list.plugin.ImportPetriNetListPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.ioobjects.PetriNetIOObject;
+import org.rapidprom.ioobjects.PetriNetListIOObject;
 import org.rapidprom.operators.abstr.AbstractRapidProMImportOperator;
 
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeFile;
 
-public class ImportPetriNetOperator
-		extends AbstractRapidProMImportOperator<PetriNetIOObject> {
+public class ImportPetriNetListOperator
+		extends AbstractRapidProMImportOperator<PetriNetListIOObject> {
 
-	private final static String[] SUPPORTED_FILE_FORMATS = new String[] {
-			"pnml" };
+	private static String[] SUPPORTED_FILE_FORMATS = { "pnlist" };
 
 	static {
 		registerExtentions(SUPPORTED_FILE_FORMATS);
 	}
 
-	public ImportPetriNetOperator(OperatorDescription description) {
-		super(description, PetriNetIOObject.class);
+	public ImportPetriNetListOperator(OperatorDescription description) {
+		super(description, PetriNetListIOObject.class);
 	}
 
 	@Override
@@ -39,18 +38,16 @@ public class ImportPetriNetOperator
 	}
 
 	@Override
-	protected PetriNetIOObject read(File file) throws Exception {
+	protected PetriNetListIOObject read(File file) {
 		PluginContext context = ProMPluginContextManager.instance()
-				.getFutureResultAwareContext(PnmlImportNet.class);
-		PnmlImportNet importer = new PnmlImportNet();
-		Object[] result = null;
+				.getFutureResultAwareContext(ImportPetriNetListPlugin.class);
+		ImportPetriNetListPlugin importer = new ImportPetriNetListPlugin();
+		PetriNetList pnlist = null;
 		try {
-			result = (Object[]) importer.importFile(context,
-					getParameterAsFile(PARAMETER_KEY_FILE));
+			pnlist = importer.apply(context, getFile());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new PetriNetIOObject((Petrinet) result[0],
-				ProMPluginContextManager.instance().getContext());
+		return new PetriNetListIOObject(pnlist, context);
 	}
 }
