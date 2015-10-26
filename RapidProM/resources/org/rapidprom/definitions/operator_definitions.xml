@@ -45,6 +45,10 @@
                 <class>org.rapidprom.operators.conversion.PetriNetToBpmnConversionOperator</class>
             </operator>
             <operator>
+                <key>convert_petri_nets_to_petri_net_list</key>
+                <class>org.rapidprom.operators.conversion.PetriNetsToPetriNetListConversionOperator</class>
+            </operator>
+            <operator>
                 <key>transition_system_to_petrinet</key>
                 <class>org.rapidprom.operators.conversion.TransitionSystemtoPetriNetConversionOperator</class>
             </operator>

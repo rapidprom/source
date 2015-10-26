@@ -119,6 +119,12 @@
         <help>For using this operator, you need a context and a petri net. </help>
 		<key>convert_petrinet_to_bpmn</key>
 	</operator>
+	<operator>
+		<name>Petri Nets to Petri Net List</name>
+		<synopsis>This operator transforms a number of Petri nets to a list containing them</synopsis>
+		<help></help>
+		<key>convert_petri_nets_to_petri_net_list</key>
+	</operator>	
   <operator>
   		<name>Transition System to Petri Net </name>
         <synopsis>This operator transforms a Transition System (Reachability Graph) into a petri net</synopsis>
