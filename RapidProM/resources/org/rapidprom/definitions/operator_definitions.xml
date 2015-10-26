@@ -41,22 +41,6 @@
         </group>
         <group key="conversion">
             <operator>
-                <key>add_source_sink</key>
-                <class>com.rapidminer.operator.conversionplugins.AddSourceAndSinkPlacesTask</class>     
-            </operator>
-            <operator>
-                <key>name_to_petrinet</key>
-                <class>com.rapidminer.operator.conversionplugins.NameListToPetrinetTask</class>
-            </operator>
-            <operator>
-                <key>case_data_extractor</key>
-                <class>com.rapidminer.operator.conversionplugins.CaseDataExtractor</class>
-            </operator>
-            <operator>
-                <key>discovery_of_the_process_data-flow_(decision-tree_miner)</key>
-                <class>com.rapidminer.operator.conversionplugins.DiscoveryoftheProcessDataFlowTask</class>
-            </operator>
-            <operator>
                 <key>convert_petrinet_to_bpmn</key>
                 <class>org.rapidprom.operators.conversion.PetriNetToBpmnConversionOperator</class>
             </operator>
@@ -83,22 +67,6 @@
             <operator>
                 <key>convert_process_tree_to_petri_net</key>
                 <class>org.rapidprom.operators.conversion.ProcessTreeToPetriNetConversionOperator</class>
-            </operator>
-            <operator>
-                <key>add_table_column_to_log</key>
-                <class>com.rapidminer.operator.conversionplugins.AddTableColumnToXLog</class>
-            </operator>
-            <operator>
-                <key>add_event_attributes_to_log</key>
-                <class>com.rapidminer.operator.conversionplugins.AddEventAttributesToLog</class>
-            </operator>
-            <operator>
-                <key>add_events_to_log</key>
-                <class>com.rapidminer.operator.conversionplugins.AddEventsToLog</class>
-            </operator> 
-            <operator>
-                <key>merge_two_event_logs</key>
-                <class>com.rapidminer.operator.conversionplugins.MergeTwoEventLogs</class>
             </operator>
         </group>
         <group key="discovery">
@@ -195,12 +163,16 @@
             <class>org.rapidprom.operators.logmanipulation.MergeTwoEventLogsOperator</class>
         </operator>
         <operator>
-            <key>check_timestamp_filter</key>
-            <class>com.rapidminer.operator.filterplugins.CheckTimestampFilterTask</class>
+            <key>add_event_attributes_to_log</key>
+            <class>org.rapidprom.operators.logmanipulation.AddEventAttributesToLogOperator</class>
+        </operator>
+        <operator>
+            <key>add_events_to_log</key>
+            <class>org.rapidprom.operators.logmanipulation.AddEventsToLogOperator</class>
         </operator> 
         <operator>
             <key>timestamp_sort</key>
-            <class>com.rapidminer.operator.filterplugins.TimestampSort</class>
+            <class>org.rapidprom.operators.logmanipulation.TimestampSortOperator</class>
         </operator>
       </group> 
         <group key="import">

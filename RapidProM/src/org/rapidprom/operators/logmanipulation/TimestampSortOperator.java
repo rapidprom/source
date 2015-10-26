@@ -8,6 +8,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.deckfour.xes.extension.XExtension;
 import org.deckfour.xes.extension.std.XTimeExtension;
@@ -18,8 +20,8 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
+import org.rapidprom.ioobjects.XLogIOObject;
 
-import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -27,43 +29,44 @@ import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.tools.LogService;
-import com.rapidminer.util.ProMIOObjectList;
 
-public class TimestampSort extends Operator {
-	
-	/** defining the ports */
-	private InputPort inputLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
-	private OutputPort outputLog = getOutputPorts().createPort("event log (ProM Event Log)");
-	
-	public TimestampSort(OperatorDescription description) {
+public class TimestampSortOperator extends Operator {
+
+	private InputPort inputLog = getInputPorts().createPort(
+			"event log (ProM Event Log)", XLogIOObject.class);
+	private OutputPort outputLog = getOutputPorts().createPort(
+			"event log (ProM Event Log)");
+
+	public TimestampSortOperator(OperatorDescription description) {
 		super(description);
-		// TODO Auto-generated constructor stub
-		getTransformer().addRule( new GenerateNewMDRule(outputLog, XLogIOObject.class));
+		getTransformer().addRule(
+				new GenerateNewMDRule(outputLog, XLogIOObject.class));
 	}
-	
+
 	@Override
 	public void doWork() throws OperatorException {
-		// get ProMContext
-		LogService logService = LogService.getGlobal();
-		logService.log("start do work", LogService.NOTE);
-		// get the log
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "Start: sort by timestamp");
+		long time = System.currentTimeMillis();
+
 		XLogIOObject log = inputLog.getData(XLogIOObject.class);
-		XLog promLog = log.getData();
+		XLog promLog = log.getArtifact();
 		XLog resultLog = timeStampSortTraces(timeStampSortEvents(promLog));
-		XLogIOObject result = new XLogIOObject(resultLog);
+		XLogIOObject result = new XLogIOObject(resultLog,
+				log.getPluginContext());
 		outputLog.deliver(result);
-		// add to list so that afterwards it can be cleared if needed
-		ProMIOObjectList instance = ProMIOObjectList.getInstance();
-		instance.addToList(result);
-		logService.log("end do work", LogService.NOTE);
+
+		logger.log(Level.INFO,
+				"End: sort by timestamp ("
+						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 
 	}
 
 	private XLog timeStampSortEvents(XLog log) {
 		System.out.println("Time Stamp Sorting");
 		final String depSortingKey = "concept:name";
-		//final String depSortingKey = "org:resource"; // "org:group"
-		//final String depSortingKey = "AfdelingCode"; // "org:group"
+		// final String depSortingKey = "org:resource"; // "org:group"
+		// final String depSortingKey = "AfdelingCode"; // "org:group"
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		XLog outputLog = factory.createLog();
 		for (XExtension extension : log.getExtensions())
@@ -75,7 +78,6 @@ public class TimestampSort extends Operator {
 
 		XTrace outputTrace;
 		XAttributeMap traceAttributeMap, eventAttributeMap;
-		XEvent outputEvent;
 
 		List<Date> eventDateList = new ArrayList<Date>();
 		List<Date> sortedEventDateList = new ArrayList<Date>();
@@ -203,57 +205,44 @@ public class TimestampSort extends Operator {
 		for (int i = 0; i < noTraces; i++)
 			System.out.println("Trace " + i + " " + log.get(i).size() + " @ "
 					+ outputLog.get(i).size());
-		
+
 		return outputLog;
 
-//		context.getProvidedObjectManager().createProvidedObject(
-//				"Log with Sorted Activity Names Based on TimeStamps",
-//				outputLog, XLog.class, context);
-//		context.getGlobalContext().getResourceManager()
-//				.getResourceForInstance(outputLog).setFavorite(true);
+		// context.getProvidedObjectManager().createProvidedObject(
+		// "Log with Sorted Activity Names Based on TimeStamps",
+		// outputLog, XLog.class, context);
+		// context.getGlobalContext().getResourceManager()
+		// .getResourceForInstance(outputLog).setFavorite(true);
 	}
-	
+
 	private XLog timeStampSortTraces(XLog log) {
-		
+
 		List<XTrace> traces = new Vector<XTrace>();
 		Iterator<XTrace> iterator = log.iterator();
-		while(iterator.hasNext())
+		while (iterator.hasNext())
 			traces.add(iterator.next());
-		
+
 		Collections.sort(traces, new TraceComparator());
-		
-		for(int i = 0 ; i < log.size() ; i++)
+
+		for (int i = 0; i < log.size(); i++)
 			log.set(i, traces.get(i));
-		
+
 		return log;
-	}	
-		
+	}
+
 	public class TraceComparator implements Comparator<XTrace> {
 
 		@Override
 		public int compare(XTrace t1, XTrace t2) {
-			
-			Date d1 = ((XAttributeTimestampImpl)t1.get(0).getAttributes().get(XTimeExtension.KEY_TIMESTAMP)).getValue();
-			Date d2 = ((XAttributeTimestampImpl)t2.get(0).getAttributes().get(XTimeExtension.KEY_TIMESTAMP)).getValue();
-			
+
+			Date d1 = ((XAttributeTimestampImpl) t1.get(0).getAttributes()
+					.get(XTimeExtension.KEY_TIMESTAMP)).getValue();
+			Date d2 = ((XAttributeTimestampImpl) t2.get(0).getAttributes()
+					.get(XTimeExtension.KEY_TIMESTAMP)).getValue();
+
 			return d1.compareTo(d2);
 		}
 
 	}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-}
 
-	
-	
-	
+}

@@ -3,6 +3,8 @@ package org.rapidprom.operators.logmanipulation;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -28,6 +30,7 @@ import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
+import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
 
 public class AddTraceAttributesToLogOperator extends Operator {
@@ -49,6 +52,10 @@ public class AddTraceAttributesToLogOperator extends Operator {
 
 	@Override
 	public void doWork() throws OperatorException {
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "Start: add trace attributes");
+		long time = System.currentTimeMillis();
+		
 		ExampleSet es = inputExampleSet.getData(ExampleSet.class);
 
 		XLogIOObject logIO = inputLog.getData(XLogIOObject.class);
@@ -81,6 +88,9 @@ public class AddTraceAttributesToLogOperator extends Operator {
 					"Case ID column not found", JOptionPane.ERROR_MESSAGE);
 			outputLog.deliver(null);
 		}
+		logger.log(Level.INFO,
+				"End: add trace attributes ("
+						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
 
 	public List<ParameterType> getParameterTypes() {

@@ -1,9 +1,10 @@
 package org.rapidprom.operators.logmanipulation;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.JOptionPane;
 
@@ -13,14 +14,13 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
-import org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
+import org.rapidprom.ioobjects.XLogIOObject;
 
 import com.rapidminer.example.Attribute;
 import com.rapidminer.example.Attributes;
 import com.rapidminer.example.Example;
 import com.rapidminer.example.ExampleSet;
-import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -30,19 +30,16 @@ import com.rapidminer.operator.ports.metadata.ExampleSetMetaData;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeString;
-import com.rapidminer.parameter.UndefinedParameterError;
-import com.rapidminer.parameters.Parameter;
-import com.rapidminer.parameters.ParameterString;
+import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
-import com.rapidminer.util.ProMIOObjectList;
 
-public class AddEventAttributesToLog extends Operator {
+public class AddEventAttributesToLogOperator extends Operator {
 
-	private List<Parameter> parameters = null;
+	private static final String PARAMETER_1 = "Case id column",
+			PARAMETER_2 = "Event id column";
+
 	private Attribute traceIdColumnAttrib = null;
 	private Attribute eventIdColumnAttrib = null;
-	private String nameTraceIDcolumn = "";
-	private String nameEventIDcolumn = "";
 
 	private InputPort inputExampleSet = getInputPorts().createPort(
 			"example set (Data Table)", new ExampleSetMetaData());
@@ -51,7 +48,7 @@ public class AddEventAttributesToLog extends Operator {
 	private OutputPort outputLog = getOutputPorts().createPort(
 			"event log (ProM Event Log)");
 
-	public AddEventAttributesToLog(OperatorDescription description) {
+	public AddEventAttributesToLogOperator(OperatorDescription description) {
 		super(description);
 		getTransformer().addRule(
 				new GenerateNewMDRule(outputLog, XLogIOObject.class));
@@ -59,20 +56,22 @@ public class AddEventAttributesToLog extends Operator {
 
 	@Override
 	public void doWork() throws OperatorException {
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "Start: add event attributes");
+		long time = System.currentTimeMillis();
+
 		ExampleSet es = inputExampleSet.getData(ExampleSet.class);
 
 		XLogIOObject logIO = inputLog.getData(XLogIOObject.class);
-		XLog xLog = logIO.getXLog();
+		XLog xLog = logIO.getArtifact();
 
-		getConfiguration(parameters);
-		// check first if there is a column for the case id and event id
 		Iterator<Attribute> iterator = es.getAttributes().iterator();
 		while (iterator.hasNext()) {
 			Attribute next = iterator.next();
-			if (next.getName().equals(nameTraceIDcolumn)) {
+			if (next.getName().equals(getParameterAsString(PARAMETER_1))) {
 				traceIdColumnAttrib = next;
 			}
-			if (next.getName().equals(nameEventIDcolumn)) {
+			if (next.getName().equals(getParameterAsString(PARAMETER_2))) {
 				eventIdColumnAttrib = next;
 			}
 			if (traceIdColumnAttrib != null && eventIdColumnAttrib != null) {
@@ -83,14 +82,12 @@ public class AddEventAttributesToLog extends Operator {
 		if (traceIdColumnAttrib != null && eventIdColumnAttrib != null) {
 			XLog adaptedLog = mergeExampleSetIntoLog(xLog, es,
 					traceIdColumnAttrib, eventIdColumnAttrib);
-			XLogIOObject xLogIOObject = new XLogIOObject(adaptedLog);
-			xLogIOObject.setPluginContext(null);
+			XLogIOObject xLogIOObject = new XLogIOObject(adaptedLog,
+					logIO.getPluginContext());
 			xLogIOObject
 					.setVisualizationType(XLogIOObjectVisualizationType.EXAMPLE_SET);
 			outputLog.deliver(xLogIOObject);
-			// add to list so that afterwards it can be cleared if needed
-			ProMIOObjectList instance = ProMIOObjectList.getInstance();
-			instance.addToList(xLogIOObject);
+
 		} else {
 			// show warning
 			JOptionPane.showMessageDialog(null,
@@ -99,45 +96,23 @@ public class AddEventAttributesToLog extends Operator {
 					JOptionPane.ERROR_MESSAGE);
 			outputLog.deliver(null);
 		}
+		logger.log(Level.INFO,
+				"End: add event attributes ("
+						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
 
 	public List<ParameterType> getParameterTypes() {
-		this.parameters = new ArrayList<Parameter>();
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
-		ParameterString parameter1 = new ParameterString("", String.class,
-				"Name of Case ID column", "Case ID column");
 		ParameterTypeString parameterType1 = new ParameterTypeString(
-				parameter1.getNameParameter(),
-				parameter1.getDescriptionParameter(),
-				parameter1.getDefaultValueParameter());
+				PARAMETER_1, PARAMETER_1, "T:concept:name");
 		parameterTypes.add(parameterType1);
-		parameters.add(parameter1);
 
-		ParameterString parameter2 = new ParameterString("", String.class,
-				"Name of Event ID column", "Event ID column");
 		ParameterTypeString parameterType2 = new ParameterTypeString(
-				parameter2.getNameParameter(),
-				parameter2.getDescriptionParameter(),
-				parameter2.getDefaultValueParameter());
+				PARAMETER_2, PARAMETER_2, "E:concept:name");
 		parameterTypes.add(parameterType2);
-		parameters.add(parameter2);
 
 		return parameterTypes;
-	}
-
-	private void getConfiguration(List<Parameter> parameters) {
-		try {
-			Parameter parameter1 = parameters.get(0);
-			String valPar1 = getParameterAsString(parameter1.getNameParameter());
-			nameTraceIDcolumn = valPar1;
-
-			Parameter parameter2 = parameters.get(1);
-			String valPar2 = getParameterAsString(parameter2.getNameParameter());
-			nameEventIDcolumn = valPar2;
-		} catch (UndefinedParameterError e) {
-			e.printStackTrace();
-		}
 	}
 
 	private XLog mergeExampleSetIntoLog(XLog xLog, ExampleSet es,

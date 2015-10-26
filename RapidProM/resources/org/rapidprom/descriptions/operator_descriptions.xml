@@ -65,20 +65,6 @@
         <help>An event log is used as input and a data table (ExampleSet) is produced as output</help>
 		<key>case_data_extractor</key>
   </operator>
-    
-  <operator>
-  		<name>Add Noise Filter to Log</name>
-        <synopsis>This operator filters noise out of an event log</synopsis>
-        <help>An event log is used as input and the filtered log is provided as output</help>
-		<key>add_noise_filter_log</key>
-	 </operator>
-    
-  <operator>
-  		<name>Clear Context</name>
-        <synopsis>This operator clears the ProM PluginContext</synopsis>
-        <help>This operator cleans the connection and provided objects manager, and sets future to null, use this when running out of memory </help>
-        <key>clear_context</key>
-     </operator>
   <operator>
   		<name>Soundness analysis (WOFLAN)</name>
         <synopsis>This operator analyzes the soundness of a petri net</synopsis>
@@ -185,6 +171,12 @@
         <synopsis>This operator provides a ProM context.</synopsis>
         <help>This operator provides a ProM context. In order to run most of the ProM operators a ProM context is needed. When the operator is executed an instance of ProM is started. This instance can be reused  for multiple operators that require such a ProM context.</help>
     <key>prom_context</key>
+  </operator>
+  <operator>
+        <name>Sort chronologically</name>
+        <synopsis>This operator sorts traces and events within traces by timestamp (increasing).</synopsis>
+        <help>This operator sorts traces and events within traces by timestamp.</help>
+    <key>timestamp_sort</key>
   </operator>
   
    <operator>
@@ -501,7 +493,7 @@
   	</operator>
   	
   	<operator>
-        <name>Add Noise (Log)</name>
+        <name>Add Noise</name>
         <synopsis>This filter randomly adds noise to the log.</synopsis>
         <help>This operator can be used to add noise to a log. There are 5 possible noise types: remove head, remove body, swap tasks, remove task, and add task. The noise types remove head and remove body respectively remove at most the first or second 1/3 of a trace. The noise type swap randomly swaps two event in a trace. The noise type remove randomly removes event from a trace. The add type randomly adds an event to a trace. As input a log file is needed.</help>
     	<key>add_noise_log</key>

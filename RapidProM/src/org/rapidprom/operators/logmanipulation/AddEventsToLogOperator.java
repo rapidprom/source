@@ -1,9 +1,10 @@
 package org.rapidprom.operators.logmanipulation;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.extension.std.XLifecycleExtension;
@@ -20,11 +21,11 @@ import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 import org.deckfour.xes.model.impl.XAttributeMapImpl;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
+import org.rapidprom.ioobjects.XLogIOObject;
 
 import com.rapidminer.example.Attribute;
 import com.rapidminer.example.Example;
 import com.rapidminer.example.ExampleSet;
-import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -35,23 +36,15 @@ import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
-import com.rapidminer.parameters.Parameter;
-import com.rapidminer.parameters.ParameterString;
+import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
-import com.rapidminer.util.ProMIOObjectList;
 
-public class AddEventsToLog extends Operator {
+public class AddEventsToLogOperator extends Operator {
 
-	private List<Parameter> parameters = null;
+	private static final String PARAMETER_1 = "Case id column",
+			PARAMETER_2 = "Event id column", PARAMETER_3 = "Lifecycle column",
+			PARAMETER_4 = "Timestamp column", PARAMETER_5 = "Resource column";
 	private Attribute traceIdColumnAttrib = null;
-	private String nameTraceIDcolumn = "";
-
-	private String nameEventIDcolumn = "";
-	private String lifeCycleColumn = "";
-	private String timestampColumn = "";
-	private String resourceColumn = "";
-	private String roleColumn = "";
-	private String groupColumn = "";
 
 	private InputPort inputExampleSet = getInputPorts().createPort(
 			"example set (Data Table)", new ExampleSetMetaData());
@@ -60,7 +53,7 @@ public class AddEventsToLog extends Operator {
 	private OutputPort outputLog = getOutputPorts().createPort(
 			"event log (ProM Event Log)");
 
-	public AddEventsToLog(OperatorDescription description) {
+	public AddEventsToLogOperator(OperatorDescription description) {
 		super(description);
 		getTransformer().addRule(
 				new GenerateNewMDRule(outputLog, XLogIOObject.class));
@@ -68,18 +61,19 @@ public class AddEventsToLog extends Operator {
 
 	@Override
 	public void doWork() throws OperatorException {
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "Start: add event");
+		long time = System.currentTimeMillis();
+
 		ExampleSet es = inputExampleSet.getData(ExampleSet.class);
 
 		XLogIOObject logIO = inputLog.getData(XLogIOObject.class);
-		XLog xLog = logIO.getXLog();
+		XLog xLog = logIO.getArtifact();
 
-		getConfiguration(parameters);
-
-		// check first if there is a column for the case id
 		Iterator<Attribute> iterator = es.getAttributes().iterator();
 		while (iterator.hasNext()) {
 			Attribute next = iterator.next();
-			if (next.getName().equals(nameTraceIDcolumn)) {
+			if (next.getName().equals(getParameterAsString(PARAMETER_1))) {
 				traceIdColumnAttrib = next;
 				break;
 			}
@@ -89,17 +83,17 @@ public class AddEventsToLog extends Operator {
 			dumpSizeTraces(xLog);
 			XLog adaptedLog = mergeExampleSetIntoLog(xLog, es,
 					traceIdColumnAttrib);
-			XLogIOObject xLogIOObject = new XLogIOObject(adaptedLog);
-			xLogIOObject.setPluginContext(null);
+			XLogIOObject xLogIOObject = new XLogIOObject(adaptedLog,
+					logIO.getPluginContext());
 			xLogIOObject
 					.setVisualizationType(XLogIOObjectVisualizationType.EXAMPLE_SET);
 			outputLog.deliver(xLogIOObject);
 			System.out.println("DUMPSECOND");
 			dumpSizeTraces(adaptedLog);
-			// add to list so that afterwards it can be cleared if needed
-			ProMIOObjectList instance = ProMIOObjectList.getInstance();
-			instance.addToList(xLogIOObject);
+
 		}
+		logger.log(Level.INFO, "End: add event ("
+				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
 
 	private void dumpSizeTraces(XLog xLog) {
@@ -111,7 +105,7 @@ public class AddEventsToLog extends Operator {
 	}
 
 	private XLog mergeExampleSetIntoLog(XLog xLog, ExampleSet es,
-			Attribute traceIdAttrib) {
+			Attribute traceIdAttrib) throws UndefinedParameterError {
 		XFactory factory = XFactoryRegistry.instance().currentDefault();
 		Iterator<Example> iterator = es.iterator();
 		while (iterator.hasNext()) {
@@ -126,24 +120,27 @@ public class AddEventsToLog extends Operator {
 					String nameAttrib = next.getName();
 					if (nameAttrib.equals(traceIdAttrib.getName())) {
 						// do nothing
-					} else if (nameAttrib.equals(nameEventIDcolumn)
-							&& !nameEventIDcolumn.equals("")) {
+					} else if (nameAttrib
+							.equals(getParameterAsString(PARAMETER_2))
+							&& !getParameterAsString(PARAMETER_2).equals("")) {
 						// concept:name
 						String value = row.getValueAsString(next);
 						XAttributeLiteral attribNameEvent = factory
 								.createAttributeLiteral("concept:name", value,
 										XConceptExtension.instance());
 						attribMapEvent.put("concept:name", attribNameEvent);
-					} else if (nameAttrib.equals(lifeCycleColumn)
-							&& !lifeCycleColumn.equals("")) {
+					} else if (nameAttrib
+							.equals(getParameterAsString(PARAMETER_3))
+							&& !getParameterAsString(PARAMETER_3).equals("")) {
 						// lifecycle:transition
 						String value = row.getValueAsString(next);
 						XAttributeLiteral attribLC = factory
 								.createAttributeLiteral("lifecycle:transition",
 										value, XLifecycleExtension.instance());
 						attribMapEvent.put("lifecycle:transition", attribLC);
-					} else if (nameAttrib.equals(timestampColumn)
-							&& !timestampColumn.equals("")) {
+					} else if (nameAttrib
+							.equals(getParameterAsString(PARAMETER_4))
+							&& !getParameterAsString(PARAMETER_4).equals("")) {
 						// timestamp
 						Date dateValue = row.getDateValue(next);
 						XAttributeTimestamp attribTimestampEvent = factory
@@ -151,31 +148,15 @@ public class AddEventsToLog extends Operator {
 										dateValue, XTimeExtension.instance());
 						attribMapEvent.put("time:timestamp",
 								attribTimestampEvent);
-					} else if (nameAttrib.equals(resourceColumn)
-							&& !resourceColumn.equals("")) {
+					} else if (nameAttrib
+							.equals(getParameterAsString(PARAMETER_5))
+							&& !getParameterAsString(PARAMETER_5).equals("")) {
 						// resource
 						String value = row.getValueAsString(next);
 						XAttributeLiteral attribResource = factory
 								.createAttributeLiteral("org:resource", value,
 										XOrganizationalExtension.instance());
 						attribMapEvent.put("org:resource", attribResource);
-					} else if (nameAttrib.equals(roleColumn)
-							&& !roleColumn.equals("")) {
-						// role
-						String value = row.getValueAsString(next);
-						XAttributeLiteral attribRole = factory
-								.createAttributeLiteral("org:role", value,
-										XOrganizationalExtension.instance());
-						attribMapEvent.put("org:role", attribRole);
-					} else if (nameAttrib.equals(groupColumn)
-							&& !groupColumn.equals("")) {
-						// group
-						String value = row.getValueAsString(next);
-						XAttributeLiteral attribGroup = factory
-								.createAttributeLiteral("group:resource",
-										value,
-										XOrganizationalExtension.instance());
-						attribMapEvent.put("group:resource", attribGroup);
 					} else {
 						if (next.getValueType() == Ontology.DATE
 								|| next.getValueType() == Ontology.DATE_TIME) {
@@ -203,119 +184,30 @@ public class AddEventsToLog extends Operator {
 	}
 
 	public List<ParameterType> getParameterTypes() {
-		this.parameters = new ArrayList<Parameter>();
+
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
-		ParameterString parameter1 = new ParameterString("", String.class,
-				"Name of Case ID column", "Case ID column");
 		ParameterTypeString parameterType1 = new ParameterTypeString(
-				parameter1.getNameParameter(),
-				parameter1.getDescriptionParameter(),
-				parameter1.getDefaultValueParameter());
+				PARAMETER_1, PARAMETER_1, "T:concept:name");
 		parameterTypes.add(parameterType1);
-		parameters.add(parameter1);
 
-		ParameterString parameter2 = new ParameterString("", String.class,
-				"Name of Event concept:name column",
-				"Event concept:name column");
 		ParameterTypeString parameterType2 = new ParameterTypeString(
-				parameter2.getNameParameter(),
-				parameter2.getDescriptionParameter(),
-				parameter2.getDefaultValueParameter());
+				PARAMETER_2, PARAMETER_2, "E:concept:name");
 		parameterTypes.add(parameterType2);
-		parameters.add(parameter2);
 
-		ParameterString parameter3 = new ParameterString("", String.class,
-				"Name of lifecycle:transition column",
-				"Lifecycle:transition column");
 		ParameterTypeString parameterType3 = new ParameterTypeString(
-				parameter3.getNameParameter(),
-				parameter3.getDescriptionParameter(),
-				parameter3.getDefaultValueParameter());
+				PARAMETER_3, PARAMETER_3, "E:lifecycle:transition");
 		parameterTypes.add(parameterType3);
-		parameters.add(parameter3);
 
-		ParameterString parameter4 = new ParameterString("", String.class,
-				"Name of time:timestamp column", "Time:timestamp column");
 		ParameterTypeString parameterType4 = new ParameterTypeString(
-				parameter4.getNameParameter(),
-				parameter4.getDescriptionParameter(),
-				parameter4.getDefaultValueParameter());
+				PARAMETER_4, PARAMETER_4, "E:time:timestamp");
 		parameterTypes.add(parameterType4);
-		parameters.add(parameter4);
 
-		ParameterString parameter5 = new ParameterString("", String.class,
-				"Name of org:resource column", "Org:resource column");
 		ParameterTypeString parameterType5 = new ParameterTypeString(
-				parameter5.getNameParameter(),
-				parameter5.getDescriptionParameter(),
-				parameter5.getDefaultValueParameter());
+				PARAMETER_5, PARAMETER_5, "E:org:resource");
 		parameterTypes.add(parameterType5);
-		parameters.add(parameter5);
-
-		ParameterString parameter6 = new ParameterString("", String.class,
-				"Name of org:resource column", "Org:resource column");
-		ParameterTypeString parameterType6 = new ParameterTypeString(
-				parameter6.getNameParameter(),
-				parameter6.getDescriptionParameter(),
-				parameter6.getDefaultValueParameter());
-		parameterTypes.add(parameterType6);
-		parameters.add(parameter6);
-
-		ParameterString parameter7 = new ParameterString("", String.class,
-				"Name of org:role column", "Org:role column");
-		ParameterTypeString parameterType7 = new ParameterTypeString(
-				parameter7.getNameParameter(),
-				parameter7.getDescriptionParameter(),
-				parameter7.getDefaultValueParameter());
-		parameterTypes.add(parameterType7);
-		parameters.add(parameter7);
-
-		ParameterString parameter8 = new ParameterString("", String.class,
-				"Name of group:resource column", "Group:resource column");
-		ParameterTypeString parameterType8 = new ParameterTypeString(
-				parameter8.getNameParameter(),
-				parameter8.getDescriptionParameter(),
-				parameter8.getDefaultValueParameter());
-		parameterTypes.add(parameterType8);
-		parameters.add(parameter8);
 
 		return parameterTypes;
-	}
-
-	private void getConfiguration(List<Parameter> parameters) {
-		try {
-			Parameter parameter1 = parameters.get(0);
-			String valPar1 = getParameterAsString(parameter1.getNameParameter());
-			nameTraceIDcolumn = valPar1;
-
-			Parameter parameter2 = parameters.get(1);
-			String valPar2 = getParameterAsString(parameter2.getNameParameter());
-			nameEventIDcolumn = valPar2;
-
-			Parameter parameter3 = parameters.get(2);
-			String valPar3 = getParameterAsString(parameter3.getNameParameter());
-			lifeCycleColumn = valPar3;
-
-			Parameter parameter4 = parameters.get(3);
-			String valPar4 = getParameterAsString(parameter4.getNameParameter());
-			timestampColumn = valPar4;
-
-			Parameter parameter5 = parameters.get(4);
-			String valPar5 = getParameterAsString(parameter5.getNameParameter());
-			resourceColumn = valPar5;
-
-			Parameter parameter6 = parameters.get(5);
-			String valPar6 = getParameterAsString(parameter6.getNameParameter());
-			roleColumn = valPar6;
-
-			Parameter parameter7 = parameters.get(6);
-			String valPar7 = getParameterAsString(parameter7.getNameParameter());
-			groupColumn = valPar7;
-
-		} catch (UndefinedParameterError e) {
-			e.printStackTrace();
-		}
 	}
 
 	private XTrace findTrace(String caseid, XLog xLog) {
