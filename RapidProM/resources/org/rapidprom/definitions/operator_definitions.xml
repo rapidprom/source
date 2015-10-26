@@ -24,11 +24,11 @@
             </operator>
             <operator>
                 <key>repair_model</key>
-                <class>com.rapidminer.operator.analysisplugins.RepairModelTask</class>
+                <class>org.rapidprom.operators.analysis.RepairModelOperator</class>
             </operator>
             <operator>
                 <key>reduce_silent_transitions</key>
-                <class>com.rapidminer.operator.analysisplugins.ReduceSilentTransitionsTask</class>
+                <class>org.rapidprom.operators.analysis.ReduceSilentTransitionsOperator</class>
             </operator>
             <operator>
                 <key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
