@@ -1,7 +1,8 @@
 package org.rapidprom.operator.logmanipulation;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.factory.XFactoryRegistry;
@@ -9,9 +10,8 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
+import org.rapidprom.ioobjects.XLogIOObject;
 
-import com.rapidminer.example.ExampleSet;
-import com.rapidminer.ioobjects.XLogIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -20,16 +20,11 @@ import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeBoolean;
-import com.rapidminer.parameter.ParameterTypeString;
-import com.rapidminer.parameter.UndefinedParameterError;
-import com.rapidminer.parameters.Parameter;
-import com.rapidminer.parameters.ParameterBoolean;
-import com.rapidminer.parameters.ParameterString;
-import com.rapidminer.util.ProMIOObjectList;
+import com.rapidminer.tools.LogService;
 
-public class MergeTwoEventLogs extends Operator {
+public class MergeTwoEventLogsOperator extends Operator {
 
-	private List<Parameter> parameters = null;
+	private static final String PARAMETER_1 = "Merge traces with same identifier";
 
 	private InputPort inputLog1 = getInputPorts().createPort(
 			"event log 1 (ProM Event Log)", XLogIOObject.class);
@@ -38,20 +33,24 @@ public class MergeTwoEventLogs extends Operator {
 	private OutputPort outputLog = getOutputPorts().createPort(
 			"event log (ProM Event Log)");
 
-	public MergeTwoEventLogs(OperatorDescription description) {
+	public MergeTwoEventLogsOperator(OperatorDescription description) {
 		super(description);
 		getTransformer().addRule(
 				new GenerateNewMDRule(outputLog, XLogIOObject.class));
 	}
 
 	public void doWork() throws OperatorException {
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "Start: merge event logs");
+		long time = System.currentTimeMillis();
+
 		XLogIOObject logIO1 = inputLog1.getData(XLogIOObject.class);
-		XLog xLog1 = logIO1.getXLog();
+		XLog xLog1 = logIO1.getArtifact();
 		XLogIOObject logIO2 = inputLog2.getData(XLogIOObject.class);
-		XLog xLog2 = logIO2.getXLog();
+		XLog xLog2 = logIO2.getArtifact();
 
 		// configuration
-		boolean dontMergeDouble = getConfiguration(this.parameters);
+		boolean dontMergeDouble = !getParameterAsBoolean(PARAMETER_1);
 		// first copy entire log1
 		XLog result = XFactoryRegistry.instance().currentDefault()
 				.createLog(xLog1.getAttributes());
@@ -66,41 +65,30 @@ public class MergeTwoEventLogs extends Operator {
 			}
 		}
 
-		// copy log 2 into the copied log1
 		for (XTrace t : xLog2) {
 			copyIntoFirstLog(t, result, dontMergeDouble);
 		}
 		// report the result
-		XLogIOObject xLogIOObject = new XLogIOObject(result);
-		xLogIOObject.setPluginContext(null);
+		XLogIOObject xLogIOObject = new XLogIOObject(result,
+				logIO1.getPluginContext());
 		xLogIOObject
 				.setVisualizationType(XLogIOObjectVisualizationType.EXAMPLE_SET);
 		outputLog.deliver(xLogIOObject);
-		// add to list so that afterwards it can be cleared if needed
-		ProMIOObjectList instance = ProMIOObjectList.getInstance();
-		instance.addToList(xLogIOObject);
+
+		logger.log(Level.INFO,
+				"End: merge event logs (" + (System.currentTimeMillis() - time)
+						/ 1000 + " sec)");
+
 	}
 
 	public List<ParameterType> getParameterTypes() {
-		this.parameters = new ArrayList<Parameter>();
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
-		ParameterBoolean parameter1 = new ParameterBoolean(true, Boolean.class,
-				"Don't merge traces with same identifier",
-				"Don't merge trace with same identifier");
 		ParameterTypeBoolean parameterType1 = new ParameterTypeBoolean(
-				parameter1.getNameParameter(),
-				parameter1.getDescriptionParameter(),
-				parameter1.getDefaultValueParameter());
+				PARAMETER_1, PARAMETER_1, false);
 		parameterTypes.add(parameterType1);
-		parameters.add(parameter1);
-		return parameterTypes;
-	}
 
-	private boolean getConfiguration(List<Parameter> parameters) {
-		Parameter parameter1 = parameters.get(0);
-		Boolean valPar1 = getParameterAsBoolean(parameter1.getNameParameter());
-		return valPar1;
+		return parameterTypes;
 	}
 
 	private void copyIntoFirstLog(XTrace t, XLog result, boolean dontMergeDouble) {

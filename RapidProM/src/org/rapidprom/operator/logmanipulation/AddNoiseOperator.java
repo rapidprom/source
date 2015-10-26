@@ -1,6 +1,5 @@
 package org.rapidprom.operator.logmanipulation;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -27,9 +26,6 @@ import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.parameter.ParameterTypeDouble;
 import com.rapidminer.parameter.ParameterTypeInt;
 import com.rapidminer.parameter.UndefinedParameterError;
-import com.rapidminer.parameters.Parameter;
-import com.rapidminer.parameters.ParameterCategory;
-import com.rapidminer.parameters.ParameterInteger;
 import com.rapidminer.tools.LogService;
 
 public class AddNoiseOperator extends Operator {
@@ -67,7 +63,7 @@ public class AddNoiseOperator extends Operator {
 						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
 
-	private XLog filterLog(XLog log) {
+	private XLog filterLog(XLog log) throws UndefinedParameterError {
 		XLog result = XFactoryRegistry.instance().currentDefault()
 				.createLog(log.getAttributes());
 		XFactoryRegistry.instance().setCurrentDefault(new XFactoryNaiveImpl());
@@ -76,12 +72,13 @@ public class AddNoiseOperator extends Operator {
 		for (XTrace t : log) {
 			XTrace copy = XFactoryRegistry.instance().currentDefault()
 					.createTrace(t.getAttributes());
-			Random r = new Random(seed + new Integer(traceCounter).hashCode());
+			Random r = new Random(getParameterAsInt(PARAMETER_3)
+					+ new Integer(traceCounter).hashCode());
 			double nextDouble = rOverall.nextDouble();
 			// System.out.println("nextDouble:" + nextDouble);
-			if (nextDouble < noisePercentage) {
+			if (nextDouble < getParameterAsDouble(PARAMETER_1)) {
 				double oneThird = t.size() / 3.0;
-				if (noiseType.equals(HEAD)) {
+				if (getParameterAsString(PARAMETER_2).equals(HEAD)) {
 					int start = safeNextInt(r, (int) oneThird);
 					for (int i = start; i < t.size(); i++) {
 						XEvent e = t.get(i);
@@ -90,7 +87,7 @@ public class AddNoiseOperator extends Operator {
 								.createEvent(e.getAttributes());
 						copy.add(copyEvent);
 					}
-				} else if (noiseType.equals(BODY)) {
+				} else if (getParameterAsString(PARAMETER_2).equals(BODY)) {
 					int stopFirst = safeNextInt(r, (int) oneThird);
 					for (int i = 0; i < stopFirst; i++) {
 						XEvent e = t.get(i);
@@ -108,7 +105,7 @@ public class AddNoiseOperator extends Operator {
 								.createEvent(e.getAttributes());
 						copy.add(copyEvent);
 					}
-				} else if (noiseType.equals(EXTRA)) {
+				} else if (getParameterAsString(PARAMETER_2).equals(EXTRA)) {
 					for (XEvent e : t) {
 						XEvent copyEvent = XFactoryRegistry.instance()
 								.currentDefault()
@@ -164,7 +161,7 @@ public class AddNoiseOperator extends Operator {
 								createEvent(log, log.size(), r, null,
 										XTimeExtension.instance()));
 					}
-				} else if (noiseType.equals(SWAP)) {
+				} else if (getParameterAsString(PARAMETER_2).equals(SWAP)) {
 					int indexFirstTaskToSwap = safeNextInt(r, t.size());
 					int indexSecondTaskToSwap = safeNextInt(r, t.size());
 					XEvent firstTaskToSwap = null;

@@ -190,6 +190,10 @@
             <key>add_artificial_start_end_event_filter</key>
             <class>org.rapidprom.operator.logmanipulation.AddArtificialStartEndEventOperator</class>
         </operator>
+         <operator>
+                <key>merge_two_event_logs</key>
+                <class>org.rapidprom.operator.logmanipulation.MergeTwoEventLogsOperator</class>
+            </operator>
         <operator>
             <key>check_timestamp_filter</key>
             <class>com.rapidminer.operator.filterplugins.CheckTimestampFilterTask</class>
