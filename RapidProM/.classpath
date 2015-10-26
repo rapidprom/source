@@ -16,7 +16,6 @@
 	<classpathentry kind="lib" path="lib/prom_stdlib/colt.jar"/>
 	<classpathentry kind="lib" path="lib/prom_stdlib/commons-compress-1.0.jar"/>
 	<classpathentry kind="lib" path="lib/prom_stdlib/commons-math-1.2.jar"/>
-	<classpathentry kind="lib" path="lib/prom_stdlib/EfficientStorage.jar"/>
 	<classpathentry kind="lib" path="lib/prom_stdlib/FilterableSortableTablePanel.jar"/>
 	<classpathentry kind="lib" path="lib/prom_stdlib/flanagan.jar"/>
 	<classpathentry kind="lib" path="lib/prom_stdlib/freehep-export-2.1.1.jar"/>
