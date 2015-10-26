@@ -1,4 +1,4 @@
-package org.rapidprom.operator.logmanipulation;
+package org.rapidprom.operators.logmanipulation;
 
 import java.util.ArrayList;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package org.rapidprom.operator.logmanipulation;
+package org.rapidprom.operators.logmanipulation;
 
 import java.util.List;
 import java.util.logging.Level;
