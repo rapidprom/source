@@ -2,7 +2,7 @@ package org.rapidprom.ioobjectrenderers;
 
 import javax.swing.JComponent;
 
-import org.processmining.plugins.petrinet.replayresult.visualization.PNLogReplayResultVis;
+import org.processmining.plugins.petrinet.replayresult.visualization.PNLogReplayResultVisPanel;
 import org.rapidprom.ioobjectrenderers.abstr.AbstractRapidProMIOObjectRenderer;
 import org.rapidprom.ioobjects.PNRepResultIOObject;
 
@@ -16,9 +16,9 @@ public class PNRepResultIOObjectRenderer extends
 
 	@Override
 	protected JComponent runVisualization(PNRepResultIOObject artifact) {
-		PNLogReplayResultVis visualizer = new PNLogReplayResultVis();
-		return visualizer.visualize(artifact.getPluginContext(),
-				artifact.getArtifact());
+		return new PNLogReplayResultVisPanel(artifact.getPn(),
+				artifact.getXLog(), artifact.getArtifact(), artifact
+						.getPluginContext().getProgress());
 	}
 
 }
