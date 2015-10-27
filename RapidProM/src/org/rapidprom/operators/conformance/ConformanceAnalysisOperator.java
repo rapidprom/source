@@ -26,22 +26,19 @@ import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
-import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithILP;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
 import org.processmining.plugins.astar.petrinet.PrefixBasedPetrinetReplayer;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
 import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayAlgorithm;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
-import org.processmining.plugins.petrinet.replayer.algorithms.behavapp.BehavAppParam;
-import org.processmining.plugins.petrinet.replayer.algorithms.behavapp.BehavAppPruneAlg;
 import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.CostBasedCompleteParam;
 import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.CostBasedCompletePruneAlg;
-import org.processmining.plugins.petrinet.replayer.algorithms.costbasedprefix.CostBasedPrefixAlg;
 import org.processmining.plugins.petrinet.replayer.algorithms.costbasedprefix.CostBasedPrefixParam;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjectrenderers.PNRepResultIOObjectVisualizationType;
 import org.rapidprom.ioobjects.PNRepResultIOObject;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.XLogIOObject;
@@ -65,21 +62,16 @@ import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.operator.ports.metadata.MDInteger;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeCategory;
-import com.rapidminer.parameter.ParameterTypeInt;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
 
 public class ConformanceAnalysisOperator extends Operator {
 
-	private static final String PARAMETER_1 = "Replay Algorithm",
-			PARAMETER_2 = "Max explored states (in hundreds)";
+	private static final String PARAMETER_1 = "Replay Algorithm";
 
 	private static final String[] ALGORITHMS = new String[] {
 			"A* Cost-based Fitness", "A* Cost-based Fitness Express",
-			"A* Cost-based Fitness Express with ILP",
-			"Prefix based A* Cost-based Fitness",
-			"Cost-based Fitness Petri net replay (not considering completion)",
-			"A* Cost-based Behavioral Appropriateness" };
+			"Prefix based A* Cost-based Fitness",};
 
 	private final String NAMECOL = "Name";
 	private final String VALUECOL = "Value";
@@ -227,21 +219,25 @@ public class ConformanceAnalysisOperator extends Operator {
 		}
 		PNLogReplayer replayer = new PNLogReplayer();
 		PNRepResult repResult = null;
+		IPNReplayAlgorithm algorithm = null;
 		try {
-			repResult = replayer.replayLog(
-					pluginContext,
-					pNet.getArtifact(),
-					xLog.getArtifact(),
-					getMapping(pNet.getArtifact(), xLog.getArtifact()),
-					getAlgorithm(pluginContext, pNet.getArtifact(),
-							xLog.getArtifact()), parameter);
+			algorithm = getAlgorithm(pluginContext, pNet.getArtifact(),
+					xLog.getArtifact(), mapping);
+		} catch (ObjectNotFoundException e1) {
+			e1.printStackTrace();
+		}
+		try {
+			repResult = replayer.replayLog(pluginContext, pNet.getArtifact(),
+					xLog.getArtifact(), mapping, algorithm, parameter);
 		} catch (AStarException e) {
 			e.printStackTrace();
-		} catch (ObjectNotFoundException e) {
-			e.printStackTrace();
 		}
-		output.deliver(new PNRepResultIOObject(repResult, pluginContext, pNet
-				.getArtifact(), xLog.getArtifact()));
+
+		PNRepResultIOObject result = new PNRepResultIOObject(repResult,
+				pluginContext, pNet, xLog.getArtifact(), mapping);
+		result.setVisualizationType(PNRepResultIOObjectVisualizationType.PROJECT_ON_MODEL);
+
+		output.deliver(result);
 
 		Iterator<SyncReplayResult> iterator3 = repResult.iterator();
 		boolean unreliable = false;
@@ -255,8 +251,13 @@ public class ConformanceAnalysisOperator extends Operator {
 			}
 		}
 		Map<String, Object> info = repResult.getInfo();
-		double trace_fitness = Double.parseDouble((String) info
-				.get(PNRepResult.TRACEFITNESS));
+		double trace_fitness = 0;
+		try {
+			trace_fitness = Double.parseDouble((String) info
+					.get(PNRepResult.TRACEFITNESS));
+		} catch (Exception e) {
+			trace_fitness = (Double) info.get(PNRepResult.TRACEFITNESS);
+		}
 		double move_log_fitness = (Double) info.get(PNRepResult.MOVELOGFITNESS);
 		double move_model_fitness = (Double) info
 				.get(PNRepResult.MOVEMODELFITNESS);
@@ -465,7 +466,7 @@ public class ConformanceAnalysisOperator extends Operator {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private Marking getFinalMarking(Petrinet pn) {
+	public static Marking getFinalMarking(Petrinet pn) {
 		List<Place> places = new ArrayList<Place>();
 		Iterator<Place> placesIt = pn.getPlaces().iterator();
 		while (placesIt.hasNext()) {
@@ -487,18 +488,14 @@ public class ConformanceAnalysisOperator extends Operator {
 
 		IPNReplayParameter parameter = null;
 		switch (getParameterAsInt(PARAMETER_1)) {
+		case 0:
 		case 1:
 		case 2:
-		case 3:
-		case 4:
 			parameter = new CostBasedCompleteParam(map.values(),
 					map.getDummyEventClass(), map.keySet(), 1, 1);
 			break;
-		case 5:
+		case 3:
 			parameter = new CostBasedPrefixParam();
-			break;
-		case 6:
-			parameter = new BehavAppParam();
 			break;
 		}
 
@@ -510,31 +507,23 @@ public class ConformanceAnalysisOperator extends Operator {
 	}
 
 	private IPNReplayAlgorithm getAlgorithm(PluginContext pc, Petrinet pn,
-			XLog log) throws UserError, ObjectNotFoundException {
+			XLog log, TransEvClassMapping mapping) throws UserError,
+			ObjectNotFoundException {
 
 		IPNReplayAlgorithm algorithm = null;
 		switch (getParameterAsInt(PARAMETER_1)) {
-		case 1:
+		case 0:
 			algorithm = new CostBasedCompletePruneAlg();
 			break;
-		case 2:
+		case 1:
 			algorithm = new PetrinetReplayerWithoutILP();
 			break;
-		case 3:
-			algorithm = new PetrinetReplayerWithILP();
-			break;
-		case 4:
+		case 2:
 			algorithm = new PrefixBasedPetrinetReplayer();
 			break;
-		case 5:
-			algorithm = new CostBasedPrefixAlg();
-			break;
-		case 6:
-			algorithm = new BehavAppPruneAlg();
-			break;
 		}
-		if (algorithm.isAllReqSatisfied(pc, pn, log, getMapping(pn, log),
-				getParameter(getMapping(pn, log))))
+		if (algorithm.isAllReqSatisfied(pc, pn, log, mapping,
+				getParameter(mapping)))
 			return algorithm;
 		else
 			return null;
@@ -561,12 +550,8 @@ public class ConformanceAnalysisOperator extends Operator {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
 		ParameterTypeCategory parameterType1 = new ParameterTypeCategory(
-				PARAMETER_1, PARAMETER_1, ALGORITHMS, 1);
+				PARAMETER_1, PARAMETER_1, ALGORITHMS, 0);
 		parameterTypes.add(parameterType1);
-
-		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_2,
-				PARAMETER_2, 0, Integer.MAX_VALUE, 100);
-		parameterTypes.add(parameterType2);
 
 		return parameterTypes;
 	}
