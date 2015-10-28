@@ -4,17 +4,17 @@ import java.awt.Component;
 import java.lang.ref.WeakReference;
 import java.util.EnumSet;
 
-import javassist.tools.rmi.ObjectNotFoundException;
-
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.petrinet.replayresult.visualization.PNLogReplayResultVisPanel;
 import org.processmining.plugins.pnalignanalysis.visualization.projection.PNLogReplayProjectedVisPanel;
-import org.rapidprom.AbstractMultipleVisualizersRenderer;
+import org.rapidprom.ioobjectrenderers.abstr.AbstractMultipleVisualizersRenderer;
 import org.rapidprom.ioobjects.PNRepResultIOObject;
 
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;
 import com.rapidminer.operator.IOContainer;
 import com.rapidminer.report.Reportable;
+
+import javassist.tools.rmi.ObjectNotFoundException;
 
 public class PNRepResultIOObjectRenderer
 		extends
