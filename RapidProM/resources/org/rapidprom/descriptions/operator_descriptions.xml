@@ -587,4 +587,10 @@
         <help />
         <key>stream_inductive_miner</key>
 	</operator>
+	<operator>
+		<name> Event Stream Algorithm Analyzer (Model to Model)</name>
+		<synopsis>Calculates Model to Model similarity of each generated model of each connected algorithm at each point in time to a collection of reference models</synopsis>
+		<help />
+		<key>event_stream_analysis_model_2_model</key>
+	</operator>
 </operatorHelp>

@@ -99,6 +99,12 @@
     </ioobject>
     
     <ioobject
+		name="Petri Net List"
+		class="org.rapidprom.ioobjects.PetriNetListIOObject"
+		reportable="false">
+	</ioobject>
+    
+    <ioobject
         name="GuideTreeProM"
         class="com.rapidminer.ioobjects.GuideTreeIOObject"
         reportable="true">
@@ -197,26 +203,27 @@
 	
 	<!-- STREAMS -->
 	<ioobject
-		name="Event Stream Publisher"
-		class="com.rapidminer.ioobjects.XSPublisherIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.XSPublisherIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
 		name="Event Stream"
 		class="org.rapidprom.ioobjects.streams.XSEventStreamIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.XSEventStreamIOObjectRenderer</renderer>
+		reportable="false">
+		<renderer>org.rapidprom.ioobjectrenderers.streams.XSEventStreamIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
-		name="Event Stream to Accepting Petri Net Reader"
+		name="Event Stream Publisher (Generic)"
+		class="org.rapidprom.ioobjects.streams.XSPublisherIOObject"
+		reportable="false">
+		<renderer>org.rapidprom.ioobjectrenderers.streams.XSPublisherIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="Event Stream Subscriber (Generic)"
+		class="org.rapidprom.ioobjects.streams.XSSubscriberIOObject"
+		reportable="false">
+		<renderer>org.rapidprom.ioojbectrenderers.streams.XSSubscriberIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="Event Stream to Accepting Petri Net Reader (Generic)"
 		class="org.rapidprom.ioobjects.streams.XSEventStreamToAcceptingPetriNetReaderIOObject"
 		reportable="false">
 		<renderer>org.rapidprom.ioobjectrenderers.streams.XSEventStreamToAcceptingPetriNetReaderIOObjectRenderer</renderer>
 	</ioobject>	
-	<ioobject
-		name="Petri Net List"
-		class="org.rapidprom.ioobjects.PetriNetListIOObject"
-		reportable="false">
-	</ioobject>
 </ioobjects>

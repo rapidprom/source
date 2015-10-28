@@ -1,4 +1,4 @@
-package com.rapidminer.ioobjectrenderers;
+package org.rapidprom.ioobjectrenderers.streams;
 
 import java.awt.Component;
 

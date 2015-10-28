@@ -6,10 +6,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.rapidprom.ioobjects.abstr.AbstractRapidProMIOObject;
+import org.rapidprom.util.IOUtils;
 
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.UserError;
 import com.rapidminer.operator.io.AbstractWriter;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeCategory;
@@ -53,7 +53,7 @@ public abstract class AbstractRapidProMExporterOperator<T extends AbstractRapidP
 		try {
 			F format = PARAMETER_VALUES_FILE_FORMAT[getParameterAsInt(
 					PARAMETER_KEY_FILE_FORMAT)];
-			File target = prepareTargetFile(
+			File target = IOUtils.prepareTargetFile(
 					getParameterAsFile(PARAMETER_KEY_FOLDER).getCanonicalPath(),
 					getParameterAsString(PARAMETER_KEY_FILE_NAME), format);
 			if (target.exists()) {
@@ -91,24 +91,4 @@ public abstract class AbstractRapidProMExporterOperator<T extends AbstractRapidP
 						.indexOf(defaultFileFormat)));
 		return types;
 	}
-
-	protected File prepareTargetFile(String dirPath, String name, F format)
-			throws UserError, IOException {
-		// only remove a ".null" if it is the last occurring element of the
-		// path.
-		String nullStr = ".null";
-		if (dirPath.length() > nullStr.length()) {
-			if (dirPath.substring(dirPath.length() - nullStr.length(),
-					dirPath.length()).contains(".null")) {
-				dirPath = dirPath.substring(0,
-						dirPath.length() - nullStr.length());
-			}
-		}
-		if (!dirPath.endsWith(File.separator)) {
-			dirPath += File.separator;
-		}
-		dirPath += name + "." + format.toString();
-		return new File(dirPath);
-	}
-
 }

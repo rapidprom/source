@@ -13,9 +13,9 @@ import org.processmining.stream.core.enums.CommunicationType;
 import org.processmining.stream.core.interfaces.XSPublisher;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.streams.XSEventStreamIOObject;
+import org.rapidprom.ioobjects.streams.XSPublisherIOObject;
 
 import com.rapidminer.ioobjects.CPNModelIOObject;
-import com.rapidminer.ioobjects.XSPublisherIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -135,8 +135,8 @@ public class CPNToEventStreamOperator extends Operator {
 						inputCPNModel.getData(CPNModelIOObject.class).getData(),
 						parameters);
 
-		outputPublisher
-				.deliver(new XSPublisherIOObject((XSPublisher) result[0]));
+		outputPublisher.deliver(
+				new XSPublisherIOObject((XSPublisher) result[0], context));
 		outputStream.deliver(
 				new XSEventStreamIOObject((XSEventStream) result[1], context));
 

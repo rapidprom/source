@@ -8,8 +8,8 @@ import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.inductiveVisualMiner.plugins.GraphvizProcessTree;
 import org.processmining.processtree.ProcessTree;
 import org.processmining.processtree.visualization.tree.TreeVisualization;
-import org.rapidprom.AbstractMultipleVisualizersRenderer;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjectrenderers.abstr.AbstractMultipleVisualizersRenderer;
 import org.rapidprom.ioobjects.ProcessTreeIOObject;
 
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;

@@ -182,16 +182,22 @@
             </operator>
         </group>
         <group key="streams">
+        	<group key="analysis">
+        		<operator>
+        			<key>event_stream_analysis_model_2_model</key>
+        			<class>org.rapidprom.operators.streams.analysis.StreamAlgorithmAnalyserModelToModelOperator</class>
+        		</operator>
+        	</group>
+        	<group key="discovery">
+                <operator>
+                    <key>stream_inductive_miner</key>
+                    <class>org.rapidprom.operators.streams.discovery.StreamInductiveMinerOperator</class>
+                </operator>
+            </group>
             <group key="generators">
                 <operator>
                     <key>stream_from_cpn</key>
                     <class>org.rapidprom.operators.streams.generators.CPNToEventStreamOperator</class>
-                </operator>
-            </group>
-            <group key="discovery">
-                <operator>
-                    <key>stream_inductive_miner</key>
-                    <class>org.rapidprom.operators.streams.discovery.StreamInductiveMinerOperator</class>
                 </operator>
             </group>
         </group>

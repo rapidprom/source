@@ -18,8 +18,8 @@ import org.processmining.plugins.dottedchartanalysis.DottedChartAnalysis;
 import org.processmining.plugins.dottedchartanalysis.model.DottedChartModel;
 import org.processmining.plugins.log.ui.logdialog.LogDialogInitializer;
 import org.processmining.plugins.log.ui.logdialog.SlickerOpenLogSettings;
-import org.rapidprom.AbstractMultipleVisualizersRenderer;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjectrenderers.abstr.AbstractMultipleVisualizersRenderer;
 import org.rapidprom.ioobjects.XLogIOObject;
 
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;

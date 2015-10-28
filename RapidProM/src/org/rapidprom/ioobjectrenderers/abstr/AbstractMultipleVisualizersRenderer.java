@@ -1,4 +1,4 @@
-package org.rapidprom;
+package org.rapidprom.ioobjectrenderers.abstr;
 
 import java.awt.BorderLayout;
 import java.awt.Component;

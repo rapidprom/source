@@ -69,7 +69,7 @@ public class StreamInductiveMinerOperator extends Operator {
 			.toArray(
 					new StreamBasedDataStoreType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
 							.size()]);
-	
+
 	public StreamInductiveMinerOperator(OperatorDescription description) {
 		super(description);
 		getTransformer().addRule(new GenerateNewMDRule(readerOutputPort,
@@ -92,6 +92,7 @@ public class StreamInductiveMinerOperator extends Operator {
 		params = setActivityActivityStore(params);
 		XSEventStreamToAcceptingPetriNetReader reader = StreamInductiveMinerPlugin
 				.applyStreamInductiveMiner(context, eventStream, params);
+		reader.start();
 		readerOutputPort.deliver(
 				new XSEventStreamToAcceptingPetriNetReaderIOObject(reader,
 						context));
