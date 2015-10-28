@@ -86,7 +86,7 @@ public class ConformanceAnalysisOperator extends Operator {
 	private InputPort inputPN = getInputPorts().createPort(
 			"model (ProM Petri Net)", PetriNetIOObject.class);
 	private OutputPort output = getOutputPorts().createPort(
-			"model (ProM PNRepResult)");
+			"alignments (ProM PNRepResult)");
 
 	private OutputPort outputData = getOutputPorts().createPort(
 			"example set with metrics (Data Table)");

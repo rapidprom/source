@@ -18,6 +18,12 @@
 		<renderer>com.rapidminer.ioobjectrenderers.PetriNetWithDataIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
+		name="AlignmentPrecGenResProM"
+		class="org.rapidprom.ioobjects.AlignmentPrecGenResIOObject"
+		reportable="true">
+		<renderer>org.rapidprom.ioobjectrenderers.AlignmentPrecGenResIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
 		name="WoflanDiagnosisProM"
 		class="org.rapidprom.ioobjects.WoflanDiagnosisIOObject"
 		reportable="true">
@@ -127,23 +133,16 @@
 	
 	<ioobject
 		name="ManifestProM"
-		class="com.rapidminer.ioobjects.ManifestIOObject"
+		class="org.rapidprom.ioobjects.ManifestIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.ManifestIOObjectRenderer</renderer>
-	</ioobject>
-	
-	<ioobject
-		name="DottedChartModelProM"
-		class="com.rapidminer.ioobjects.DottedChartModelIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.DottedChartModelIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.ManifestIOObjectRenderer</renderer>
 	</ioobject>
 	
 	<ioobject
 		name="SocialNetworkProM"
-		class="com.rapidminer.ioobjects.SocialNetworkIOObject"
+		class="org.rapidprom.ioobjects.SocialNetworkIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.SocialNetworkIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.SocialNetworkIOObjectRenderer</renderer>
 	</ioobject>
 
 	<ioobject

@@ -4,20 +4,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.deckfour.xes.classification.XEventAndClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
+import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.etm.parameters.ETMParam;
 import org.processmining.plugins.etm.parameters.ETMParamFactory;
 import org.processmining.plugins.etm.ui.plugins.ETMwithoutGUI;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.ProcessTreeIOObject;
-import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.operators.abstr.AbstractRapidProMDiscoveryOperator;
 
-import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
@@ -26,7 +23,7 @@ import com.rapidminer.parameter.ParameterTypeInt;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.tools.LogService;
 
-public class ETMdMinerOperator extends Operator {
+public class ETMdMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
 	private static final String PARAMETER_1 = "Population Size",
 			PARAMETER_2 = "Elite Count",
@@ -42,8 +39,6 @@ public class ETMdMinerOperator extends Operator {
 			PARAMETER_12 = "Weight: Generalization",
 			PARAMETER_13 = "Weight: Simplicity";
 
-	private InputPort inputXLog = getInputPorts().createPort(
-			"event log (ProM Event Log)", XLogIOObject.class);
 	private OutputPort outputProcessTree = getOutputPorts().createPort(
 			"model (ProM ProcessTree)");
 
@@ -62,13 +57,13 @@ public class ETMdMinerOperator extends Operator {
 
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(ETMwithoutGUI.class);
-		XLogIOObject xLog = inputXLog.getData(XLogIOObject.class);
+		XLog xLog = getXLog();
 		
 		ETMParam eTMParam = getConfiguration(xLog, pluginContext);
 
 		ProcessTreeIOObject processTreeIOObject = new ProcessTreeIOObject(
-				ETMwithoutGUI.minePTWithParameters(pluginContext, xLog.getArtifact(),
-						new XEventAndClassifier(new XEventNameClassifier()),
+				ETMwithoutGUI.minePTWithParameters(pluginContext, xLog,
+						getXEventClassifier(),
 						eTMParam),pluginContext);
 		outputProcessTree.deliver(processTreeIOObject);
 
@@ -104,7 +99,7 @@ public class ETMdMinerOperator extends Operator {
 		parameterTypes.add(parameter5);
 
 		ParameterTypeInt parameter6 = new ParameterTypeInt(PARAMETER_6,
-				PARAMETER_6, 0, Integer.MAX_VALUE, 1000);
+				PARAMETER_6, 0, Integer.MAX_VALUE, 100);
 		parameterTypes.add(parameter6);
 
 		ParameterTypeDouble parameter7 = new ParameterTypeDouble(PARAMETER_7,
@@ -138,11 +133,11 @@ public class ETMdMinerOperator extends Operator {
 		return parameterTypes;
 	}
 
-	private ETMParam getConfiguration(XLogIOObject log, PluginContext context) {
+	private ETMParam getConfiguration(XLog log, PluginContext context) {
 		ETMParam param;
 		try {
 			 param = ETMParamFactory.buildParam(
-				    log.getArtifact(),
+				    log,
 					context,
 					getParameterAsInt(PARAMETER_1),
 					getParameterAsInt(PARAMETER_2),

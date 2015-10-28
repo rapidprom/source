@@ -18,7 +18,6 @@
                 <key>animate_event_log_in_fuzzy_instance</key>
                 <class>org.rapidprom.operators.analysis.AnimateLogInFuzzyModelAnalysisOperator</class>
             </operator>
-           
             <operator>
                 <key>repair_model</key>
                 <class>org.rapidprom.operators.analysis.RepairModelOperator</class>
@@ -26,10 +25,6 @@
             <operator>
                 <key>reduce_silent_transitions</key>
                 <class>org.rapidprom.operators.analysis.ReduceSilentTransitionsOperator</class>
-            </operator>
-            <operator>
-                <key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
-                <class>com.rapidminer.operator.analysisplugins.ReplayaLogonPetriNetforPerformance_ConformanceAnalysisTask</class>
             </operator>    
             <operator>
                 <key>perform_predictions_of_business_process_features</key>
@@ -40,6 +35,14 @@
         	 <operator>
                 <key>replay_a_log_on_petri_net_for_conformance_analysis</key>
                 <class>org.rapidprom.operators.conformance.ConformanceAnalysisOperator</class>
+            </operator>
+            <operator>
+                <key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
+                <class>org.rapidprom.operators.conformance.PerformanceConformanceAnalysisOperator</class>
+            </operator>
+            <operator>
+                <key>measure_precision</key>
+                <class>org.rapidprom.operators.conformance.MeasurePrecisionAnalysisOperator</class>
             </operator>
         </group>
         <group key="conversion">

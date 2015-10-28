@@ -26,6 +26,12 @@
     <!-- IMPORTERS -->
 
    <operator>
+        <name>Measure Model Precision based on alignments</name>
+        <synopsis></synopsis>
+        <help> </help>
+        <key>measure_precision</key>
+   </operator>
+   <operator>
    		<name>Mine a sequential model</name>
         <synopsis>DO NOT USE THIS OPERATOR (Experimental)</synopsis>
         <help> </help>
@@ -470,40 +476,11 @@
   		</operator>
   
   	<operator>
-        <name>Social Network Miner (Similar-Task Social Network)</name>
-        <synopsis>This operator can be used to execute the Similar Task Social Network Miner in order to discover a Social Network.</synopsis>
-        <help>This operator can be used to execute the Similar Task Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
-    <key>social_network_st_miner</key>
-  </operator>
-  
-  	<operator>
         <name>Social Network Miner (Social Network)</name>
         <synopsis>This operator can be used to execute the Handover-of-Work Social Network Miner in order to discover a Social Network.</synopsis>
         <help>This operator can be used to execute the Handover-of-Work Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
     <key>social_network_miner</key>
   </operator>
-  
-    <operator>
-        <name>Social Network Miner (Subcontracting Social Network)</name>
-        <synopsis>This operator can be used to execute the Subcontracting Social Network Miner in order to discover a Social Network.</synopsis>
-        <help>This operator can be used to execute the Subcontracting Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
-    	<key>social_network_sc_miner</key>
-  </operator>
-  
-  	<operator>
-        <name>Social Network Miner (Working-Together Social Network)</name>
-        <synopsis>This operator can be used to execute the Working-Together Social Network Miner in order to discover a Social Network.</synopsis>
-        <help>This operator can be used to execute the Working-Together Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
-    	<key>social_network_wt_miner</key>
-  	</operator>
-  	
-  	<operator>
-        <name>Social Network Miner (Reassignment Social Network)</name>
-        <synopsis>This operator can be used to execute the Reassignment Social Network Miner in order to discover a Social Network.</synopsis>
-        <help>This operator can be used to execute the Reassignment Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
-    	<key>social_network_ra_miner</key>
-  	</operator>
-  	
   	<operator>
         <name>Add Noise</name>
         <synopsis>This filter randomly adds noise to the log.</synopsis>
