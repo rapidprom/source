@@ -48,9 +48,9 @@
 	</ioobject>
 	<ioobject
 		name="PNRepResultProM"
-		class="com.rapidminer.ioobjects.PNRepResultIOObject"
+		class="org.rapidprom.ioobjects.PNRepResultIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.PNRepResultIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.PNRepResultIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="InteractiveMinerLauncherProM"

@@ -112,11 +112,11 @@ public class ETMdMinerOperator extends Operator {
 		parameterTypes.add(parameter7);
 
 		ParameterTypeDouble parameter8 = new ParameterTypeDouble(PARAMETER_8,
-				PARAMETER_8, 0, 1, 0);
+				PARAMETER_8, 0, 1, 1);
 		parameterTypes.add(parameter8);
 
 		ParameterTypeInt parameter9 = new ParameterTypeInt(PARAMETER_9,
-				PARAMETER_9, 0, Integer.MAX_VALUE, 1000);
+				PARAMETER_9, 0, Integer.MAX_VALUE, 100);
 		parameterTypes.add(parameter9);
 
 		ParameterTypeInt parameter10 = new ParameterTypeInt(PARAMETER_10,
@@ -160,9 +160,6 @@ public class ETMdMinerOperator extends Operator {
 					getParameterAsDouble(PARAMETER_13),
 					null,
 					0.0);
-			 
-			
-			 param.setRng(ETMParam.createRNG());
 			 
 		} catch (UndefinedParameterError e) {
 			e.printStackTrace();
