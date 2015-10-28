@@ -161,9 +161,6 @@ public class ETMdMinerOperator extends Operator {
 					null,
 					0.0);
 			 
-			
-			 param.setRng(ETMParam.createRNG());
-			 
 		} catch (UndefinedParameterError e) {
 			e.printStackTrace();
 			param = null;
