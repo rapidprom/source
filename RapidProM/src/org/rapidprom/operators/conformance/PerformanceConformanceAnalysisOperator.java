@@ -14,13 +14,18 @@ import java.util.logging.Logger;
 import javassist.tools.rmi.ObjectNotFoundException;
 import nl.tue.astar.AStarException;
 
+import org.deckfour.xes.classification.XEventAndClassifier;
 import org.deckfour.xes.classification.XEventClass;
+import org.deckfour.xes.classification.XEventClassifier;
+import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.processmining.plugins.astar.petrinet.manifestreplay.ManifestFactory;
+import org.processmining.plugins.astar.petrinet.manifestreplay.PNManifestFlattener;
 import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayer;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
@@ -32,11 +37,12 @@ import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.Trans
 import org.processmining.plugins.petrinet.manifestreplayresult.Manifest;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.ManifestIOObject;
+import org.rapidprom.ioobjects.PNRepResultIOObject;
 import org.rapidprom.ioobjects.PetriNetIOObject;
-import org.rapidprom.operators.abstr.AbstractRapidProMDiscoveryOperator;
 
 import com.rapidminer.example.ExampleSet;
 import com.rapidminer.example.ExampleSetFactory;
+import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
@@ -47,15 +53,12 @@ import com.rapidminer.parameter.ParameterTypeInt;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.tools.LogService;
 
-public class PerformanceConformanceAnalysisOperator extends
-		AbstractRapidProMDiscoveryOperator {
+public class PerformanceConformanceAnalysisOperator extends Operator {
 
-	// visualizations = "Performance Projection to Model",
-	// "Project Manifest to Log", "Project Manifest to Model for Conformance"
 	private static final String PARAMETER_1 = "Max Explored States (in Hundreds)";
 
-	private InputPort inputPN = getInputPorts().createPort(
-			"model (ProM Petri Net)", PetriNetIOObject.class);
+	private InputPort inputPNRepResult = getInputPorts().createPort(
+			"alignments (ProM PNRepResult)", PNRepResultIOObject.class);
 	private OutputPort outputManifest = getOutputPorts().createPort(
 			"model (ProM Manifest)");
 	private OutputPort outputFitness = getOutputPorts().createPort(
@@ -79,19 +82,24 @@ public class PerformanceConformanceAnalysisOperator extends
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(PNManifestReplayer.class);
 
-		XLog xLog = getXLog();
-		PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
+		PNRepResultIOObject alignments = inputPNRepResult
+				.getData(PNRepResultIOObject.class);
+		XLog xLog = alignments.getXLog();
+
+		PetriNetIOObject pNet = alignments.getPn();
 
 		PNManifestReplayerParameter parameter = getParameterObject(pNet, xLog);
 
 		IPNManifestReplayAlgorithm algorithm = new PNManifestReplayerILPAlgorithm();
-
+		
 		PNManifestReplayer replayer = new PNManifestReplayer();
 		Manifest result = null;
 		try {
-			result = replayer.replayLogParameter(pluginContext,
-					pNet.getArtifact(), xLog, algorithm, parameter);
+			result = replayer.replayLogParameter(pluginContext, pNet.getArtifact(),
+					xLog, algorithm, parameter);
 		} catch (AStarException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -128,9 +136,11 @@ public class PerformanceConformanceAnalysisOperator extends
 			TransClasses tc = new TransClasses(pNet.getArtifact());
 			Map<TransClass, Set<EvClassPattern>> pattern = new HashMap<TransClass, Set<EvClassPattern>>();
 
+			XEventClassifier classifier = new XEventAndClassifier(
+					new XEventNameClassifier());
 			Collection<XEventClass> eventClasses = XLogInfoFactory
-					.createLogInfo(log, getXEventClassifier())
-					.getEventClasses().getClasses();
+					.createLogInfo(log, classifier).getEventClasses()
+					.getClasses();
 
 			EvClassPattern pat = new EvClassPattern(eventClasses.size());
 			pat.addAll(eventClasses);
@@ -141,12 +151,11 @@ public class PerformanceConformanceAnalysisOperator extends
 				pattern.put(t, p);
 			}
 			TransClass2PatternMap mapping = new TransClass2PatternMap(log,
-					pNet.getArtifact(), getXEventClassifier(), tc, pattern);
+					pNet.getArtifact(), classifier, tc, pattern);
 			parameter.setMapping(mapping);
 
 			Map<XEventClass, Integer> mapEvClass2Cost = new HashMap<XEventClass, Integer>();
-			for (XEventClass c : XLogInfoFactory
-					.createLogInfo(log, getXEventClassifier())
+			for (XEventClass c : XLogInfoFactory.createLogInfo(log, classifier)
 					.getEventClasses().getClasses()) {
 				mapEvClass2Cost.put(c, 1);
 			}
