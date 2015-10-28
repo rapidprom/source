@@ -400,7 +400,7 @@
   </operator>
   
        <operator>
-        <name>Evolutionary Tree Miner</name>
+        <name>Evolutionary Tree Miner (Process Tree)</name>
         <synopsis>Mine a Process Using the ETM Algorithm.</synopsis>
         <help>Mine a Process Using the ETM Algorithm.</help>
     	<key>etm_miner</key>
@@ -449,7 +449,7 @@
   	  </operator>
   	  
   	   <operator>
-        <name>Heuristics Miner</name>
+        <name>Heuristics Miner (Heuristics Net)</name>
         <synopsis>This operator can be used to execute the Heuristics Miner algorithm.</synopsis>
         <help>This operator can be used to execute the Heuristics Miner algorithm which provides a Heuristics Net. As input a ProM context and a log file is needed.</help>
     	<key>heuristics_miner</key>
