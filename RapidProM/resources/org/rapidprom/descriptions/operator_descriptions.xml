@@ -63,20 +63,6 @@
         <help> </help>
 		<key>name_to_petrinet</key>
 	</operator>
-    
-   <operator>
-   		<name>Conformance Checking</name>
-        <synopsis>This operator calculates different conformance metrics for a Petri net and an event log. One of these metrics is Replay Fitness</synopsis>
-        <help>This operator calculates different conformance metrics for a Petri net and an event log. One of these metrics is Replay Fitness</help>
-		<key>conformance_checking_of_dpn_(balanced)</key>
-	</operator>
-    
-  <operator>
-  		<name>Case Data Extractor</name>
-        <synopsis>This operator extract case data from an event log</synopsis>
-        <help>An event log is used as input and a data table (ExampleSet) is produced as output</help>
-		<key>case_data_extractor</key>
-  </operator>
   <operator>
   		<name>Soundness analysis (WOFLAN)</name>
         <synopsis>This operator analyzes the soundness of a petri net</synopsis>
@@ -90,13 +76,7 @@
 		<key>perform_predictions_of_business_process_features</key>
 	</operator>
   <operator>
-  		<name>Replay Event Log on Petri Net (Alignment) + Bottleneck Visualization</name>
-        <synopsis>This operator replays a log into a petrinet and show visual results</synopsis>
-        <help>For using this operator, you need a context, a petri net and a log. </help>
-		<key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
-	</operator>
-  <operator>
-  		<name>Replay Event Log on Petri Net for Conformance Analysis</name>
+  		<name>Conformance Checking</name>
         <synopsis>This operator replays a log into a petrinet and show visual results</synopsis>
         <help>For using this operator, you need a context, a petri net and a log. </help>
 		<key>replay_a_log_on_petri_net_for_conformance_analysis</key>
@@ -434,7 +414,7 @@
   	  </operator>
   	  
   	  <operator>
-        <name>Replay Log on Petri Net (Performance / Conformance Analysis)</name>
+        <name>Analyze Performance (Manifest) </name>
         <synopsis>A log is replayed on a petri net to get performance and conformance information.</synopsis>
         <help>A log is replayed on a petri net to get performance and conformance information.</help>
     	<key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
@@ -445,13 +425,6 @@
         <synopsis>A log is visualised using a dotted chart.</synopsis>
         <help>A log is visualised using a dotted chart.</help>
     	<key>dotted_chart_analysis</key>
-  	  </operator>
-  	  
-  	   <operator>
-        <name>Case Data Extractor</name>
-        <synopsis>Extract Case Data.</synopsis>
-        <help>Extract Case Data.</help>
-    	<key>case_data_extractor</key>
   	  </operator>
   	  
   	   <operator>

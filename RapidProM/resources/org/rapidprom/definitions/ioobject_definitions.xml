@@ -60,9 +60,9 @@
 	</ioobject>
 	<ioobject
 		name="InteractiveMinerLauncherProM"
-		class="com.rapidminer.ioobjects.InteractiveMinerLauncherIOObject"
+		class="org.rapidprom.ioobjects.InteractiveMinerLauncherIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.InteractiveMinerLauncherIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.InteractiveMinerLauncherIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="ReachabilityGraphProM"

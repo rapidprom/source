@@ -30,15 +30,19 @@
                 <key>perform_predictions_of_business_process_features</key>
                 <class>org.rapidprom.operators.analysis.FeaturePredictionAnalysisOperator</class>
             </operator>
+            <operator>
+                <key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
+                <class>org.rapidprom.operators.conformance.PerformanceConformanceAnalysisOperator</class>
+            </operator>
+            <operator>
+                <key>mine_with_inductive_visual_miner</key>
+                <class>org.rapidprom.operators.analysis.InductiveVisualMinerOperator</class>
+            </operator>
         </group>
         <group key="conformance">
         	 <operator>
                 <key>replay_a_log_on_petri_net_for_conformance_analysis</key>
                 <class>org.rapidprom.operators.conformance.ConformanceAnalysisOperator</class>
-            </operator>
-            <operator>
-                <key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
-                <class>org.rapidprom.operators.conformance.PerformanceConformanceAnalysisOperator</class>
             </operator>
             <operator>
                 <key>measure_precision</key>
@@ -103,10 +107,6 @@
             <operator>
                 <key>mine_process_tree_with_inductive_miner</key>
                 <class>org.rapidprom.operators.discovery.InductiveMinerPTOperator</class>
-            </operator>
-            <operator>
-                <key>mine_with_inductive_visual_miner</key>
-                <class>com.rapidminer.operator.miningplugins.MinewithInductivevisualMinerTask</class>
             </operator>
             <operator>
                 <key>social_network_miner</key>
