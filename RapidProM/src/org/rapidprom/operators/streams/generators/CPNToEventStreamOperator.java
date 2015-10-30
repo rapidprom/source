@@ -12,10 +12,10 @@ import org.processmining.framework.plugin.PluginContext;
 import org.processmining.stream.core.enums.CommunicationType;
 import org.processmining.stream.core.interfaces.XSPublisher;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjects.CPNModelIOObject;
 import org.rapidprom.ioobjects.streams.XSEventStreamIOObject;
 import org.rapidprom.ioobjects.streams.XSPublisherIOObject;
 
-import com.rapidminer.ioobjects.CPNModelIOObject;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -132,7 +132,7 @@ public class CPNToEventStreamOperator extends Operator {
 
 		Object[] result = CPNModelToXSEventStreamAuthorPlugin
 				.cpnToXSEventStreamPlugin(context,
-						inputCPNModel.getData(CPNModelIOObject.class).getData(),
+						inputCPNModel.getData(CPNModelIOObject.class).getArtifact(),
 						parameters);
 
 		outputPublisher.deliver(

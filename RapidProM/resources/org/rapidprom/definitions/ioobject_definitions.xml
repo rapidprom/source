@@ -1,9 +1,9 @@
 <ioobjects>
 	<ioobject
 		name="CPNModelProM"
-		class="com.rapidminer.ioobjects.CPNModelIOObject"
+		class="org.rapidprom.ioobjects.CPNModelIOObject"
 		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.CPNModelIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.CPNModelIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="BalancedReplayResultProM"

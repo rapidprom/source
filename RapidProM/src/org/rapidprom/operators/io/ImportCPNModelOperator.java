@@ -7,9 +7,9 @@ import java.util.List;
 import org.processmining.plugins.cpnet.ColouredPetriNet;
 import org.processmining.plugins.cpnet.LoadCPNModelFromFile;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjects.CPNModelIOObject;
 import org.rapidprom.operators.abstr.AbstractRapidProMImportOperator;
 
-import com.rapidminer.ioobjects.CPNModelIOObject;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeFile;
@@ -45,6 +45,6 @@ public class ImportCPNModelOperator
 				ProMPluginContextManager.instance().getFutureResultAwareContext(
 						LoadCPNModelFromFile.class),
 				new FileInputStream(file), file.getName(), file.length());
-		return new CPNModelIOObject(net);
+		return new CPNModelIOObject(net,ProMPluginContextManager.instance().getContext());
 	}
 }
