@@ -8,6 +8,9 @@ import java.util.logging.Logger;
 
 import org.deckfour.xes.model.XLog;
 import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.util.XLogUtils;
+import org.rapidprom.util.XLogUtils.AttributeTypes;
+import org.rapidprom.util.XLogUtils.TableModelXLog;
 
 import com.rapidminer.example.Attribute;
 import com.rapidminer.example.ExampleSet;
@@ -29,9 +32,6 @@ import com.rapidminer.operator.ports.metadata.SetRelation;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
 import com.rapidminer.tools.math.container.Range;
-import com.rapidminer.util.XLogUtils;
-import com.rapidminer.util.XLogUtils.AttributeTypes;
-import com.rapidminer.util.XLogUtils.TableModelXLog;
 
 public class XLogToExampleSetConversionOperator extends Operator {
 	

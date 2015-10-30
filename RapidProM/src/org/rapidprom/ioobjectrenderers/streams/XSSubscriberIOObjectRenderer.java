@@ -6,7 +6,7 @@ import org.processmining.stream.visualizers.XSStreamSubscriberVisualizer;
 import org.rapidprom.ioobjectrenderers.abstr.AbstractRapidProMIOObjectRenderer;
 import org.rapidprom.ioobjects.streams.XSSubscriberIOObject;
 
-public class XSSubscriberIOObejctRenderer
+public class XSSubscriberIOObjectRenderer
 		extends AbstractRapidProMIOObjectRenderer<XSSubscriberIOObject> {
 
 	@Override

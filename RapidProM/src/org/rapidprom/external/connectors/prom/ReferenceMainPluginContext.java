@@ -1,4 +1,4 @@
-package com.rapidminer.callprom;
+package org.rapidprom.external.connectors.prom;
 
 import org.rapidprom.external.connectors.prom.RapidProMCLIContext;
 

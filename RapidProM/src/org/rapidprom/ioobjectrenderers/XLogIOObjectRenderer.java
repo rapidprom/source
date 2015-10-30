@@ -21,15 +21,16 @@ import org.processmining.plugins.log.ui.logdialog.SlickerOpenLogSettings;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjectrenderers.abstr.AbstractMultipleVisualizersRenderer;
 import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.util.XLogUtils;
+import org.rapidprom.util.XLogUtils.ColumnNamesLog;
+import org.rapidprom.util.XLogUtils.TableModelXLog;
 
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;
 import com.rapidminer.gui.tools.ExtendedJScrollPane;
 import com.rapidminer.gui.tools.ExtendedJTable;
 import com.rapidminer.operator.IOContainer;
 import com.rapidminer.report.Reportable;
-import com.rapidminer.util.XLogUtils;
-import com.rapidminer.util.XLogUtils.ColumnNamesLog;
-import com.rapidminer.util.XLogUtils.TableModelXLog;
+
 
 public class XLogIOObjectRenderer extends
 		AbstractMultipleVisualizersRenderer<XLogIOObjectVisualizationType> {

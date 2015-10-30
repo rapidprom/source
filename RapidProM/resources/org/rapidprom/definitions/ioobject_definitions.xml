@@ -6,24 +6,6 @@
 		<renderer>org.rapidprom.ioobjectrenderers.CPNModelIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
-		name="BalancedReplayResultProM"
-		class="com.rapidminer.ioobjects.BalancedReplayResultIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.BalancedReplayResultIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
-		name="PetriNetWithDataProM"
-		class="com.rapidminer.ioobjects.PetriNetWithDataIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.PetriNetWithDataIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
-		name="AlignmentPrecGenResProM"
-		class="org.rapidprom.ioobjects.AlignmentPrecGenResIOObject"
-		reportable="true">
-		<renderer>org.rapidprom.ioobjectrenderers.AlignmentPrecGenResIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
 		name="WoflanDiagnosisProM"
 		class="org.rapidprom.ioobjects.WoflanDiagnosisIOObject"
 		reportable="true">
@@ -46,11 +28,6 @@
 		class="org.rapidprom.ioobjects.PomPomViewIOObject"
 		reportable="true">
 		<renderer>org.rapidprom.ioobjectrenderers.PomPomViewIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
-		name="ClassifierProM"
-		class="com.rapidminer.ioobjects.ClassifierIOObject"
-		reportable="false">
 	</ioobject>
 	<ioobject
 		name="PNRepResultProM"
@@ -76,20 +53,6 @@
 		reportable="true">
 		<renderer>org.rapidprom.ioobjectrenderers.FuzzyAnimationIOObjectRenderer</renderer>
 	</ioobject>
-   <ioobject
-        name="CLIPluginContext"
-        class="com.rapidminer.ioobjects.ProMContextIOObject"
-        reportable="true">
-        <renderer>com.rapidminer.ioobjectrenderers.ProMContextIOObjectRenderer</renderer>
-    </ioobject>
-    
-    <ioobject
-        name="FirstPromTask"
-        class="com.rapidminer.ioobjects.OutputFirstProMTaskIOObject"
-        reportable="true">
-        <renderer>com.rapidminer.ioobjectrenderers.OutputFirstProMTaskIOObjectRenderer</renderer>
-    </ioobject>
-    
      <ioobject
         name="XLogProM"
         class="org.rapidprom.ioobjects.XLogIOObject"
@@ -109,13 +72,6 @@
 		class="org.rapidprom.ioobjects.PetriNetListIOObject"
 		reportable="false">
 	</ioobject>
-    
-    <ioobject
-        name="GuideTreeProM"
-        class="com.rapidminer.ioobjects.GuideTreeIOObject"
-        reportable="true">
-        <renderer>com.rapidminer.ioobjectrenderers.GuideTreeIOObjectRenderer</renderer>
-    </ioobject>
 	
 	<ioobject
 		name="HeuristicsNetProM"
@@ -151,53 +107,12 @@
 		reportable="true">
 		<renderer>org.rapidprom.ioobjectrenderers.TransitionSystemIOObjectRenderer</renderer>
 	</ioobject>
-
-	<ioobject
-		name="DirectedGraphElementWeightsProM"
-		class="com.rapidminer.ioobjects.DirectedGraphElementWeightsIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.DirectedGraphElementWeightsIOObjectRenderer</renderer>
-	</ioobject>
-
-	<ioobject
-		name="StartStateSetProM"
-		class="com.rapidminer.ioobjects.StartStateSetIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.StartStateSetIOObjectRenderer</renderer>
-	</ioobject>
-
-	<ioobject
-		name="AcceptStateSetProM"
-		class="com.rapidminer.ioobjects.AcceptStateSetIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.AcceptStateSetIOObjectRenderer</renderer>
-	</ioobject>
-	
-	<ioobject
-		name="AttenuationProM"
-		class="com.rapidminer.ioobjects.AttenuationIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.AttenuationIOObjectRenderer</renderer>
-	</ioobject>
-
-	<ioobject
-		name="IntegerProM"
-		class="com.rapidminer.ioobjects.IntegerIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.IntegerIOObjectRenderer</renderer>
-	</ioobject>
 	
 	<ioobject
 		name="MetricsRepositoryProM"
 		class="org.rapidprom.ioobjects.MetricsRepositoryIOObject"
 		reportable="true">
 		<renderer>org.rapidprom.ioobjectrenderers.MetricsRepositoryIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
-		name="DotPanelProM"
-		class="com.rapidminer.ioobjects.DotPanelIOObject"
-		reportable="true">
-		<renderer>com.rapidminer.ioobjectrenderers.DotPanelIOObjectRenderer</renderer>
 	</ioobject>
 	
 	<!-- STREAMS -->
@@ -217,7 +132,7 @@
 		name="Event Stream Subscriber (Generic)"
 		class="org.rapidprom.ioobjects.streams.XSSubscriberIOObject"
 		reportable="false">
-		<renderer>org.rapidprom.ioojbectrenderers.streams.XSSubscriberIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.streams.XSSubscriberIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="Event Stream to Accepting Petri Net Reader (Generic)"

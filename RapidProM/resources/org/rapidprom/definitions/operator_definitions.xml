@@ -3,10 +3,6 @@
     <group key="process mining">
         <group key="analysis">
             <operator>
-                <key>conformance_checking_of_dpn_(balanced)</key>
-                <class>com.rapidminer.operator.analysisplugins.ConformanceCheckingofDPNTask</class>
-            </operator>
-            <operator>
                 <key>analyze_with_woflan</key>
                 <class>org.rapidprom.operators.analysis.WoflanAnalysisOperator</class>
             </operator>
@@ -120,11 +116,14 @@
                 <key>mine_fuzzy_model</key>
                 <class>org.rapidprom.operators.discovery.FuzzyMinerOperator</class>
             </operator>
-            <operator>
+            
+        </group>
+        <!-- <group key="experimental">
+         <operator>
                 <key>sequence_miner</key>
                 <class>com.rapidminer.operator.miningplugins.SequencePainterTask</class>
-            </operator>
-        </group>
+            </operator> 
+        </group>-->
         <group key="export">
             <operator>
                 <key>export_petri_net</key>

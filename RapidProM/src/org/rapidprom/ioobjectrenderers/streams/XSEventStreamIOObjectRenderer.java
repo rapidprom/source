@@ -14,7 +14,6 @@ import com.rapidminer.gui.renderer.DefaultComponentRenderable;
 import com.rapidminer.gui.renderer.DefaultReadable;
 import com.rapidminer.operator.IOContainer;
 import com.rapidminer.report.Reportable;
-import com.rapidminer.util.Utilities;
 
 public class XSEventStreamIOObjectRenderer extends AbstractRenderer {
 
@@ -41,8 +40,7 @@ public class XSEventStreamIOObjectRenderer extends AbstractRenderer {
 			JComponent panel = runVisualization(object.getArtifact(),
 					object.getPluginContext());
 			// put the thing in its own panel
-			return new DefaultComponentRenderable(Utilities.getSizedPanel(panel,
-					panel, desiredWidth, desiredHeight - 50));
+			return new DefaultComponentRenderable(panel);
 		}
 		return new DefaultReadable("No XSEventStream visualization available.");
 	}

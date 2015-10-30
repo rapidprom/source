@@ -3,8 +3,6 @@ package org.rapidprom.external.connectors.prom;
 import org.processmining.contexts.cli.CLIContext;
 import org.processmining.contexts.cli.CLIPluginContext;
 
-import com.rapidminer.callprom.ReferenceMainPluginContext;
-
 /**
  * 
  * @author rmans

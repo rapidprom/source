@@ -1,4 +1,4 @@
-package com.rapidminer.util;
+package org.rapidprom.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
