@@ -16,12 +16,12 @@ import com.rapidminer.report.Reportable;
 
 import javassist.tools.rmi.ObjectNotFoundException;
 
-public class PNRepResultIOObjectRenderer
-		extends
+public class PNRepResultIOObjectRenderer extends
 		AbstractMultipleVisualizersRenderer<PNRepResultIOObjectVisualizationType> {
 
 	public PNRepResultIOObjectRenderer() {
-		super(EnumSet.allOf(PNRepResultIOObjectVisualizationType.class),"PNRepResult renderer");
+		super(EnumSet.allOf(PNRepResultIOObjectVisualizationType.class),
+				"PNRepResult renderer");
 	}
 
 	private Component projectOnModelComponent = null;
@@ -37,8 +37,8 @@ public class PNRepResultIOObjectRenderer
 	@Override
 	public Reportable createReportable(Object renderable,
 			IOContainer ioContainer, int desiredWidth, int desiredHeight) {
-		return new DefaultComponentRenderable(getVisualizationComponent(
-				renderable, ioContainer));
+		return new DefaultComponentRenderable(
+				getVisualizationComponent(renderable, ioContainer));
 	}
 
 	@Override
@@ -68,10 +68,10 @@ public class PNRepResultIOObjectRenderer
 		PNRepResultIOObject artifact = (PNRepResultIOObject) renderable;
 		if (projectOnLogComponent == null || projectOnLogObject == null
 				|| !(artifact.equals(projectOnLogObject.get()))) {
-			projectOnLogComponent = new PNLogReplayResultVisPanel(artifact
-					.getPn().getArtifact(), artifact.getXLog(),
-					artifact.getArtifact(), artifact.getPluginContext()
-							.getProgress());
+			projectOnLogComponent = new PNLogReplayResultVisPanel(
+					artifact.getPn().getArtifact(), artifact.getXLog(),
+					artifact.getArtifact(),
+					artifact.getPluginContext().getProgress());
 			projectOnLogObject = new WeakReference<PNRepResult>(
 					artifact.getArtifact());
 		}
@@ -84,9 +84,8 @@ public class PNRepResultIOObjectRenderer
 		if (projectOnModelComponent == null || projectOnModelObject == null
 				|| !(artifact.equals(projectOnModelObject.get()))) {
 			projectOnModelComponent = new PNLogReplayProjectedVisPanel(
-					artifact.getPluginContext(),
-					artifact.getPn().getArtifact(), artifact.getPn()
-							.getInitialMarking(), artifact.getXLog(),
+					artifact.getPluginContext(), artifact.getPn().getArtifact(),
+					artifact.getPn().getInitialMarking(), artifact.getXLog(),
 					artifact.getMapping(), artifact.getArtifact());
 			projectOnModelObject = new WeakReference<PNRepResult>(
 					artifact.getArtifact());
