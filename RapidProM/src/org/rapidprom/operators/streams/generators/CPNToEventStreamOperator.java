@@ -7,14 +7,15 @@ import java.util.logging.Logger;
 import org.processmining.eventstream.authors.cpn.parameters.CPN2XSEventStreamCaseIdentification;
 import org.processmining.eventstream.authors.cpn.parameters.CPN2XSEventStreamParameters;
 import org.processmining.eventstream.authors.cpn.plugins.CPNModelToXSEventStreamAuthorPlugin;
+import org.processmining.eventstream.core.interfaces.XSEvent;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.stream.core.enums.CommunicationType;
-import org.processmining.stream.core.interfaces.XSPublisher;
+import org.processmining.stream.core.interfaces.XSAuthor;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.CPNModelIOObject;
-import org.rapidprom.ioobjects.streams.XSEventStreamIOObject;
-import org.rapidprom.ioobjects.streams.XSPublisherIOObject;
+import org.rapidprom.ioobjects.streams.XSAuthorIOObject;
+import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
 
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
@@ -65,24 +66,29 @@ public class CPNToEventStreamOperator extends Operator {
 	private static final String PARAMETER_OPTION_COMMUNICATION_TYPE_SYNC = CommunicationType.SYNC
 			.toString();
 	private static final String[] PARAMETER_OPTIONS_CASE_IDENTIFICATION = new String[] {
-			PARAMETER_OPTION_CASE_IDENTIFICATION_REPETITION,
-			PARAMETER_OPTION_CASE_IDENTIFICATION_VARIABELE };
+			PARAMETER_OPTION_CASE_IDENTIFICATION_VARIABELE,
+			PARAMETER_OPTION_CASE_IDENTIFICATION_REPETITION };
 	private static final String[] PARAMETER_OPTIONS_COMMUNICATION_TYPE = new String[] {
-			PARAMETER_OPTION_COMMUNICATION_TYPE_ASYNC,
-			PARAMETER_OPTION_COMMUNICATION_TYPE_SYNC };
+			PARAMETER_OPTION_COMMUNICATION_TYPE_SYNC,
+			PARAMETER_OPTION_COMMUNICATION_TYPE_ASYNC };
+
+	private static final String PARAMETER_KEY_IGNORE_PAGE = "ignore_page";
+	private static final String PARAMETER_LABEL_IGNORE_PAGE = "Ignore CPN model's page information in emitted events.";
+
+	private static final String PARAMETER_KEY_IGNORE_PATTERSNS = "ignore_patterns";
+	private static final String PARAMETER_LABEL_IGNORE_PATTERNS = "Provide a comma separated list of patterns to ignore for event emission";
 
 	private InputPort inputCPNModel = getInputPorts()
 			.createPort("model (CPN model)", CPNModelIOObject.class);
 
-	private OutputPort outputPublisher = getOutputPorts()
-			.createPort("publisher)");
+	private OutputPort outputAuthor = getOutputPorts().createPort("author");
 	private OutputPort outputStream = getOutputPorts()
 			.createPort("event stream");
 
 	public CPNToEventStreamOperator(OperatorDescription description) {
 		super(description);
-		getTransformer().addRule(new GenerateNewMDRule(outputPublisher,
-				XSPublisherIOObject.class));
+		getTransformer().addRule(
+				new GenerateNewMDRule(outputAuthor, XSAuthorIOObject.class));
 		getTransformer().addRule(new GenerateNewMDRule(outputStream,
 				XSEventStreamIOObject.class));
 	}
@@ -119,6 +125,7 @@ public class CPNToEventStreamOperator extends Operator {
 		return params;
 	}
 
+	@SuppressWarnings("unchecked")
 	public void doWork() throws OperatorException {
 
 		Logger logger = LogService.getRoot();
@@ -130,17 +137,16 @@ public class CPNToEventStreamOperator extends Operator {
 
 		CPN2XSEventStreamParameters parameters = getStreamParameters();
 
-		Object[] result = CPNModelToXSEventStreamAuthorPlugin
-				.cpnToXSEventStreamPlugin(context,
-						inputCPNModel.getData(CPNModelIOObject.class).getArtifact(),
-						parameters);
+		Object[] result = CPNModelToXSEventStreamAuthorPlugin.apply(context,
+				inputCPNModel.getData(CPNModelIOObject.class).getArtifact(),
+				parameters);
 
-		outputPublisher.deliver(
-				new XSPublisherIOObject((XSPublisher) result[0], context));
+		outputAuthor.deliver(new XSAuthorIOObject<XSEvent>(
+				(XSAuthor<XSEvent>) result[0], context));
 		outputStream.deliver(
 				new XSEventStreamIOObject((XSEventStream) result[1], context));
 
-		logger.log(Level.INFO, "start do work Stream Generator");
+		logger.log(Level.INFO, "end do work Stream Generator");
 	}
 
 	@Override
@@ -152,6 +158,27 @@ public class CPNToEventStreamOperator extends Operator {
 		parameterTypes = setupCaseIdentificationParameter(parameterTypes);
 		parameterTypes = setupAdditionalVariables(parameterTypes);
 		parameterTypes = setupCommunicationType(parameterTypes);
+		parameterTypes = setupIgnorePageParameter(parameterTypes);
+		parameterTypes = setupIgnorePatternsParameter(parameterTypes);
+		return parameterTypes;
+	}
+
+	private List<ParameterType> setupIgnorePatternsParameter(
+			List<ParameterType> parameterTypes) {
+		ParameterType ignorePatterns = new ParameterTypeString(
+				PARAMETER_KEY_IGNORE_PATTERSNS, PARAMETER_LABEL_IGNORE_PATTERNS,
+				true, false);
+		parameterTypes.add(ignorePatterns);
+		return parameterTypes;
+	}
+
+	private List<ParameterType> setupIgnorePageParameter(
+			List<ParameterType> parameterTypes) {
+		ParameterType ignorePageBool = new ParameterTypeBoolean(
+				PARAMETER_KEY_IGNORE_PAGE, PARAMETER_LABEL_IGNORE_PAGE, true,
+				false);
+		ignorePageBool.setOptional(false);
+		parameterTypes.add(ignorePageBool);
 		return parameterTypes;
 	}
 
@@ -164,13 +191,17 @@ public class CPNToEventStreamOperator extends Operator {
 				getParameterAsInt(PARAMETER_KEY_REPETITIONS));
 		streamParams.setTransitionDelayMs(
 				getParameterAsInt(PARAMETER_KEY_STEP_DELAY));
-
 		streamParams = determineCaseIdentification(streamParams);
-
 		streamParams.setIncludeVariables(
 				getParameterAsBoolean(PARAMETER_KEY_INCLUDE_ADDITIONAL_DATA));
-
 		streamParams = determineCommunicationType(streamParams);
+		streamParams.setIgnorePage(
+				getParameterAsBoolean(PARAMETER_KEY_IGNORE_PAGE));
+		String[] ignorePatterns = getParameterAsString(
+				PARAMETER_KEY_IGNORE_PATTERSNS) == null ? new String[0]
+						: getParameterAsString(PARAMETER_KEY_IGNORE_PATTERSNS)
+								.split(",");
+		streamParams.setIgnorePatterns(ignorePatterns);
 		return streamParams;
 	}
 

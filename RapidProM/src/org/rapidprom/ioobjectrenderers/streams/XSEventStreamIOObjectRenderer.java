@@ -5,9 +5,12 @@ import java.awt.Component;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-import org.processmining.eventstream.core.interfaces.XSEventStream;
+import org.processmining.eventstream.core.interfaces.XSEvent;
 import org.processmining.framework.plugin.PluginContext;
-import org.rapidprom.ioobjects.streams.XSEventStreamIOObject;
+import org.processmining.stream.core.interfaces.XSDataPacket;
+import org.processmining.stream.core.interfaces.XSStream;
+import org.processmining.stream.core.visualizer.XSStreamVisualizer;
+import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
 
 import com.rapidminer.gui.renderer.AbstractRenderer;
 import com.rapidminer.gui.renderer.DefaultComponentRenderable;
@@ -17,11 +20,11 @@ import com.rapidminer.report.Reportable;
 
 public class XSEventStreamIOObjectRenderer extends AbstractRenderer {
 
-	private static String GIVEN_NAME = "XSEventStreamIOObjectRenderer renderer";
+	private static String NAME = "XSEventStreamIOObjectRenderer renderer";
 
 	@Override
 	public String getName() {
-		return GIVEN_NAME;
+		return NAME;
 	}
 
 	@Override
@@ -45,9 +48,8 @@ public class XSEventStreamIOObjectRenderer extends AbstractRenderer {
 		return new DefaultReadable("No XSEventStream visualization available.");
 	}
 
-	public static JComponent runVisualization(XSEventStream pn,
-			PluginContext pc) {
-		return new JLabel(GIVEN_NAME);
+	private JComponent runVisualization(XSStream<XSEvent> artifact,
+			PluginContext pluginContext) {
+		return XSStreamVisualizer.visualize(pluginContext, artifact);
 	}
-
 }

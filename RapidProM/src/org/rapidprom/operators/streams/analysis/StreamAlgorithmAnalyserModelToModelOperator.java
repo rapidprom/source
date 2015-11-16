@@ -7,22 +7,22 @@ import java.util.EnumSet;
 import java.util.List;
 
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNetArray;
+import org.processmining.acceptingpetrinet.models.impl.AcceptingPetriNetArrayFactory;
 import org.processmining.eventstream.core.interfaces.XSEvent;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.eventstream.readers.acceptingpetrinet.XSEventStreamToAcceptingPetriNetReader;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.petrinets.list.PetriNetList;
-import org.processmining.petrinets.list.factory.PetriNetListFactory;
 import org.processmining.stream.core.interfaces.XSReader;
-import org.processmining.stream.core.interfaces.XSSubscriber;
-import org.processmining.streamanalysis.parameters.GEDSimXSEventStreamAnalyzerParameters;
-import org.processmining.streamanalysis.parameters.GEDSimXSEventStreamAnalyzerParameters.AnalysisScheme;
-import org.processmining.streamanalysis.plugins.GEDSimXSEventStreamAnalyzerPlugin;
+import org.processmining.streamanalysis.core.interfaces.XSStreamAnalyzer;
+import org.processmining.streamanalysis.parameters.XSEventStreamAnalyzerParameters;
+import org.processmining.streamanalysis.parameters.XSEventStreamAnalyzerParameters.AnalysisScheme;
+import org.processmining.streamanalysis.plugins.ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.ioobjects.PetriNetIOObject;
-import org.rapidprom.ioobjects.streams.XSEventStreamIOObject;
+import org.rapidprom.ioobjects.AcceptingPetriNetIOObject;
 import org.rapidprom.ioobjects.streams.XSEventStreamToAcceptingPetriNetReaderIOObject;
-import org.rapidprom.ioobjects.streams.XSSubscriberIOObject;
+import org.rapidprom.ioobjects.streams.XSStreamAnalyzerIOObject;
+import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
 import org.rapidprom.util.IOUtils;
 
 import com.rapidminer.operator.Operator;
@@ -84,12 +84,12 @@ public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
 		referenceModelsPort.start();
 		algorithmsPort.start();
 		getTransformer().addRule(new GenerateNewMDRule(subscriberPort,
-				XSSubscriberIOObject.class));
+				XSStreamAnalyzerIOObject.class));
 	}
 
 	@Override
 	public void doWork() throws OperatorException {
-		GEDSimXSEventStreamAnalyzerParameters params;
+		XSEventStreamAnalyzerParameters params;
 		try {
 			params = getParameterObject();
 		} catch (IOException e) {
@@ -97,15 +97,16 @@ public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
 		}
 		PluginContext context = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(
-						GEDSimXSEventStreamAnalyzerPlugin.class);
+						ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin.class);
 		XSEventStream stream = streamPort.getData(XSEventStreamIOObject.class)
 				.getArtifact();
-		PetriNetList nets = PetriNetListFactory.createPetriNetList();
+		AcceptingPetriNetArray arr = AcceptingPetriNetArrayFactory
+				.createAcceptingPetriNetArray();
 		for (InputPort i : referenceModelsPort.getManagedPorts()) {
 			try {
-				nets.add(i.getData(PetriNetIOObject.class).getArtifact());
+				arr.addNet(i.getData(AcceptingPetriNetIOObject.class)
+						.getArtifact());
 			} catch (UserError e) {
-				// port was probably empty
 			}
 		}
 		List<XSReader<XSEvent, AcceptingPetriNet>> algos = new ArrayList<XSReader<XSEvent, AcceptingPetriNet>>();
@@ -119,21 +120,23 @@ public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
 				// port was probably empty
 			}
 		}
-		XSSubscriber sub = GEDSimXSEventStreamAnalyzerPlugin
-				.run(context, stream, nets, params,
+		XSStreamAnalyzer<XSEvent, List<List<Double>>, AcceptingPetriNet> analyzer = ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin
+				.run(context, stream, arr, params,
 						algos.toArray(
 								new XSEventStreamToAcceptingPetriNetReader[algos
 										.size()]));
 
-		for (XSReader<?, ?> r : sub.getReaders()) {
+		for (XSReader<?, ?> r : algos) {
 			r.start();
 		}
-		subscriberPort.deliver(new XSSubscriberIOObject(sub, context));
+		subscriberPort.deliver(
+				new XSStreamAnalyzerIOObject<XSEvent, List<List<Double>>, AcceptingPetriNet>(
+						analyzer, context));
 	}
 
-	private GEDSimXSEventStreamAnalyzerParameters getParameterObject()
+	private XSEventStreamAnalyzerParameters getParameterObject()
 			throws UserError, IOException {
-		GEDSimXSEventStreamAnalyzerParameters params = new GEDSimXSEventStreamAnalyzerParameters();
+		XSEventStreamAnalyzerParameters params = new XSEventStreamAnalyzerParameters();
 		AnalysisScheme scheme = PARAMETER_REFERENCE_ANALYSIS_SCHEME[getParameterAsInt(
 				PARAMETER_KEY_ANALYSIS_SCHEME)];
 		params.setScheme(scheme);
@@ -150,7 +153,7 @@ public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
 				target.delete();
 			}
 			target.createNewFile();
-			params.setFile(target);
+			params.setMetricsFile(target);
 		}
 		params.setVerbose(true);
 		return params;

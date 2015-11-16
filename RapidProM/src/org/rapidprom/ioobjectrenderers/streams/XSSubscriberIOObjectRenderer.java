@@ -2,7 +2,7 @@ package org.rapidprom.ioobjectrenderers.streams;
 
 import javax.swing.JComponent;
 
-import org.processmining.stream.visualizers.XSStreamSubscriberVisualizer;
+import org.processmining.stream.core.visualizer.XSStreamSubscriberVisualizer;
 import org.rapidprom.ioobjectrenderers.abstr.AbstractRapidProMIOObjectRenderer;
 import org.rapidprom.ioobjects.streams.XSSubscriberIOObject;
 

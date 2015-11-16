@@ -29,9 +29,9 @@ public abstract class AbstractRapidProMIOObjectRenderer<T extends AbstractRapidP
 	@Override
 	public Reportable createReportable(Object renderable,
 			IOContainer ioContainer, int desiredWidth, int desiredHeight) {
-		return new DefaultComponentRenderable(getVisualizationComponent(
-				renderable, ioContainer));
+		return new DefaultComponentRenderable(
+				getVisualizationComponent(renderable, ioContainer));
 	}
 
-	protected abstract JComponent runVisualization(T artifact);
+	protected abstract JComponent runVisualization(T ioObject);
 }

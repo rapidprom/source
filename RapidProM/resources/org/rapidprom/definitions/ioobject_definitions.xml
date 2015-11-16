@@ -117,6 +117,12 @@
 	
 	<!-- STREAMS -->
 	<ioobject
+		name="Author"
+		class="org.rapidprom.ioobjects.streams.XSAuthorIOObject"
+		reportable="false" >
+		<renderer>org.rapidprom.ioobjectrenderers.streams.XSAuthorIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
 		name="Event Stream"
 		class="org.rapidprom.ioobjects.streams.XSEventStreamIOObject"
 		reportable="false">
@@ -139,5 +145,17 @@
 		class="org.rapidprom.ioobjects.streams.XSEventStreamToAcceptingPetriNetReaderIOObject"
 		reportable="false">
 		<renderer>org.rapidprom.ioobjectrenderers.streams.XSEventStreamToAcceptingPetriNetReaderIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
+		name="Reader"
+		class="org.rapidprom.ioobjects.streams.XSReaderIOObject"
+		reportable="false" >
+		<renderer>org.rapidprom.ioobjectrenderers.streams.XSReaderIOObjectRenderer</renderer>	
+	</ioobject>	
+	<ioobject
+		name="Stream Analyzer"
+		class="org.rapidprom.ioobjects.streams.XSStreamAnalyzerIOObject"
+		reportable="false" >
+		<renderer>org.rapidprom.ioobjectrenderers.streams.XSStreamAnalyzerIOObjectRenderer</renderer>	
 	</ioobject>	
 </ioobjects>

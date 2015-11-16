@@ -15,11 +15,11 @@ import org.processmining.stream.models.streamdatastore.factories.StreamBasedData
 import org.processmining.stream.models.streamdatastore.interfaces.StreamBasedDataStore;
 import org.processmining.stream.models.streamdatastore.types.StreamBasedDataStoreType;
 import org.processmining.streaminductiveminer.parameters.StreamInductiveMinerParameters;
-import org.processmining.streaminductiveminer.plugins.StreamInductiveMinerPlugin;
+import org.processmining.streaminductiveminer.plugins.StreamInductiveMinerAPNPlugin;
 import org.processmining.streaminductiveminer.utils.StreamInductiveMinerUtils;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.ioobjects.streams.XSEventStreamIOObject;
 import org.rapidprom.ioobjects.streams.XSEventStreamToAcceptingPetriNetReaderIOObject;
+import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
 import org.rapidprom.util.ObjectUtils;
 
 import com.rapidminer.operator.Operator;
@@ -81,7 +81,8 @@ public class StreamInductiveMinerOperator extends Operator {
 		XSEventStream eventStream = streamInputPort
 				.getData(XSEventStreamIOObject.class).getArtifact();
 		PluginContext context = ProMPluginContextManager.instance()
-				.getFutureResultAwareContext(StreamInductiveMinerPlugin.class);
+				.getFutureResultAwareContext(
+						StreamInductiveMinerAPNPlugin.class);
 		StreamInductiveMinerParameters params = new StreamInductiveMinerParameters();
 		params.setCaseIdentifier(
 				getParameterAsString(PARAMETER_KEY_CASE_IDENTIFIER));
@@ -90,8 +91,8 @@ public class StreamInductiveMinerOperator extends Operator {
 		params.setRefreshRate(getParameterAsInt(PARAMETER_KEY_REFRESH_RATE));
 		params = setCaseActivityStore(params);
 		params = setActivityActivityStore(params);
-		XSEventStreamToAcceptingPetriNetReader reader = StreamInductiveMinerPlugin
-				.applyStreamInductiveMiner(context, eventStream, params);
+		XSEventStreamToAcceptingPetriNetReader reader = StreamInductiveMinerAPNPlugin
+				.apply(context, eventStream, params);
 		reader.start();
 		readerOutputPort.deliver(
 				new XSEventStreamToAcceptingPetriNetReaderIOObject(reader,
