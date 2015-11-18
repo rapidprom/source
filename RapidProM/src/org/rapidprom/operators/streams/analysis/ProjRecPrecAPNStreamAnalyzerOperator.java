@@ -111,7 +111,7 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
 			try {
 				arr.addNet(i.getData(AcceptingPetriNetIOObject.class)
 						.getArtifact());
-			} catch (UserError _) {
+			} catch (UserError e) {
 			}
 		}
 		List<XSEventStreamToAcceptingPetriNetReader> algos = new ArrayList<XSEventStreamToAcceptingPetriNetReader>();
@@ -121,7 +121,7 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
 						.getData(
 								XSEventStreamToAcceptingPetriNetReaderIOObject.class)
 						.getArtifact());
-			} catch (UserError _) {
+			} catch (UserError e) {
 			}
 		}
 		XSStreamAnalyzer<XSEvent, List<List<Double>>, AcceptingPetriNet> analyzer = ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin

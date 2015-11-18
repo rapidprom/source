@@ -135,12 +135,6 @@
 		<renderer>org.rapidprom.ioobjectrenderers.streams.event.XSEventStreamIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
-		name="Event Stream to Accepting Petri Net Reader (Generic)"
-		class="org.rapidprom.ioobjects.streams.XSEventStreamToAcceptingPetriNetReaderIOObject"
-		reportable="false">
-		<renderer>org.rapidprom.ioobjectrenderers.streams.XSEventStreamToAcceptingPetriNetReaderIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
 		name="Event Stream to Process Tree Reader"
 		class="org.rapidprom.ioobjects.streams.event.XSEventStreamToProcessTreePetriNetReaderIOObject"
 		reportable="false" >
