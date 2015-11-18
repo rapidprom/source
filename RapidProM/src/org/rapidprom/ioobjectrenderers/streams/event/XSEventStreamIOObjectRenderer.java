@@ -1,4 +1,4 @@
-package org.rapidprom.ioobjectrenderers.streams;
+package org.rapidprom.ioobjectrenderers.streams.event;
 
 import java.awt.Component;
 
@@ -7,7 +7,6 @@ import javax.swing.JLabel;
 
 import org.processmining.eventstream.core.interfaces.XSEvent;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.stream.core.interfaces.XSDataPacket;
 import org.processmining.stream.core.interfaces.XSStream;
 import org.processmining.stream.core.visualizer.XSStreamVisualizer;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;

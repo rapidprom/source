@@ -1,4 +1,4 @@
-package org.rapidprom.operators.streams.discovery;
+package org.rapidprom.operators.streams.discovery.abstr;
 
 import java.util.HashMap;
 import java.util.List;
@@ -8,17 +8,16 @@ import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.processmining.eventstream.core.interfaces.XSEventSignature;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
-import org.processmining.eventstream.readers.acceptingpetrinet.XSEventStreamToAcceptingPetriNetReader;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.framework.util.Pair;
+import org.processmining.stream.core.interfaces.XSDataPacket;
+import org.processmining.stream.core.interfaces.XSReader;
 import org.processmining.stream.models.streamdatastore.factories.StreamBasedDataStoreFactory;
 import org.processmining.stream.models.streamdatastore.interfaces.StreamBasedDataStore;
 import org.processmining.stream.models.streamdatastore.types.StreamBasedDataStoreType;
 import org.processmining.streaminductiveminer.parameters.StreamInductiveMinerParameters;
-import org.processmining.streaminductiveminer.plugins.StreamInductiveMinerAPNPlugin;
 import org.processmining.streaminductiveminer.utils.StreamInductiveMinerUtils;
-import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
-import org.rapidprom.ioobjects.streams.XSEventStreamToAcceptingPetriNetReaderIOObject;
+import org.rapidprom.ioobjects.streams.XSReaderIOObject;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
 import org.rapidprom.util.ObjectUtils;
 
@@ -36,7 +35,8 @@ import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.parameter.conditions.EqualStringCondition;
 
-public class StreamInductiveMinerOperator extends Operator {
+public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<? extends XSDataPacket<?, ?>, ?>, T2 extends XSReaderIOObject<T1>>
+		extends Operator {
 
 	private InputPort streamInputPort = getInputPorts()
 			.createPort("event stream", XSEventStreamIOObject.class);
@@ -70,19 +70,25 @@ public class StreamInductiveMinerOperator extends Operator {
 					new StreamBasedDataStoreType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
 							.size()]);
 
-	public StreamInductiveMinerOperator(OperatorDescription description) {
+	public AbstractStreamInductiveMinerOperator(
+			OperatorDescription description) {
 		super(description);
 		getTransformer().addRule(new GenerateNewMDRule(readerOutputPort,
-				XSEventStreamToAcceptingPetriNetReaderIOObject.class));
+				XSReaderIOObject.class));
 	}
+
+	protected abstract PluginContext getPluginContextForISM();
+
+	protected abstract T1 getAlgorithm(PluginContext context,
+			XSEventStream stream, StreamInductiveMinerParameters parameters);
+
+	protected abstract T2 getIOObject(T1 algorithm, PluginContext context);
 
 	@Override
 	public void doWork() throws UserError {
 		XSEventStream eventStream = streamInputPort
 				.getData(XSEventStreamIOObject.class).getArtifact();
-		PluginContext context = ProMPluginContextManager.instance()
-				.getFutureResultAwareContext(
-						StreamInductiveMinerAPNPlugin.class);
+		PluginContext context = getPluginContextForISM();
 		StreamInductiveMinerParameters params = new StreamInductiveMinerParameters();
 		params.setCaseIdentifier(
 				getParameterAsString(PARAMETER_KEY_CASE_IDENTIFIER));
@@ -91,12 +97,9 @@ public class StreamInductiveMinerOperator extends Operator {
 		params.setRefreshRate(getParameterAsInt(PARAMETER_KEY_REFRESH_RATE));
 		params = setCaseActivityStore(params);
 		params = setActivityActivityStore(params);
-		XSEventStreamToAcceptingPetriNetReader reader = StreamInductiveMinerAPNPlugin
-				.apply(context, eventStream, params);
+		T1 reader = getAlgorithm(context, eventStream, params);
 		reader.start();
-		readerOutputPort.deliver(
-				new XSEventStreamToAcceptingPetriNetReaderIOObject(reader,
-						context));
+		readerOutputPort.deliver(getIOObject(reader, context));
 
 	}
 

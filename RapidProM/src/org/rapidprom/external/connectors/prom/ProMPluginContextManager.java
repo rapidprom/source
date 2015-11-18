@@ -62,6 +62,7 @@ public class ProMPluginContextManager extends ProgressThread {
 		return instance;
 	}
 
+	@Deprecated
 	public static ProMPluginContextManager instance(Boot.Level verbose) {
 		instance();
 		instance.setVerboseLevel(verbose);

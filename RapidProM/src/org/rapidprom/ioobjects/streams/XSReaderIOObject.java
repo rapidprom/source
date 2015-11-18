@@ -5,13 +5,13 @@ import org.processmining.stream.core.interfaces.XSDataPacket;
 import org.processmining.stream.core.interfaces.XSReader;
 import org.rapidprom.ioobjects.abstr.AbstractRapidProMIOObject;
 
-public class XSReaderIOObject<T1 extends XSDataPacket<?, ?>, T2>
-		extends AbstractRapidProMIOObject<XSReader<T1, T2>> {
+public class XSReaderIOObject<T extends XSReader<? extends XSDataPacket<?, ?>, ?>>
+		extends AbstractRapidProMIOObject<T> {
 
 	private static final long serialVersionUID = -7862503192309811538L;
 
-	public XSReaderIOObject(XSReader<T1, T2> t, PluginContext context) {
-		super(t, context);
+	public XSReaderIOObject(T reader, PluginContext context) {
+		super(reader, context);
 	}
 
 }

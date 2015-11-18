@@ -13,16 +13,15 @@ import org.processmining.eventstream.core.interfaces.XSEvent;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.eventstream.readers.acceptingpetrinet.XSEventStreamToAcceptingPetriNetReader;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.stream.core.interfaces.XSReader;
 import org.processmining.streamanalysis.core.interfaces.XSStreamAnalyzer;
 import org.processmining.streamanalysis.parameters.XSEventStreamAnalyzerParameters;
 import org.processmining.streamanalysis.parameters.XSEventStreamAnalyzerParameters.AnalysisScheme;
 import org.processmining.streamanalysis.plugins.ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.AcceptingPetriNetIOObject;
-import org.rapidprom.ioobjects.streams.XSEventStreamToAcceptingPetriNetReaderIOObject;
 import org.rapidprom.ioobjects.streams.XSStreamAnalyzerIOObject;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
+import org.rapidprom.ioobjects.streams.event.XSEventStreamToAcceptingPetriNetReaderIOObject;
 import org.rapidprom.util.IOUtils;
 
 import com.rapidminer.operator.Operator;
@@ -42,7 +41,19 @@ import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.conditions.BooleanParameterCondition;
 import com.rapidminer.parameter.conditions.EqualStringCondition;
 
-public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
+public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
+
+	private final InputPort streamPort = getInputPorts()
+			.createPort("event stream", XSEventStreamIOObject.class);
+
+	private final InputPortExtender referenceModelsPort = new InputPortExtender(
+			"accepting petri nets", getInputPorts(), null, 1);
+
+	private final InputPortExtender algorithmsPort = new InputPortExtender(
+			"algorithms", getInputPorts(), null, 1);
+
+	private final OutputPort analyzerPort = getOutputPorts()
+			.createPort("analyzer");
 
 	private static final String PARAMETER_KEY_ANALYSIS_SCHEME = "analysis_scheme";
 	private static final String PARAMETER_DESC_ANALYSIS_SCHEME = "Determine the analysis scheme of the analyzer.";
@@ -66,24 +77,18 @@ public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
 
 	private final static String EXPORT_FILE_FORMAT = "csv";
 
-	private final InputPort streamPort = getInputPorts()
-			.createPort("event stream", XSEventStreamIOObject.class);
+	private final static String PARAMETER_KEY_STORE_MODEL_SEQUENCE = "store_model_sequence";
+	private final static String PARAMETER_DESC_STORE_MODEL_SEQUENCE = "Store a sequence of models (showing model evolution), potentially memory expensive";
 
-	private final InputPortExtender referenceModelsPort = new InputPortExtender(
-			"reference models", getInputPorts(), null, 1);
+	private final static String PARAMETER_KEY_STORE_MODEL_DIR = "store_model_dir";
+	private final static String PARAMETER_DESC_STORE_MODEL_DIR = "Directory where to store the model sequence";
 
-	private final InputPortExtender algorithmsPort = new InputPortExtender(
-			"algorithms", getInputPorts(), null, 1);
-
-	private final OutputPort subscriberPort = getOutputPorts()
-			.createPort("analyzer");
-
-	public StreamAlgorithmAnalyserModelToModelOperator(
+	public ProjRecPrecAPNStreamAnalyzerOperator(
 			OperatorDescription description) {
 		super(description);
 		referenceModelsPort.start();
 		algorithmsPort.start();
-		getTransformer().addRule(new GenerateNewMDRule(subscriberPort,
+		getTransformer().addRule(new GenerateNewMDRule(analyzerPort,
 				XSStreamAnalyzerIOObject.class));
 	}
 
@@ -106,18 +111,17 @@ public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
 			try {
 				arr.addNet(i.getData(AcceptingPetriNetIOObject.class)
 						.getArtifact());
-			} catch (UserError e) {
+			} catch (UserError _) {
 			}
 		}
-		List<XSReader<XSEvent, AcceptingPetriNet>> algos = new ArrayList<XSReader<XSEvent, AcceptingPetriNet>>();
+		List<XSEventStreamToAcceptingPetriNetReader> algos = new ArrayList<XSEventStreamToAcceptingPetriNetReader>();
 		for (InputPort i : algorithmsPort.getManagedPorts()) {
 			try {
 				algos.add(i
 						.getData(
 								XSEventStreamToAcceptingPetriNetReaderIOObject.class)
 						.getArtifact());
-			} catch (UserError e) {
-				// port was probably empty
+			} catch (UserError _) {
 			}
 		}
 		XSStreamAnalyzer<XSEvent, List<List<Double>>, AcceptingPetriNet> analyzer = ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin
@@ -125,11 +129,7 @@ public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
 						algos.toArray(
 								new XSEventStreamToAcceptingPetriNetReader[algos
 										.size()]));
-
-		for (XSReader<?, ?> r : algos) {
-			r.start();
-		}
-		subscriberPort.deliver(
+		analyzerPort.deliver(
 				new XSStreamAnalyzerIOObject<XSEvent, List<List<Double>>, AcceptingPetriNet>(
 						analyzer, context));
 	}
@@ -154,6 +154,12 @@ public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
 			}
 			target.createNewFile();
 			params.setMetricsFile(target);
+		}
+		if (getParameterAsBoolean(PARAMETER_KEY_STORE_MODEL_SEQUENCE)) {
+			File dir = getParameterAsFile(PARAMETER_KEY_STORE_MODEL_DIR);
+			assert (dir.exists() && dir.isDirectory());
+			params.setStoreModelSequence(true);
+			params.setModelSequenceDirectory(dir);
 		}
 		params.setVerbose(true);
 		return params;
@@ -186,6 +192,16 @@ public class StreamAlgorithmAnalyserModelToModelOperator extends Operator {
 				PARAMETER_KEY_WRITE_TO_FILE, true, true));
 		params.add(fileName);
 
+		params.add(new ParameterTypeBoolean(PARAMETER_KEY_STORE_MODEL_SEQUENCE,
+				PARAMETER_DESC_STORE_MODEL_SEQUENCE, false));
+
+		ParameterType modelSequenceDir = new ParameterTypeDirectory(
+				PARAMETER_KEY_STORE_MODEL_DIR, PARAMETER_DESC_STORE_MODEL_DIR,
+				true);
+		modelSequenceDir
+				.registerDependencyCondition(new BooleanParameterCondition(this,
+						PARAMETER_KEY_STORE_MODEL_SEQUENCE, true, true));
+		params.add(modelSequenceDir);
 		return params;
 	}
 

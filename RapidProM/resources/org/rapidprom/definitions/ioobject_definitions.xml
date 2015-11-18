@@ -1,5 +1,11 @@
 <ioobjects>
 	<ioobject
+		name="Accepting Petri Net"
+		class="org.rapidprom.ioobjects.AcceptingPetriNetIOObject"
+		reportable="false">
+		<renderer>org.rapidprom.ioobjectrenderers.AcceptingPetriNetIOObjectRenderer</renderer>
+	</ioobject>
+	<ioobject
 		name="CPNModelProM"
 		class="org.rapidprom.ioobjects.CPNModelIOObject"
 		reportable="true">
@@ -124,21 +130,9 @@
 	</ioobject>
 	<ioobject
 		name="Event Stream"
-		class="org.rapidprom.ioobjects.streams.XSEventStreamIOObject"
+		class="org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject"
 		reportable="false">
-		<renderer>org.rapidprom.ioobjectrenderers.streams.XSEventStreamIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
-		name="Event Stream Publisher (Generic)"
-		class="org.rapidprom.ioobjects.streams.XSPublisherIOObject"
-		reportable="false">
-		<renderer>org.rapidprom.ioobjectrenderers.streams.XSPublisherIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject
-		name="Event Stream Subscriber (Generic)"
-		class="org.rapidprom.ioobjects.streams.XSSubscriberIOObject"
-		reportable="false">
-		<renderer>org.rapidprom.ioobjectrenderers.streams.XSSubscriberIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.streams.event.XSEventStreamIOObjectRenderer</renderer>
 	</ioobject>
 	<ioobject
 		name="Event Stream to Accepting Petri Net Reader (Generic)"
@@ -146,6 +140,18 @@
 		reportable="false">
 		<renderer>org.rapidprom.ioobjectrenderers.streams.XSEventStreamToAcceptingPetriNetReaderIOObjectRenderer</renderer>
 	</ioobject>
+	<ioobject
+		name="Event Stream to Process Tree Reader"
+		class="org.rapidprom.ioobjects.streams.event.XSEventStreamToProcessTreePetriNetReaderIOObject"
+		reportable="false" >
+		<renderer>org.rapidprom.ioobjectrenderers.streams.XSReaderIOObjectRenderer</renderer>	
+	</ioobject>	
+	<ioobject
+		name="Event Stream to Accepting Petri Net Reader"
+		class="org.rapidprom.ioobjects.streams.event.XSEventStreamToAcceptingPetriNetReaderIOObject"
+		reportable="false" >
+		<renderer>org.rapidprom.ioobjectrenderers.streams.XSReaderIOObjectRenderer</renderer>	
+	</ioobject>	
 	<ioobject
 		name="Reader"
 		class="org.rapidprom.ioobjects.streams.XSReaderIOObject"

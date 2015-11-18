@@ -124,6 +124,13 @@
 		<key>construct_reachability_graph_of_a_petri_net</key>
 	</operator>
     
+    <operator>
+        <name>Import Accepting Petri Net</name>
+        <synopsis>Import an Accepting Petri Net</synopsis>
+        <help />
+        <key>import_accepting_petri_net</key>
+    </operator>
+    
   <operator>
   		<name>Import Petri Net</name>
         <synopsis>This operator is used to import a Petri net</synopsis>
@@ -532,15 +539,21 @@
         <key>stream_from_cpn</key>
     </operator>
     <operator>
-        <name>Stream Inductive Miner</name>
+        <name>Stream Inductive Miner (Accepting Petri Net)</name>
         <synopsis>Discover a Petri net from an event stream using a stream-based implementation of the inductive miner</synopsis>
         <help />
-        <key>stream_inductive_miner</key>
+        <key>stream_inductive_miner_apn</key>
 	</operator>
 	<operator>
-		<name> Event Stream Algorithm Analyzer (Model to Model)</name>
-		<synopsis>Calculates Model to Model similarity of each generated model of each connected algorithm at each point in time to a collection of reference models</synopsis>
-		<help />
-		<key>event_stream_analysis_model_2_model</key>
+        <name>Stream Inductive Miner (Process Tree)</name>
+        <synopsis>Discover a Petri net from an event stream using a stream-based implementation of the inductive miner</synopsis>
+        <help />
+        <key>stream_inductive_miner_pt</key>
+    </operator>
+    <operator>
+        <name> Event Stream Algorithm Analyzer (Model to Model)</name>
+        <synopsis>Calculates Model to Model similarity of each generated model of each connected algorithm at each point in time to a collection of reference models</synopsis>
+        <help />
+        <key>event_stream_analysis_proj_rec_prec_apn</key>
 	</operator>
 </operatorHelp>

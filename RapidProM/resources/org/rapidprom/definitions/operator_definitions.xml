@@ -166,6 +166,10 @@
       </group> 
         <group key="import">
             <operator>
+                <key>import_accepting_petri_net</key>
+                <class>org.rapidprom.operators.io.ImportAcceptingPetriNetOperator</class>
+            </operator>
+            <operator>
                 <key>import_xlog</key>
                 <class>org.rapidprom.operators.io.ImportXLogOperator</class>
             </operator>
@@ -187,16 +191,20 @@
             </operator>
         </group>
         <group key="streams">
-        	<group key="analysis">
-        		<operator>
-        			<key>event_stream_analysis_model_2_model</key>
-        			<class>org.rapidprom.operators.streams.analysis.StreamAlgorithmAnalyserModelToModelOperator</class>
-        		</operator>
-        	</group>
-        	<group key="discovery">
+            <group key="analysis">
                 <operator>
-                    <key>stream_inductive_miner</key>
-                    <class>org.rapidprom.operators.streams.discovery.StreamInductiveMinerOperator</class>
+                    <key>event_stream_analysis_proj_rec_prec_apn</key>
+                    <class>org.rapidprom.operators.streams.analysis.ProjRecPrecAPNStreamAnalyzerOperator</class>
+                </operator>
+            </group>
+            <group key="discovery">
+                <operator>
+                    <key>stream_inductive_miner_apn</key>
+                    <class>org.rapidprom.operators.streams.discovery.StreamInductiveMinerAcceptingPNOperator</class>
+                </operator>
+                <operator>
+                    <key>stream_inductive_miner_pt</key>
+                    <class>org.rapidprom.operators.streams.discovery.StreamInductiveMinerProcessTreeOperator</class>
                 </operator>
             </group>
             <group key="generators">
