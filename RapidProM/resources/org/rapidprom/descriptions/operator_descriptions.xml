@@ -551,7 +551,7 @@
         <key>stream_inductive_miner_pt</key>
     </operator>
     <operator>
-        <name> Event Stream Algorithm Analyzer (Model to Model)</name>
+        <name> Event Stream Algorithm Analyzer (Projected Recall & Precision, Accepting Petri Net)</name>
         <synopsis>Calculates Model to Model similarity of each generated model of each connected algorithm at each point in time to a collection of reference models</synopsis>
         <help />
         <key>event_stream_analysis_proj_rec_prec_apn</key>
