@@ -134,36 +134,6 @@
                 <class>org.rapidprom.operators.io.ExportXLogOperator</class>
             </operator>
         </group>
-        <group key="Log Manipulation">
-        <operator>
-            <key>add_noise_log</key>
-            <class>org.rapidprom.operators.logmanipulation.AddNoiseOperator</class>
-        </operator>   
-        <operator>
-            <key>add_artificial_start_end_event_filter</key>
-            <class>org.rapidprom.operators.logmanipulation.AddArtificialStartEndEventOperator</class>
-        </operator>
-        <operator>
-            <key>add_trace_attributes_to_log</key>
-            <class>org.rapidprom.operators.logmanipulation.AddTraceAttributesToLogOperator</class>
-        </operator>
-        <operator>
-            <key>merge_two_event_logs</key>
-            <class>org.rapidprom.operators.logmanipulation.MergeTwoEventLogsOperator</class>
-        </operator>
-        <operator>
-            <key>add_event_attributes_to_log</key>
-            <class>org.rapidprom.operators.logmanipulation.AddEventAttributesToLogOperator</class>
-        </operator>
-        <operator>
-            <key>add_events_to_log</key>
-            <class>org.rapidprom.operators.logmanipulation.AddEventsToLogOperator</class>
-        </operator> 
-        <operator>
-            <key>timestamp_sort</key>
-            <class>org.rapidprom.operators.logmanipulation.TimestampSortOperator</class>
-        </operator>
-      </group> 
         <group key="import">
             <operator>
                 <key>import_accepting_petri_net</key>
@@ -190,6 +160,36 @@
                 <class>org.rapidprom.operators.io.ImportPetriNetListOperator</class>
             </operator>
         </group>
+        <group key="log_manipulation">
+            <operator>
+                <key>add_noise_log</key>
+                <class>org.rapidprom.operators.logmanipulation.AddNoiseOperator</class>
+            </operator>   
+            <operator>
+                <key>add_artificial_start_end_event_filter</key>
+                <class>org.rapidprom.operators.logmanipulation.AddArtificialStartEndEventOperator</class>
+            </operator>
+            <operator>
+                <key>add_trace_attributes_to_log</key>
+                <class>org.rapidprom.operators.logmanipulation.AddTraceAttributesToLogOperator</class>
+            </operator>
+            <operator>
+                <key>merge_two_event_logs</key>
+                <class>org.rapidprom.operators.logmanipulation.MergeTwoEventLogsOperator</class>
+            </operator>
+            <operator>
+                <key>add_event_attributes_to_log</key>
+                <class>org.rapidprom.operators.logmanipulation.AddEventAttributesToLogOperator</class>
+            </operator>
+            <operator>
+                <key>add_events_to_log</key>
+                <class>org.rapidprom.operators.logmanipulation.AddEventsToLogOperator</class>
+            </operator> 
+            <operator>
+                <key>timestamp_sort</key>
+                <class>org.rapidprom.operators.logmanipulation.TimestampSortOperator</class>
+            </operator>
+        </group> 
         <group key="streams">
             <group key="analysis">
                 <operator>
