@@ -36,7 +36,7 @@
         <dependency org="org.rapidprom" name="PTConversions" rev="6.5.3" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="PomPomView" rev="6.5.25" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="SocialNetwork" rev="6.5.18" rapidprom:release="2.1.0" />
-        <dependency org="org.rapidprom" name="StreamAnalysis" rev="6.5.16" rapidprom:release="2.1.0" />
+        <dependency org="org.rapidprom" name="StreamAnalysis" rev="6.5.18" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="StreamInductiveMiner" rev="6.5.33" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="TransitionSystems" rev="6.5.40" rapidprom:release="2.1.0" />
         <dependency org="org.rapidprom" name="TSPetriNet" rev="6.5.25" rapidprom:release="2.1.0" />
