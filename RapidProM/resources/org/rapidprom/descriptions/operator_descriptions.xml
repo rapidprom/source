@@ -42,7 +42,7 @@
 		<name>Import CPN Model</name>
         <synopsis>Import CPN Model</synopsis>
         <help> </help>
-        <key>read_cpn</key>
+        <key>import_cpn</key>
     </operator>
     <operator>
    		<name>Import Petri Net List</name>
