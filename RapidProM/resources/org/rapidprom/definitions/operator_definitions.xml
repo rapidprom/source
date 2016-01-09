@@ -144,7 +144,7 @@
                 <class>org.rapidprom.operators.io.ImportXLogOperator</class>
             </operator>
             <operator>
-                <key>read_cpn</key>
+                <key>import_cpn</key>
                 <class>org.rapidprom.operators.io.ImportCPNModelOperator</class>
             </operator>
             <operator>
@@ -154,10 +154,6 @@
             <operator>
                 <key>import_petri_net</key>
                 <class>org.rapidprom.operators.io.ImportPetriNetOperator</class>
-            </operator>
-            <operator>
-                <key>import_petri_net_list</key>
-                <class>org.rapidprom.operators.io.ImportPetriNetListOperator</class>
             </operator>
         </group>
         <group key="log_manipulation">
