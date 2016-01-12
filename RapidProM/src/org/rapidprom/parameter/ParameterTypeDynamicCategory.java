@@ -1,5 +1,8 @@
 package org.rapidprom.parameter;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.MetaDataChangeListener;
 import com.rapidminer.operator.ports.metadata.MetaData;
@@ -18,24 +21,54 @@ import com.rapidminer.tools.container.Pair;
  * @param <T>
  *            indicates what underlying java object the user wants to choose.
  */
-public abstract class ParameterTypeDynamicCategory<T> extends
-		ParameterTypeCategory {
+public abstract class ParameterTypeDynamicCategory<T>
+		extends ParameterTypeCategory {
 
 	private static final long serialVersionUID = 5610913750316933718L;
 
-	protected MetaDataProvider metaDataProvider;
+	private MetaDataProvider metaDataProvider;
 
-	protected int defaultValue;
+	public MetaDataProvider getMetaDataProvider() {
+		return metaDataProvider;
+	}
 
-	protected String[] categories = new String[0];
+	public void setMetaDataProvider(MetaDataProvider metaDataProvider) {
+		this.metaDataProvider = metaDataProvider;
+	}
 
-	protected T[] correspondingValues;
+	public String[] getCategories() {
+		return categories;
+	}
+
+	public void setCategories(String[] categories) {
+		this.categories = categories;
+	}
+
+	public T[] getCorrespondingValues() {
+		return correspondingValues;
+	}
+
+	public void setCorrespondingValues(T[] correspondingValues) {
+		this.correspondingValues = correspondingValues;
+	}
+
+	public void setDefaultValue(int defaultValue) {
+		this.defaultValueIndex = defaultValue;
+	}
+
+	private int defaultValueIndex = -1;
+
+	private T defaultValue = null;
+
+	private String[] categories = new String[0];
+
+	private T[] correspondingValues;
 
 	public ParameterTypeDynamicCategory(String key, String description,
-			String[] categories, T[] correspondingValues, int defaultValue,
+			String[] categories, T[] correspondingValues, int defaultValueIndex,
 			boolean expert, final InputPort inputPort) {
-		this(key, description, categories, correspondingValues, defaultValue,
-				expert, new MetaDataProvider() {
+		this(key, description, categories, correspondingValues,
+				defaultValueIndex, expert, new MetaDataProvider() {
 
 					@Override
 					public void removeMetaDataChangeListener(
@@ -63,22 +96,22 @@ public abstract class ParameterTypeDynamicCategory<T> extends
 	}
 
 	public ParameterTypeDynamicCategory(String key, String description,
-			String[] categories, T[] correspondingValues, int defaultValue,
+			String[] categories, T[] correspondingValues, int defaultValueIndex,
 			boolean expert, MetaDataProvider metaDataProvider) {
-		super(key, description, categories, defaultValue, expert);
-		this.defaultValue = defaultValue;
+		super(key, description, categories, defaultValueIndex, expert);
+		this.defaultValueIndex = defaultValueIndex;
 		this.categories = categories;
 		this.correspondingValues = correspondingValues;
+		if (defaultValueIndex > -1
+				&& defaultValueIndex < correspondingValues.length) {
+			this.defaultValue = correspondingValues[defaultValueIndex];
+		}
 		this.metaDataProvider = metaDataProvider;
 	}
 
 	@Override
 	public Object getDefaultValue() {
-		if (defaultValue == -1) {
-			return null;
-		} else {
-			return categories[defaultValue];
-		}
+		return defaultValue;
 	}
 
 	public String getCategory(int index) {
@@ -122,8 +155,26 @@ public abstract class ParameterTypeDynamicCategory<T> extends
 	@Override
 	public String[] getValues() {
 		Pair<String[], T[]> newValues = updateValues();
-		categories = newValues.getFirst();
-		correspondingValues = newValues.getSecond();
+		String[] strs = newValues.getFirst();
+		T[] corVals = newValues.getSecond();
+		if (defaultValue != null) {
+			List<T> list = Arrays.asList(corVals);
+			if (!list.contains(defaultValue)) {
+				defaultValueIndex = 0;
+				corVals = (T[]) Arrays.copyOf(newValues.getSecond(),
+						newValues.getSecond().length + 1);
+				System.arraycopy(corVals, 0, corVals, 1, corVals.length - 1);
+				corVals[defaultValueIndex] = defaultValue;
+				strs = Arrays.copyOf(newValues.getFirst(),
+						newValues.getFirst().length + 1);
+				System.arraycopy(strs, 0, strs, 1, strs.length - 1);
+				strs[defaultValueIndex] = defaultValue.toString();
+			} else {
+				defaultValueIndex = list.indexOf(defaultValue);
+			}
+		}
+		categories = strs;
+		correspondingValues = corVals;
 		return categories;
 	}
 
@@ -135,7 +186,8 @@ public abstract class ParameterTypeDynamicCategory<T> extends
 				values.append(", ");
 			values.append(categories[i]);
 		}
-		return values.toString() + "; default: " + categories[defaultValue];
+		return values.toString() + "; default: "
+				+ categories[defaultValueIndex];
 	}
 
 	public int getNumberOfCategories() {
