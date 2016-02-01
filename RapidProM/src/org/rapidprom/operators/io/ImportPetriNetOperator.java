@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
+import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.pnml.importing.PnmlImportNet;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
@@ -50,7 +51,9 @@ public class ImportPetriNetOperator
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new PetriNetIOObject((Petrinet) result[0],
+		PetriNetIOObject pnResult = new PetriNetIOObject((Petrinet) result[0],
 				ProMPluginContextManager.instance().getContext());
+		pnResult.setInitialMarking((Marking) result[1]);
+		return pnResult;
 	}
 }

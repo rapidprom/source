@@ -2,6 +2,7 @@ package org.rapidprom.operators.conformance;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,11 +10,9 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javassist.tools.rmi.ObjectNotFoundException;
-import nl.tue.astar.AStarException;
-
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClasses;
+import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
@@ -26,6 +25,7 @@ import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.processmining.plugins.astar.petrinet.AbstractPetrinetReplayer;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
 import org.processmining.plugins.astar.petrinet.PrefixBasedPetrinetReplayer;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
@@ -65,13 +65,16 @@ import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
 
+import javassist.tools.rmi.ObjectNotFoundException;
+import nl.tue.astar.AStarException;
+
 public class ConformanceAnalysisOperator extends Operator {
 
 	private static final String PARAMETER_1 = "Replay Algorithm";
 
 	private static final String[] ALGORITHMS = new String[] {
 			"A* Cost-based Fitness", "A* Cost-based Fitness Express",
-			"Prefix based A* Cost-based Fitness",};
+			"Prefix based A* Cost-based Fitness", };
 
 	private final String NAMECOL = "Name";
 	private final String VALUECOL = "Value";
@@ -81,17 +84,17 @@ public class ConformanceAnalysisOperator extends Operator {
 	private final String TRACEINDEX = "Trace Index";
 	private final String RELIABLE = "Unreliable Alignments Exist";
 
-	private InputPort inputLog = getInputPorts().createPort(
-			"event log (ProM Event Log)", XLogIOObject.class);
-	private InputPort inputPN = getInputPorts().createPort(
-			"model (ProM Petri Net)", PetriNetIOObject.class);
-	private OutputPort output = getOutputPorts().createPort(
-			"alignments (ProM PNRepResult)");
+	private InputPort inputLog = getInputPorts()
+			.createPort("event log (ProM Event Log)", XLogIOObject.class);
+	private InputPort inputPN = getInputPorts()
+			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
+	private OutputPort output = getOutputPorts()
+			.createPort("alignments (ProM PNRepResult)");
 
-	private OutputPort outputData = getOutputPorts().createPort(
-			"example set with metrics (Data Table)");
-	private OutputPort outputAlignment = getOutputPorts().createPort(
-			"example set with alignment values (Data Table)");
+	private OutputPort outputData = getOutputPorts()
+			.createPort("example set with metrics (Data Table)");
+	private OutputPort outputAlignment = getOutputPorts()
+			.createPort("example set with alignment values (Data Table)");
 	private OutputPort outputAlignmentTrace = getOutputPorts().createPort(
 			"example set with alignment values per trace (Data Table)");
 	private OutputPort outputReliable = getOutputPorts().createPort(
@@ -109,7 +112,8 @@ public class ConformanceAnalysisOperator extends Operator {
 				new GenerateNewMDRule(output, PNRepResultIOObject.class));
 
 		this.metaData = new ExampleSetMetaData();
-		AttributeMetaData amd1 = new AttributeMetaData(NAMECOL, Ontology.STRING);
+		AttributeMetaData amd1 = new AttributeMetaData(NAMECOL,
+				Ontology.STRING);
 		amd1.setRole(AttributeColumn.REGULAR);
 		amd1.setNumberOfMissingValues(new MDInteger(0));
 		metaData.addAttribute(amd1);
@@ -119,8 +123,8 @@ public class ConformanceAnalysisOperator extends Operator {
 		amd2.setNumberOfMissingValues(new MDInteger(0));
 		metaData.addAttribute(amd2);
 		metaData.setNumberOfExamples(1);
-		getTransformer().addRule(
-				new GenerateNewMDRule(outputData, this.metaData));
+		getTransformer()
+				.addRule(new GenerateNewMDRule(outputData, this.metaData));
 		// for the alignment
 		this.metaData2 = new ExampleSetMetaData();
 		AttributeMetaData alignAmd1 = new AttributeMetaData(this.TRACEINDEX,
@@ -191,8 +195,8 @@ public class ConformanceAnalysisOperator extends Operator {
 				new GenerateNewMDRule(outputAlignmentTrace, this.metaData3));
 		// md4
 		this.metaData4 = new ExampleSetMetaData();
-		getTransformer().addRule(
-				new GenerateNewMDRule(outputReliable, this.metaData4));
+		getTransformer()
+				.addRule(new GenerateNewMDRule(outputReliable, this.metaData4));
 	}
 
 	@Override
@@ -208,34 +212,22 @@ public class ConformanceAnalysisOperator extends Operator {
 		XLogIOObject xLog = inputLog.getData(XLogIOObject.class);
 		PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
 
-		TransEvClassMapping mapping = getMapping(pNet.getArtifact(),
-				xLog.getArtifact());
-
-		IPNReplayParameter parameter = null;
-		try {
-			parameter = getParameter(mapping);
-		} catch (ObjectNotFoundException e) {
-			e.printStackTrace();
-		}
-		PNLogReplayer replayer = new PNLogReplayer();
 		PNRepResult repResult = null;
-		IPNReplayAlgorithm algorithm = null;
 		try {
-			algorithm = getAlgorithm(pluginContext, pNet.getArtifact(),
-					xLog.getArtifact(), mapping);
+			repResult = getAlignment(pNet.getArtifact(), xLog.getArtifact(),
+					pNet.getInitialMarking(),
+					getFinalMarking(pNet.getArtifact()));
 		} catch (ObjectNotFoundException e1) {
+			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		}
-		try {
-			repResult = replayer.replayLog(pluginContext, pNet.getArtifact(),
-					xLog.getArtifact(), mapping, algorithm, parameter);
-		} catch (AStarException e) {
-			e.printStackTrace();
 		}
 
 		PNRepResultIOObject result = new PNRepResultIOObject(repResult,
-				pluginContext, pNet, xLog.getArtifact(), mapping);
-		result.setVisualizationType(PNRepResultIOObjectVisualizationType.PROJECT_ON_MODEL);
+				pluginContext, pNet, xLog.getArtifact(),
+				constructMapping(pNet.getArtifact(), xLog.getArtifact(),
+						XLogInfoImpl.NAME_CLASSIFIER));
+		result.setVisualizationType(
+				PNRepResultIOObjectVisualizationType.PROJECT_ON_MODEL);
 
 		output.deliver(result);
 
@@ -253,8 +245,8 @@ public class ConformanceAnalysisOperator extends Operator {
 		Map<String, Object> info = repResult.getInfo();
 		double trace_fitness = 0;
 		try {
-			trace_fitness = Double.parseDouble((String) info
-					.get(PNRepResult.TRACEFITNESS));
+			trace_fitness = Double
+					.parseDouble((String) info.get(PNRepResult.TRACEFITNESS));
 		} catch (Exception e) {
 			trace_fitness = (Double) info.get(PNRepResult.TRACEFITNESS);
 		}
@@ -308,14 +300,14 @@ public class ConformanceAnalysisOperator extends Operator {
 		List<Attribute> attributes2 = new LinkedList<Attribute>();
 		attributes2.add(AttributeFactory.createAttribute(this.TRACEINDEX,
 				Ontology.STRING));
-		attributes2.add(AttributeFactory.createAttribute(
-				PNRepResult.TRACEFITNESS, Ontology.STRING));
-		attributes2.add(AttributeFactory.createAttribute(
-				PNRepResult.MOVELOGFITNESS, Ontology.STRING));
+		attributes2.add(AttributeFactory
+				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.STRING));
+		attributes2.add(AttributeFactory
+				.createAttribute(PNRepResult.MOVELOGFITNESS, Ontology.STRING));
 		attributes2.add(AttributeFactory.createAttribute(
 				PNRepResult.MOVEMODELFITNESS, Ontology.STRING));
-		attributes2.add(AttributeFactory.createAttribute(
-				PNRepResult.RAWFITNESSCOST, Ontology.STRING));
+		attributes2.add(AttributeFactory
+				.createAttribute(PNRepResult.RAWFITNESSCOST, Ontology.STRING));
 		attributes2.add(AttributeFactory.createAttribute(
 				PNRepResult.NUMSTATEGENERATED, Ontology.STRING));
 		table2 = new MemoryExampleTable(attributes2);
@@ -326,16 +318,16 @@ public class ConformanceAnalysisOperator extends Operator {
 					DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
 			Object[] vals = new Object[6];
 			vals[0] = next.getTraceIndex().toString();
-			vals[1] = Double.toString(next.getInfo().get(
-					PNRepResult.TRACEFITNESS));
-			vals[2] = Double.toString(next.getInfo().get(
-					PNRepResult.MOVELOGFITNESS));
-			vals[3] = Double.toString(next.getInfo().get(
-					PNRepResult.MOVEMODELFITNESS));
-			vals[4] = Double.toString(next.getInfo().get(
-					PNRepResult.RAWFITNESSCOST));
-			vals[5] = Double.toString(next.getInfo().get(
-					PNRepResult.NUMSTATEGENERATED));
+			vals[1] = Double
+					.toString(next.getInfo().get(PNRepResult.TRACEFITNESS));
+			vals[2] = Double
+					.toString(next.getInfo().get(PNRepResult.MOVELOGFITNESS));
+			vals[3] = Double
+					.toString(next.getInfo().get(PNRepResult.MOVEMODELFITNESS));
+			vals[4] = Double
+					.toString(next.getInfo().get(PNRepResult.RAWFITNESSCOST));
+			vals[5] = Double.toString(
+					next.getInfo().get(PNRepResult.NUMSTATEGENERATED));
 
 			Attribute[] attribArray = new Attribute[attributes2.size()];
 			for (int i = 0; i < attributes2.size(); i++) {
@@ -354,14 +346,14 @@ public class ConformanceAnalysisOperator extends Operator {
 		List<Attribute> attributes3 = new LinkedList<Attribute>();
 		attributes3.add(AttributeFactory.createAttribute(this.TRACEIDENTIFIER,
 				Ontology.STRING));
-		attributes3.add(AttributeFactory.createAttribute(
-				PNRepResult.TRACEFITNESS, Ontology.STRING));
-		attributes3.add(AttributeFactory.createAttribute(
-				PNRepResult.MOVELOGFITNESS, Ontology.STRING));
+		attributes3.add(AttributeFactory
+				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.STRING));
+		attributes3.add(AttributeFactory
+				.createAttribute(PNRepResult.MOVELOGFITNESS, Ontology.STRING));
 		attributes3.add(AttributeFactory.createAttribute(
 				PNRepResult.MOVEMODELFITNESS, Ontology.STRING));
-		attributes3.add(AttributeFactory.createAttribute(
-				PNRepResult.RAWFITNESSCOST, Ontology.STRING));
+		attributes3.add(AttributeFactory
+				.createAttribute(PNRepResult.RAWFITNESSCOST, Ontology.STRING));
 		attributes3.add(AttributeFactory.createAttribute(
 				PNRepResult.NUMSTATEGENERATED, Ontology.STRING));
 		table3 = new MemoryExampleTable(attributes3);
@@ -371,23 +363,23 @@ public class ConformanceAnalysisOperator extends Operator {
 			DataRowFactory factory = new DataRowFactory(
 					DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
 			Object[] vals = new Object[6];
-			vals[1] = Double.toString(next.getInfo().get(
-					PNRepResult.TRACEFITNESS));
-			vals[2] = Double.toString(next.getInfo().get(
-					PNRepResult.MOVELOGFITNESS));
-			vals[3] = Double.toString(next.getInfo().get(
-					PNRepResult.MOVEMODELFITNESS));
-			vals[4] = Double.toString(next.getInfo().get(
-					PNRepResult.RAWFITNESSCOST));
-			vals[5] = Double.toString(next.getInfo().get(
-					PNRepResult.NUMSTATEGENERATED));
+			vals[1] = Double
+					.toString(next.getInfo().get(PNRepResult.TRACEFITNESS));
+			vals[2] = Double
+					.toString(next.getInfo().get(PNRepResult.MOVELOGFITNESS));
+			vals[3] = Double
+					.toString(next.getInfo().get(PNRepResult.MOVEMODELFITNESS));
+			vals[4] = Double
+					.toString(next.getInfo().get(PNRepResult.RAWFITNESSCOST));
+			vals[5] = Double.toString(
+					next.getInfo().get(PNRepResult.NUMSTATEGENERATED));
 			// convert the list to array
 			Attribute[] attribArray = new Attribute[attributes3.size()];
 			for (int i = 0; i < attributes3.size(); i++) {
 				attribArray[i] = attributes3.get(i);
 			}
-			List<Integer> listArray = convertIntListToArray(next
-					.getTraceIndex().toString());
+			List<Integer> listArray = convertIntListToArray(
+					next.getTraceIndex().toString());
 			for (Integer s : listArray) {
 				// get the right trace
 				XTrace xTrace = xLog.getArtifact().get(s);
@@ -432,39 +424,6 @@ public class ConformanceAnalysisOperator extends Operator {
 		return result;
 	}
 
-	private TransEvClassMapping getMapping(Petrinet net, XLog log) {
-		XLogInfo infoLog = XLogInfoFactory.createLogInfo(log,
-				XLogInfoImpl.STANDARD_CLASSIFIER);
-		XEventClasses ecLog = infoLog.getEventClasses();
-		// create mapping for each transition to the event class of the repaired
-		// log
-		XEventClass evClassDummy = new XEventClass("DUMMY", -1);
-		TransEvClassMapping mappingTransEvClass = new TransEvClassMapping(
-				XLogInfoImpl.STANDARD_CLASSIFIER, evClassDummy);
-		Iterator<Transition> transIt2 = net.getTransitions().iterator();
-		while (transIt2.hasNext()) {
-			Transition trans = transIt2.next();
-			// System.out.println(trans.getId() + ":" + trans.getLabel());
-			if (trans.getLabel().startsWith("tr") || trans.isInvisible()) {
-				trans.setInvisible(true);
-				mappingTransEvClass.put(trans, evClassDummy);
-			} else {
-				// search for event which starts with transition name
-				for (XTrace trace : log) {
-					for (XEvent evt : trace) {
-						XEventClass ec = ecLog.getClassOf(evt);
-						if (ec.getId().startsWith(trans.getLabel())) {
-							// found the one
-							mappingTransEvClass.put(trans, ec);
-							break;
-						}
-					}
-				}
-			}
-		}
-		return mappingTransEvClass;
-	}
-
 	@SuppressWarnings("rawtypes")
 	public static Marking getFinalMarking(Petrinet pn) {
 		List<Place> places = new ArrayList<Place>();
@@ -483,51 +442,51 @@ public class ConformanceAnalysisOperator extends Operator {
 		return finalMarking;
 	}
 
-	private IPNReplayParameter getParameter(TransEvClassMapping map)
-			throws UserError, ObjectNotFoundException {
+//	private IPNReplayParameter getParameter(TransEvClassMapping map)
+//			throws UserError, ObjectNotFoundException {
+//
+//		IPNReplayParameter parameter = null;
+//		switch (getParameterAsInt(PARAMETER_1)) {
+//		case 0:
+//		case 1:
+//		case 2:
+//			parameter = new CostBasedCompleteParam(map.values(),
+//					map.getDummyEventClass(), map.keySet(), 1, 1);
+//			break;
+//		case 3:
+//			parameter = new CostBasedPrefixParam();
+//			break;
+//		}
+//
+//		parameter.setInitialMarking(
+//				inputPN.getData(PetriNetIOObject.class).getInitialMarking());
+//		parameter.setFinalMarkings(getFinalMarking(
+//				inputPN.getData(PetriNetIOObject.class).getArtifact()));
+//		return parameter;
+//	}
 
-		IPNReplayParameter parameter = null;
-		switch (getParameterAsInt(PARAMETER_1)) {
-		case 0:
-		case 1:
-		case 2:
-			parameter = new CostBasedCompleteParam(map.values(),
-					map.getDummyEventClass(), map.keySet(), 1, 1);
-			break;
-		case 3:
-			parameter = new CostBasedPrefixParam();
-			break;
-		}
-
-		parameter.setInitialMarking(inputPN.getData(PetriNetIOObject.class)
-				.getInitialMarking());
-		parameter.setFinalMarkings(getFinalMarking(inputPN.getData(
-				PetriNetIOObject.class).getArtifact()));
-		return parameter;
-	}
-
-	private IPNReplayAlgorithm getAlgorithm(PluginContext pc, Petrinet pn,
-			XLog log, TransEvClassMapping mapping) throws UserError,
-			ObjectNotFoundException {
-
-		IPNReplayAlgorithm algorithm = null;
-		switch (getParameterAsInt(PARAMETER_1)) {
-		case 0:
-			algorithm = new CostBasedCompletePruneAlg();
-			break;
-		case 1:
-			algorithm = new PetrinetReplayerWithoutILP();
-			break;
-		case 2:
-			algorithm = new PrefixBasedPetrinetReplayer();
-			break;
-		}
-		if (algorithm.isAllReqSatisfied(pc, pn, log, mapping,
-				getParameter(mapping)))
-			return algorithm;
-		else
-			return null;
-	}
+//	private IPNReplayAlgorithm getAlgorithm(PluginContext pc, Petrinet pn,
+//			XLog log, TransEvClassMapping mapping)
+//					throws UserError, ObjectNotFoundException {
+//
+//		IPNReplayAlgorithm algorithm = null;
+//		switch (getParameterAsInt(PARAMETER_1)) {
+//		case 0:
+//			algorithm = new CostBasedCompletePruneAlg();
+//			break;
+//		case 1:
+//			algorithm = new PetrinetReplayerWithoutILP();
+//			break;
+//		case 2:
+//			algorithm = new PrefixBasedPetrinetReplayer();
+//			break;
+//		}
+//		if (algorithm.isAllReqSatisfied(pc, pn, log, mapping,
+//				getParameter(mapping)))
+//			return algorithm;
+//		else
+//			return null;
+//	}
 
 	private void fillTableWithRow(MemoryExampleTable table, String name,
 			Object value, List<Attribute> attributes) {
@@ -546,14 +505,94 @@ public class ConformanceAnalysisOperator extends Operator {
 		table.addDataRow(dataRow);
 	}
 
-	public List<ParameterType> getParameterTypes() {
-		List<ParameterType> parameterTypes = super.getParameterTypes();
+//	public List<ParameterType> getParameterTypes() {
+//		List<ParameterType> parameterTypes = super.getParameterTypes();
+//
+//		ParameterTypeCategory parameterType1 = new ParameterTypeCategory(
+//				PARAMETER_1, PARAMETER_1, ALGORITHMS, 0);
+//		parameterTypes.add(parameterType1);
+//
+//		return parameterTypes;
+//	}
 
-		ParameterTypeCategory parameterType1 = new ParameterTypeCategory(
-				PARAMETER_1, PARAMETER_1, ALGORITHMS, 0);
-		parameterTypes.add(parameterType1);
+	// Boudewijn's methods for creating alignments
 
-		return parameterTypes;
+	public PNRepResult getAlignment(Petrinet net, XLog log,
+			Marking initialMarking, Marking finalMarking) {
+
+		Map<Transition, Integer> costMOS = constructMOSCostFunction(net);
+		XEventClassifier eventClassifier = XLogInfoImpl.NAME_CLASSIFIER;
+		Map<XEventClass, Integer> costMOT = constructMOTCostFunction(net, log,
+				eventClassifier);
+		TransEvClassMapping mapping = constructMapping(net, log,
+				eventClassifier);
+
+		AbstractPetrinetReplayer<?, ?> replayEngine = new PetrinetReplayerWithoutILP();
+
+		IPNReplayParameter parameters = new CostBasedCompleteParam(costMOT,
+				costMOS);
+		parameters.setInitialMarking(initialMarking);
+		parameters.setFinalMarkings(finalMarking);
+		parameters.setGUIMode(false);
+		parameters.setCreateConn(false);
+		parameters.setNumThreads(8);
+
+		PNRepResult result = null;
+		try {
+			result = replayEngine.replayLog(null, net, log, mapping,
+					parameters);
+
+		} catch (AStarException e) {
+			e.printStackTrace();
+		}
+
+		return result;
+	}
+
+	private Map<Transition, Integer> constructMOSCostFunction(Petrinet net) {
+		Map<Transition, Integer> costMOS = new HashMap<Transition, Integer>();
+
+		for (Transition t : net.getTransitions())
+			if (t.isInvisible())
+				costMOS.put(t, 0);
+			else
+				costMOS.put(t, 1);
+
+		return costMOS;
+	}
+
+	private Map<XEventClass, Integer> constructMOTCostFunction(Petrinet net,
+			XLog log, XEventClassifier eventClassifier) {
+		Map<XEventClass, Integer> costMOT = new HashMap<XEventClass, Integer>();
+		XLogInfo summary = XLogInfoFactory.createLogInfo(log, eventClassifier);
+
+		for (XEventClass evClass : summary.getEventClasses().getClasses()) {
+			costMOT.put(evClass, 1);
+		}
+
+		return costMOT;
+	}
+
+	private TransEvClassMapping constructMapping(Petrinet net, XLog log,
+			XEventClassifier eventClassifier) {
+		TransEvClassMapping mapping = new TransEvClassMapping(eventClassifier,
+				new XEventClass("DUMMY", 99999));
+
+		XLogInfo summary = XLogInfoFactory.createLogInfo(log, eventClassifier);
+
+		for (Transition t : net.getTransitions()) {
+			for (XEventClass evClass : summary.getEventClasses().getClasses()) {
+				String id = evClass.getId();
+
+				if (t.getLabel().equals(id)) {
+					mapping.put(t, evClass);
+					break;
+				}
+			}
+
+		}
+
+		return mapping;
 	}
 
 }
