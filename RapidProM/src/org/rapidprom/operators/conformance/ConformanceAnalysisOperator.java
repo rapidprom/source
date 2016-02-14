@@ -11,13 +11,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.deckfour.xes.classification.XEventClass;
-import org.deckfour.xes.classification.XEventClasses;
 import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.info.impl.XLogInfoImpl;
-import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.framework.plugin.PluginContext;
@@ -27,14 +25,10 @@ import org.processmining.models.graphbased.directed.petrinet.elements.Transition
 import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.astar.petrinet.AbstractPetrinetReplayer;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
-import org.processmining.plugins.astar.petrinet.PrefixBasedPetrinetReplayer;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
 import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
-import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayAlgorithm;
 import org.processmining.plugins.petrinet.replayer.algorithms.IPNReplayParameter;
 import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.CostBasedCompleteParam;
-import org.processmining.plugins.petrinet.replayer.algorithms.costbasedcomplete.CostBasedCompletePruneAlg;
-import org.processmining.plugins.petrinet.replayer.algorithms.costbasedprefix.CostBasedPrefixParam;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.replayer.replayresult.SyncReplayResult;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
@@ -52,7 +46,6 @@ import com.rapidminer.example.table.MemoryExampleTable;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.UserError;
 import com.rapidminer.operator.io.AbstractDataReader.AttributeColumn;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
@@ -60,8 +53,6 @@ import com.rapidminer.operator.ports.metadata.AttributeMetaData;
 import com.rapidminer.operator.ports.metadata.ExampleSetMetaData;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.operator.ports.metadata.MDInteger;
-import com.rapidminer.parameter.ParameterType;
-import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
 
@@ -70,11 +61,11 @@ import nl.tue.astar.AStarException;
 
 public class ConformanceAnalysisOperator extends Operator {
 
-	private static final String PARAMETER_1 = "Replay Algorithm";
+	// private static final String PARAMETER_1 = "Replay Algorithm";
 
-	private static final String[] ALGORITHMS = new String[] {
-			"A* Cost-based Fitness", "A* Cost-based Fitness Express",
-			"Prefix based A* Cost-based Fitness", };
+	// private static final String[] ALGORITHMS = new String[] {
+	// "A* Cost-based Fitness", "A* Cost-based Fitness Express",
+	// "Prefix based A* Cost-based Fitness", };
 
 	private final String NAMECOL = "Name";
 	private final String VALUECOL = "Value";
@@ -442,51 +433,51 @@ public class ConformanceAnalysisOperator extends Operator {
 		return finalMarking;
 	}
 
-//	private IPNReplayParameter getParameter(TransEvClassMapping map)
-//			throws UserError, ObjectNotFoundException {
-//
-//		IPNReplayParameter parameter = null;
-//		switch (getParameterAsInt(PARAMETER_1)) {
-//		case 0:
-//		case 1:
-//		case 2:
-//			parameter = new CostBasedCompleteParam(map.values(),
-//					map.getDummyEventClass(), map.keySet(), 1, 1);
-//			break;
-//		case 3:
-//			parameter = new CostBasedPrefixParam();
-//			break;
-//		}
-//
-//		parameter.setInitialMarking(
-//				inputPN.getData(PetriNetIOObject.class).getInitialMarking());
-//		parameter.setFinalMarkings(getFinalMarking(
-//				inputPN.getData(PetriNetIOObject.class).getArtifact()));
-//		return parameter;
-//	}
+	// private IPNReplayParameter getParameter(TransEvClassMapping map)
+	// throws UserError, ObjectNotFoundException {
+	//
+	// IPNReplayParameter parameter = null;
+	// switch (getParameterAsInt(PARAMETER_1)) {
+	// case 0:
+	// case 1:
+	// case 2:
+	// parameter = new CostBasedCompleteParam(map.values(),
+	// map.getDummyEventClass(), map.keySet(), 1, 1);
+	// break;
+	// case 3:
+	// parameter = new CostBasedPrefixParam();
+	// break;
+	// }
+	//
+	// parameter.setInitialMarking(
+	// inputPN.getData(PetriNetIOObject.class).getInitialMarking());
+	// parameter.setFinalMarkings(getFinalMarking(
+	// inputPN.getData(PetriNetIOObject.class).getArtifact()));
+	// return parameter;
+	// }
 
-//	private IPNReplayAlgorithm getAlgorithm(PluginContext pc, Petrinet pn,
-//			XLog log, TransEvClassMapping mapping)
-//					throws UserError, ObjectNotFoundException {
-//
-//		IPNReplayAlgorithm algorithm = null;
-//		switch (getParameterAsInt(PARAMETER_1)) {
-//		case 0:
-//			algorithm = new CostBasedCompletePruneAlg();
-//			break;
-//		case 1:
-//			algorithm = new PetrinetReplayerWithoutILP();
-//			break;
-//		case 2:
-//			algorithm = new PrefixBasedPetrinetReplayer();
-//			break;
-//		}
-//		if (algorithm.isAllReqSatisfied(pc, pn, log, mapping,
-//				getParameter(mapping)))
-//			return algorithm;
-//		else
-//			return null;
-//	}
+	// private IPNReplayAlgorithm getAlgorithm(PluginContext pc, Petrinet pn,
+	// XLog log, TransEvClassMapping mapping)
+	// throws UserError, ObjectNotFoundException {
+	//
+	// IPNReplayAlgorithm algorithm = null;
+	// switch (getParameterAsInt(PARAMETER_1)) {
+	// case 0:
+	// algorithm = new CostBasedCompletePruneAlg();
+	// break;
+	// case 1:
+	// algorithm = new PetrinetReplayerWithoutILP();
+	// break;
+	// case 2:
+	// algorithm = new PrefixBasedPetrinetReplayer();
+	// break;
+	// }
+	// if (algorithm.isAllReqSatisfied(pc, pn, log, mapping,
+	// getParameter(mapping)))
+	// return algorithm;
+	// else
+	// return null;
+	// }
 
 	private void fillTableWithRow(MemoryExampleTable table, String name,
 			Object value, List<Attribute> attributes) {
@@ -505,15 +496,15 @@ public class ConformanceAnalysisOperator extends Operator {
 		table.addDataRow(dataRow);
 	}
 
-//	public List<ParameterType> getParameterTypes() {
-//		List<ParameterType> parameterTypes = super.getParameterTypes();
-//
-//		ParameterTypeCategory parameterType1 = new ParameterTypeCategory(
-//				PARAMETER_1, PARAMETER_1, ALGORITHMS, 0);
-//		parameterTypes.add(parameterType1);
-//
-//		return parameterTypes;
-//	}
+	// public List<ParameterType> getParameterTypes() {
+	// List<ParameterType> parameterTypes = super.getParameterTypes();
+	//
+	// ParameterTypeCategory parameterType1 = new ParameterTypeCategory(
+	// PARAMETER_1, PARAMETER_1, ALGORITHMS, 0);
+	// parameterTypes.add(parameterType1);
+	//
+	// return parameterTypes;
+	// }
 
 	// Boudewijn's methods for creating alignments
 

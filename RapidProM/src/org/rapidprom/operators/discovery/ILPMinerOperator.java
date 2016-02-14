@@ -16,15 +16,15 @@ import org.processmining.causalactivitymatrixminer.miners.MatrixMiner;
 import org.processmining.causalactivitymatrixminer.miners.MatrixMinerParameters;
 import org.processmining.causalactivitymatrixminer.miners.impl.HAFMiniMatrixMiner;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.hybridilpminer.models.lp.configuration.factories.LPMinerConfigurationFactory;
-import org.processmining.hybridilpminer.models.lp.configuration.interfaces.LPMinerConfiguration;
-import org.processmining.hybridilpminer.models.lp.configuration.parameters.DiscoveryStrategy;
-import org.processmining.hybridilpminer.models.lp.configuration.parameters.DiscoveryStrategyType;
-import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPConstraintType;
-import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPFilter;
-import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPFilterType;
-import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPObjectiveType;
-import org.processmining.hybridilpminer.models.lp.configuration.parameters.LPVariableType;
+import org.processmining.hybridilpminer.parameters.DiscoveryStrategy;
+import org.processmining.hybridilpminer.parameters.DiscoveryStrategyType;
+import org.processmining.hybridilpminer.parameters.LPConstraintType;
+import org.processmining.hybridilpminer.parameters.LPFilter;
+import org.processmining.hybridilpminer.parameters.LPFilterType;
+import org.processmining.hybridilpminer.parameters.LPObjectiveType;
+import org.processmining.hybridilpminer.parameters.LPVariableType;
+import org.processmining.hybridilpminer.parameters.NetClass;
+import org.processmining.hybridilpminer.parameters.XLogHybridILPMinerParametersImpl;
 import org.processmining.hybridilpminer.plugins.HybridILPMinerPlugin;
 import org.processmining.lpengines.interfaces.LPEngine.EngineType;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
@@ -46,8 +46,8 @@ import com.rapidminer.parameter.conditions.EqualStringCondition;
 
 public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
-	private OutputPort outputPetrinet = getOutputPorts().createPort(
-			"model (ProM Petri Net)");
+	private OutputPort outputPetrinet = getOutputPorts()
+			.createPort("model (ProM Petri Net)");
 
 	private static final String PARAMETER_KEY_EAC = "enforce_emptiness_after_completion";
 	private static final String PARAMETER_DESC_EAC = "Indicates whether the net is empty after replaying the event log";
@@ -84,12 +84,12 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 				DiscoveryStrategyType.CAUSAL);
 		CausalActivityGraph cag = getCausalActivityGraph(context, log,
 				classifier);
+
 		strategy.setCausalActivityGraph(cag);
-		LPMinerConfiguration configuration = LPMinerConfigurationFactory
-				.customConfiguration(log, EngineType.LPSOLVE, classifier,
-						strategy, getConstraintTypes(),
-						LPObjectiveType.WEIGHTED_ABSOLUTE_PARIKH,
-						LPVariableType.DUAL, getFilter(), false);
+		XLogHybridILPMinerParametersImpl configuration = new XLogHybridILPMinerParametersImpl(
+				context, EngineType.LPSOLVE, strategy, NetClass.PT_NET,
+				getConstraintTypes(), LPObjectiveType.WEIGHTED_ABSOLUTE_PARIKH,
+				LPVariableType.DUAL, getFilter(), false, log, classifier);
 
 		Object[] pnAndMarking = HybridILPMinerPlugin.mine(
 				ProMPluginContextManager.instance().getContext(), log,
@@ -146,12 +146,12 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 				PARAMETER_DESC_FILTER, PARAMETER_OPTIONS_FITLER, 0, false));
 
 		ParameterType filterThreshold = new ParameterTypeDouble(
-				PARAMETER_KEY_FILTER_THRESHOLD,
-				PARAMETER_DESC_FILTER_THRESHOLD, 0, 1, 0.25, false);
+				PARAMETER_KEY_FILTER_THRESHOLD, PARAMETER_DESC_FILTER_THRESHOLD,
+				0, 1, 0.25, false);
 		filterThreshold.setOptional(true);
-		filterThreshold.registerDependencyCondition(new EqualStringCondition(
-				this, PARAMETER_KEY_FILTER, true,
-				LPFilterType.SEQUENCE_ENCODING.toString()));
+		filterThreshold.registerDependencyCondition(
+				new EqualStringCondition(this, PARAMETER_KEY_FILTER, true,
+						LPFilterType.SEQUENCE_ENCODING.toString()));
 
 		params.add(filterThreshold);
 		return params;
@@ -175,11 +175,13 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
 	private LPFilter getFilter() throws UndefinedParameterError {
 		LPFilter filter = new LPFilter();
-		LPFilterType type = PARAMETER_REFERENCE_FILTER[getParameterAsInt(PARAMETER_KEY_FILTER)];
+		LPFilterType type = PARAMETER_REFERENCE_FILTER[getParameterAsInt(
+				PARAMETER_KEY_FILTER)];
 		filter.setFilterType(type);
 		switch (type) {
 		case SEQUENCE_ENCODING:
-			filter.setThreshold(getParameterAsDouble(PARAMETER_KEY_FILTER_THRESHOLD));
+			filter.setThreshold(
+					getParameterAsDouble(PARAMETER_KEY_FILTER_THRESHOLD));
 			break;
 		default:
 			break;

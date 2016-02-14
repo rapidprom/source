@@ -67,7 +67,7 @@ public class FuzzyMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
 		outputMetricsRepository.deliver(metricsRepositoryIOObject);
 		logger.log(Level.INFO,
-				"End: heuristics miner (" + (System.currentTimeMillis() - time)
+				"End: fuzzy miner (" + (System.currentTimeMillis() - time)
 						/ 1000 + " sec)");
 	}
 

@@ -124,7 +124,7 @@ public class ProMPluginContextManager extends ProgressThread {
 				try {
 					URL url = f.toURI().toURL();
 					if (f.getName().contains(pack.getName())) {
-						System.out.println("Regiser Plugin " + f.getName());
+						System.out.println("Register Plugin " + f.getName());
 						plugins.register(url, pack, RapidProMClassLoader
 								.getRapidMinerClassLoader());
 					}

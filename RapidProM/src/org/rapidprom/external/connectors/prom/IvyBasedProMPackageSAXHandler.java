@@ -100,7 +100,7 @@ public class IvyBasedProMPackageSAXHandler extends DefaultHandler {
 			packageDescriptor = new RapidProMPackageDescriptor(packageName,
 					packageVersion, OS.fromString(packageOS), packageDesc,
 					packageOrg, packageAuthor, packageMaintainer,
-					packageLicense, packageURL, packageLogoURL,
+					packageLicense, packageURL, packageLogoURL,"",
 					"true".equals(packageAutoInstalled),
 					"true".equals(packageHasPlugins), dependencies,
 					new ArrayList<String>(), packageDirectory);

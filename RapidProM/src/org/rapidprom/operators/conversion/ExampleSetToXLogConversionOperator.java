@@ -61,16 +61,16 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 	private static final String PARAMETER_DESC_EVENT_RESOURCE_GROUP = "Please select an (optional) attribute of the example set that signifies the resource group of the resource that executed the event";
 	private static final String PARAMETER_DESC_EVENT_RESOURCE_ROLE = "Please select an (optional) attribute of the example set that signifies the role of the resource that executed the event";
 	private static final String PARAMETER_DESC_EVENT_TIMESTAMP = "Please select an (optional) attribute of the example set to act as an event timestamp";
-	private static final String PARAMETER_DESC_REORDER_BY_TIMESTAMP = "If the example set contains timestamps, this option will reorder the events within traces based on their time-stamps";
+	//private static final String PARAMETER_DESC_REORDER_BY_TIMESTAMP = "If the example set contains timestamps, this option will reorder the events within traces based on their time-stamps";
 	private static final String PARAMETER_DESC_TRACE_IDENTIFIER = "Please select an attribute of the example set to act as a trace identifier";
-	private static final boolean PARAMETER_KEY_DEFAULT_REORDER_BY_TIMESTAMP = false;
+	//private static final boolean PARAMETER_KEY_DEFAULT_REORDER_BY_TIMESTAMP = false;
 	private static final String PARAMETER_KEY_EVENT_IDENTIFIER = "event_identifier";
 	private static final String PARAMETER_KEY_EVENT_LIFECYCLE_TRANSITION = "event_lifecycle_transition";
 	private static final String PARAMETER_KEY_EVENT_RESOURCE = "event_resource";
 	private static final String PARAMETER_KEY_EVENT_RESOURCE_GROUP = "event_resource_role";
 	private static final String PARAMETER_KEY_EVENT_RESOURCE_ROLE = "event_resource_role";
 	private static final String PARAMETER_KEY_EVENT_TIMESTAMP = "event_time_stamp";
-	private static final String PARAMETER_KEY_REORDER_BY_TIMESTAMP = "reorder_by_time_stamp";
+	//private static final String PARAMETER_KEY_REORDER_BY_TIMESTAMP = "reorder_by_time_stamp";
 	private static final String PARAMETER_KEY_TRACE_IDENTIFIER = "trace_identifier";
 
 	/** defining the ports */

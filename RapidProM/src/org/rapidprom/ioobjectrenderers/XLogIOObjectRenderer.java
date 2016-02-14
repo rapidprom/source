@@ -13,7 +13,7 @@ import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.logprojection.LogProjectionPlugin;
 import org.processmining.logprojection.LogView;
-import org.processmining.logprojection.plugins.dottedchart.ui.DottedChartPanel;
+import org.processmining.logprojection.plugins.dottedchart.ui.DottedChartInspector;
 import org.processmining.plugins.dottedchartanalysis.DottedChartAnalysis;
 import org.processmining.plugins.dottedchartanalysis.model.DottedChartModel;
 import org.processmining.plugins.log.ui.logdialog.LogDialogInitializer;
@@ -30,7 +30,6 @@ import com.rapidminer.gui.tools.ExtendedJScrollPane;
 import com.rapidminer.gui.tools.ExtendedJTable;
 import com.rapidminer.operator.IOContainer;
 import com.rapidminer.report.Reportable;
-
 
 public class XLogIOObjectRenderer extends
 		AbstractMultipleVisualizersRenderer<XLogIOObjectVisualizationType> {
@@ -51,18 +50,20 @@ public class XLogIOObjectRenderer extends
 
 	protected Component visualizeRendererOption(XLogIOObjectVisualizationType e,
 			Object renderable, IOContainer ioContainer) {
-		
+
 		System.out.println("looking for renderer!");
 		Component result;
-		switch (e) {		
+		switch (e) {
 		case DOTTED_CHART:
-			result = createDottedChartVisualizerComponent(renderable, ioContainer);
+			result = createDottedChartVisualizerComponent(renderable,
+					ioContainer);
 			break;
 		case EXAMPLE_SET:
 			result = createExampleSetComponet(renderable, ioContainer);
 			break;
 		case DOTTED_CHART_L:
-			result = createDottedChartLegacyVisualizerComponent(renderable, ioContainer);
+			result = createDottedChartLegacyVisualizerComponent(renderable,
+					ioContainer);
 			break;
 		default:
 		case DEFAULT:
@@ -124,7 +125,7 @@ public class XLogIOObjectRenderer extends
 		}
 		return defaultComponent;
 	}
-	
+
 	protected Component createDottedChartVisualizerComponent(Object renderable,
 			IOContainer ioContainer) {
 		XLogIOObject logioobject = (XLogIOObject) renderable;
@@ -136,9 +137,9 @@ public class XLogIOObjectRenderer extends
 				PluginContext pluginContext = ProMPluginContextManager
 						.instance().getContext();
 
-				
 				LogView result = new LogView(xLog);
-				DottedChartPanel panel = LogProjectionPlugin.visualize(pluginContext, result);
+				DottedChartInspector panel = LogProjectionPlugin
+						.visualize(pluginContext, result);
 				dottedChartComponent = (JComponent) panel;
 				dottedLog = new WeakReference<XLog>(xLog);
 			} catch (Exception e) {
@@ -146,11 +147,11 @@ public class XLogIOObjectRenderer extends
 			}
 		}
 		return dottedChartComponent;
-	
+
 	}
-	
-	protected Component createDottedChartLegacyVisualizerComponent(Object renderable,
-			IOContainer ioContainer) {
+
+	protected Component createDottedChartLegacyVisualizerComponent(
+			Object renderable, IOContainer ioContainer) {
 		XLogIOObject logioobject = (XLogIOObject) renderable;
 		XLog xLog = logioobject.getArtifact();
 		if (dottedChartLegacyComponent == null || dottedLegacyLog == null
@@ -160,15 +161,17 @@ public class XLogIOObjectRenderer extends
 				PluginContext pluginContext = ProMPluginContextManager
 						.instance().getContext();
 
-				DottedChartModel result = new DottedChartModel(pluginContext, xLog);
-				dottedChartLegacyComponent = new DottedChartAnalysis(pluginContext, result);
+				DottedChartModel result = new DottedChartModel(pluginContext,
+						xLog);
+				dottedChartLegacyComponent = new DottedChartAnalysis(
+						pluginContext, result);
 				dottedLegacyLog = new WeakReference<XLog>(xLog);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		return dottedChartLegacyComponent;
-	
+
 	}
 
 	public Reportable createReportable(Object renderable,

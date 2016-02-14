@@ -1,7 +1,6 @@
 package org.rapidprom.operators.ports.metadata;
 
 import com.rapidminer.example.ExampleSet;
-import com.rapidminer.operator.ProcessSetupError.Severity;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.metadata.AbstractPrecondition;
 import com.rapidminer.operator.ports.metadata.CompatibilityLevel;

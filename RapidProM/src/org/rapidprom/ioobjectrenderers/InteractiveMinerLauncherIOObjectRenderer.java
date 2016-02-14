@@ -19,7 +19,7 @@ public class InteractiveMinerLauncherIOObjectRenderer extends
 			InteractiveMinerLauncherIOObject artifact) {
 		InductiveVisualMiner visualizer = new InductiveVisualMiner();
 		return visualizer.visualise(artifact.getPluginContext(),
-				artifact.getArtifact());
+				artifact.getArtifact(), null);
 	}
 
 }

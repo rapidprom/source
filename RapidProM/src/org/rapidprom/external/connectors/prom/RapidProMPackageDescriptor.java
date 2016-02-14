@@ -11,12 +11,12 @@ public class RapidProMPackageDescriptor extends PackageDescriptor {
 
 	public RapidProMPackageDescriptor(String name, String version, OS os,
 			String description, String organisation, String author,
-			String maintainer, String license, String url, String logoUrl,
+			String maintainer, String license, String url, String logoUrl, String keywords,
 			boolean autoInstalled, boolean hasPlugins,
 			List<String> dependencies, List<String> conflicts,
 			File localPackageDirectory) {
 		super(name, version, os, description, organisation, author, maintainer,
-				license, url, logoUrl, autoInstalled, hasPlugins, dependencies,
+				license, url, logoUrl, keywords, autoInstalled, hasPlugins, dependencies,
 				conflicts);
 		local = localPackageDirectory;
 	}
