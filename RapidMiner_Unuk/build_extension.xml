@@ -23,8 +23,8 @@
 	<property name="compiler.debug" value="true" />
 	<property name="compiler.arguments" value="-Xlint:deprecation,finally,unchecked,path,serial" />
 	<property name="compiler.deprecation" value="yes" />
-	<property name="compiler.source" value="1.6" />
-	<property name="compiler.target" value="1.6" />
+	<property name="compiler.source" value="1.7" />
+	<property name="compiler.target" value="1.7" />
 
 	<!-- Update and release server properties -->
 	<property file="${rm.dir}/server.properties" />
