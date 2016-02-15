@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.7.0_80"/>
 	<classpathentry excluding="com/rapidminer/context/|com/rapidminer/promcontext/|com/rapidminer/util/|com/rapidminer/PluginInitProM.java|org/rapidprom/prom/|com/rapidminer/ioobjectrenderers/|com/rapidminer/plotters/|com/rapidminer/parameters/|com/rapidminer/ioobjects/|com/rapidminer/configuration/|com/rapidminer/callprom/|com/rapidminer/|com/" kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/RapidMiner_Unuk"/>
 	<classpathentry kind="lib" path="lib/ProM-Contexts.jar"/>
@@ -8,7 +9,6 @@
 	<classpathentry kind="lib" path="lib/ProM-Framework.jar"/>
 	<classpathentry kind="lib" path="lib/jargs.jar"/>
 	<classpathentry kind="lib" path="lib/rmx_parallel-5.3.0.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=RapidProM&amp;ivyXmlPath=ivy.xml&amp;confs=*&amp;ivySettingsPath=ivysettings.xml&amp;loadSettingsOnDemand=false&amp;ivyUserDir=&amp;propertyFiles="/>
 	<classpathentry kind="lib" path="lib/prom_stdlib/axis.jar"/>
