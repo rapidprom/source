@@ -1,32 +1,22 @@
 package org.rapidprom.operators.discovery;
 
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
-import org.deckfour.xes.model.XTrace;
 import org.processmining.causalactivitygraph.models.CausalActivityGraph;
-import org.processmining.causalactivitygraphcreator.parameters.ConvertCausalActivityMatrixToCausalActivityGraphParameters;
-import org.processmining.causalactivitygraphcreator.plugins.ConvertCausalActivityMatrixToCausalActivityGraphPlugin;
-import org.processmining.causalactivitymatrix.models.CausalActivityMatrix;
-import org.processmining.causalactivitymatrixminer.miners.MatrixMiner;
-import org.processmining.causalactivitymatrixminer.miners.MatrixMinerParameters;
-import org.processmining.causalactivitymatrixminer.miners.impl.HAFMiniMatrixMiner;
+import org.processmining.causalactivitygraphcreator.algorithms.DiscoverCausalActivityGraphAlgorithm;
+import org.processmining.causalactivitygraphcreator.parameters.DiscoverCausalActivityGraphParameters;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.hybridilpminer.parameters.DiscoveryStrategy;
 import org.processmining.hybridilpminer.parameters.DiscoveryStrategyType;
 import org.processmining.hybridilpminer.parameters.LPConstraintType;
 import org.processmining.hybridilpminer.parameters.LPFilter;
 import org.processmining.hybridilpminer.parameters.LPFilterType;
-import org.processmining.hybridilpminer.parameters.LPObjectiveType;
-import org.processmining.hybridilpminer.parameters.LPVariableType;
-import org.processmining.hybridilpminer.parameters.NetClass;
 import org.processmining.hybridilpminer.parameters.XLogHybridILPMinerParametersImpl;
 import org.processmining.hybridilpminer.plugins.HybridILPMinerPlugin;
-import org.processmining.lpengines.interfaces.LPEngine.EngineType;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
@@ -75,34 +65,21 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 				.getContext();
 		XLog log = getXLog();
 		XEventClassifier classifier = getXEventClassifier();
-		for (XTrace t : log) {
-			for (XEvent e : t) {
-				System.out.println(classifier.getClassIdentity(e).toString());
-			}
-		}
-		DiscoveryStrategy strategy = new DiscoveryStrategy(
-				DiscoveryStrategyType.CAUSAL);
-		CausalActivityGraph cag = getCausalActivityGraph(context, log,
-				classifier);
-
-		strategy.setCausalActivityGraph(cag);
-		XLogHybridILPMinerParametersImpl configuration = new XLogHybridILPMinerParametersImpl(
-				context, EngineType.LPSOLVE, strategy, NetClass.PT_NET,
-				getConstraintTypes(), LPObjectiveType.WEIGHTED_ABSOLUTE_PARIKH,
-				LPVariableType.DUAL, getFilter(), false, log, classifier);
-
+		XLogHybridILPMinerParametersImpl params = new XLogHybridILPMinerParametersImpl(
+				context, log, classifier);
+		params = setCausalActivityGraph(context, log, classifier, params);
+		params.setFilter(getFilter());
+		params.setLPConstraintTypes(getConstraintTypes());
 		Object[] pnAndMarking = HybridILPMinerPlugin.mine(
-				ProMPluginContextManager.instance().getContext(), log,
-				configuration);
-
+				ProMPluginContextManager.instance().getContext(), log, params);
 		Petrinet pn = (Petrinet) pnAndMarking[0];
 		PetriNetIOObject petrinetIOObject = new PetriNetIOObject(pn, context);
 		petrinetIOObject.setInitialMarking((Marking) pnAndMarking[1]);
 		outputPetrinet.deliver(petrinetIOObject);
 	}
 
-	private Collection<LPConstraintType> getConstraintTypes() {
-		Collection<LPConstraintType> constraints = EnumSet.of(
+	private Set<LPConstraintType> getConstraintTypes() {
+		Set<LPConstraintType> constraints = EnumSet.of(
 				LPConstraintType.THEORY_OF_REGIONS,
 				LPConstraintType.NO_TRIVIAL_REGION);
 		if (getParameterAsBoolean(PARAMETER_KEY_EAC)) {
@@ -111,19 +88,21 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 		return constraints;
 	}
 
-	private CausalActivityGraph getCausalActivityGraph(PluginContext context,
-			XLog log, XEventClassifier classifier) {
-		MatrixMiner miner = getMatrixMiner();
-		MatrixMinerParameters minerParameters = getMatrixMinerParameters(log);
-		minerParameters.setClassifier(classifier);
-		CausalActivityMatrix matrix = miner.mineMatrix(context, log,
-				minerParameters);
-		ConvertCausalActivityMatrixToCausalActivityGraphPlugin creator = getMatrixToCagPlugin();
-		ConvertCausalActivityMatrixToCausalActivityGraphParameters creatorParameters = getMatrixToCagParameters();
-		creatorParameters.setZeroValue(miner.getZeroValue());
-		creatorParameters.setConcurrencyRatio(miner.getConcurrencyRatio());
-		creatorParameters.setIncludeThreshold(miner.getIncludeThreshold());
-		return creator.run(context, matrix, creatorParameters);
+	private XLogHybridILPMinerParametersImpl setCausalActivityGraph(
+			PluginContext context, XLog log, XEventClassifier classifier,
+			XLogHybridILPMinerParametersImpl params) {
+		DiscoverCausalActivityGraphParameters cagParameters = new DiscoverCausalActivityGraphParameters(
+				log);
+		cagParameters.setClassifier(classifier);
+		DiscoverCausalActivityGraphAlgorithm discoCagAlgo = new DiscoverCausalActivityGraphAlgorithm();
+		CausalActivityGraph graph = discoCagAlgo.apply(context, log,
+				cagParameters);
+		params.setDiscoveryStrategy(
+				new DiscoveryStrategy(DiscoveryStrategyType.CAUSAL));
+		params.getDiscoveryStrategy()
+				.setCausalActivityGraphParameters(cagParameters);
+		params.getDiscoveryStrategy().setCausalActivityGraph(graph);
+		return params;
 	}
 
 	@Override
@@ -155,22 +134,6 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
 		params.add(filterThreshold);
 		return params;
-	}
-
-	private MatrixMiner getMatrixMiner() {
-		return new HAFMiniMatrixMiner();
-	}
-
-	private MatrixMinerParameters getMatrixMinerParameters(XLog log) {
-		return new MatrixMinerParameters(log);
-	}
-
-	private ConvertCausalActivityMatrixToCausalActivityGraphPlugin getMatrixToCagPlugin() {
-		return new ConvertCausalActivityMatrixToCausalActivityGraphPlugin();
-	}
-
-	private ConvertCausalActivityMatrixToCausalActivityGraphParameters getMatrixToCagParameters() {
-		return new ConvertCausalActivityMatrixToCausalActivityGraphParameters();
 	}
 
 	private LPFilter getFilter() throws UndefinedParameterError {

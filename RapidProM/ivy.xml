@@ -23,7 +23,7 @@
         <dependency org="org.rapidprom" name="GraphViz" rev="6.5.142" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="GuideTreeMiner" rev="6.5.18" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="HeuristicsMiner" rev="6.5.49" rapidprom:release="3.0.0" />
-        <dependency org="org.rapidprom" name="HybridILPMiner" rev="6.5.96" rapidprom:release="3.0.0" />
+        <dependency org="org.rapidprom" name="HybridILPMiner" rev="6.5.104" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="InductiveMiner" rev="6.5.153" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="InductiveVisualMiner" rev="6.5.274" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="Log" rev="6.5.211" rapidprom:release="3.0.0" />
