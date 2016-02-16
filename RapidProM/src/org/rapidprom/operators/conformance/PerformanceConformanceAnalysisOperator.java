@@ -11,9 +11,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javassist.tools.rmi.ObjectNotFoundException;
-import nl.tue.astar.AStarException;
-
 import org.deckfour.xes.classification.XEventAndClassifier;
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
@@ -24,19 +21,19 @@ import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.processmining.plugins.astar.petrinet.manifestreplay.ManifestFactory;
+import org.processmining.plugins.astar.petrinet.manifestreplay.PNManifestFlattener;
 import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayer;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
 import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap;
-import org.processmining.plugins.petrinet.manifestreplayer.algorithms.IPNManifestReplayAlgorithm;
-import org.processmining.plugins.petrinet.manifestreplayer.algorithms.PNManifestReplayerILPAlgorithm;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 import org.processmining.plugins.petrinet.manifestreplayresult.Manifest;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.ManifestIOObject;
-import org.rapidprom.ioobjects.PNRepResultIOObject;
 import org.rapidprom.ioobjects.PetriNetIOObject;
+import org.rapidprom.ioobjects.XLogIOObject;
 
 import com.rapidminer.example.ExampleSet;
 import com.rapidminer.example.ExampleSetFactory;
@@ -51,16 +48,21 @@ import com.rapidminer.parameter.ParameterTypeInt;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.tools.LogService;
 
+import javassist.tools.rmi.ObjectNotFoundException;
+import nl.tue.astar.AStarException;
+
 public class PerformanceConformanceAnalysisOperator extends Operator {
 
 	private static final String PARAMETER_1 = "Max Explored States (in Hundreds)";
 
-	private InputPort inputPNRepResult = getInputPorts().createPort(
-			"alignments (ProM PNRepResult)", PNRepResultIOObject.class);
-	private OutputPort outputManifest = getOutputPorts().createPort(
-			"model (ProM Manifest)");
-	private OutputPort outputFitness = getOutputPorts().createPort(
-			"example set (Data Table)");
+	private InputPort inputLog = getInputPorts()
+			.createPort("event log (ProM Event Log)", XLogIOObject.class);
+	private InputPort inputPN = getInputPorts()
+			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
+	private OutputPort outputManifest = getOutputPorts()
+			.createPort("model (ProM Manifest)");
+	private OutputPort outputFitness = getOutputPorts()
+			.createPort("example set (Data Table)");
 
 	public PerformanceConformanceAnalysisOperator(
 			OperatorDescription description) {
@@ -80,21 +82,24 @@ public class PerformanceConformanceAnalysisOperator extends Operator {
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(PNManifestReplayer.class);
 
-		PNRepResultIOObject alignments = inputPNRepResult
-				.getData(PNRepResultIOObject.class);
-		XLog xLog = alignments.getXLog();
+		PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
+		XLogIOObject xLog = inputLog.getData(XLogIOObject.class);
 
-		PetriNetIOObject pNet = alignments.getPn();
+		PNManifestReplayerParameter parameter = getParameterObject(
+				alignments.getPn(), alignments.getXLog());
 
-		PNManifestReplayerParameter parameter = getParameterObject(pNet, xLog);
+		PNManifestFlattener flattener = new PNManifestFlattener(
+				alignments.getPn().getArtifact(), parameter);
 
-		IPNManifestReplayAlgorithm algorithm = new PNManifestReplayerILPAlgorithm();
-		
-		PNManifestReplayer replayer = new PNManifestReplayer();
 		Manifest result = null;
 		try {
-			result = replayer.replayLogParameter(pluginContext, pNet.getArtifact(),
-					xLog, algorithm, parameter);
+			result = ManifestFactory.construct(alignments.getPn().getArtifact(),
+					alignments.getPn().getInitialMarking(),
+					new Marking[] { ConformanceAnalysisOperator.getFinalMarking(
+							alignments.getPn().getArtifact()) },
+					alignments.getXLog(), flattener, alignments.getArtifact(),
+					parameter.getMapping());
+
 		} catch (AStarException e) {
 			e.printStackTrace();
 		} catch (Exception e) {
@@ -106,16 +111,15 @@ public class PerformanceConformanceAnalysisOperator extends Operator {
 		outputManifest.deliver(manifestIOObject);
 
 		double sum = 0;
-		for (int j = 0; j < manifestIOObject.getArtifact().getCasePointers().length; j++) {
+		for (int j = 0; j < manifestIOObject.getArtifact()
+				.getCasePointers().length; j++) {
 			sum = sum + manifestIOObject.getArtifact().getTraceFitness(j);
 		}
 
 		ExampleSet es = ExampleSetFactory.createExampleSet(new Object[][] {
-				{
-						"fitness",
-						sum
-								/ (double) manifestIOObject.getArtifact()
-										.getCasePointers().length },
+				{ "fitness",
+						sum / (double) manifestIOObject.getArtifact()
+								.getCasePointers().length },
 				{ "precision", 0.0 } });
 		outputFitness.deliver(es);
 
