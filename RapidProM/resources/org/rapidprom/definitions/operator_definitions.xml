@@ -27,10 +27,6 @@
                 <class>org.rapidprom.operators.analysis.FeaturePredictionAnalysisOperator</class>
             </operator>
             <operator>
-                <key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
-                <class>org.rapidprom.operators.conformance.PerformanceConformanceAnalysisOperator</class>
-            </operator>
-            <operator>
                 <key>mine_with_inductive_visual_miner</key>
                 <class>org.rapidprom.operators.analysis.InductiveVisualMinerOperator</class>
             </operator>
@@ -43,6 +39,10 @@
             <operator>
                 <key>measure_precision</key>
                 <class>org.rapidprom.operators.conformance.MeasurePrecisionAnalysisOperator</class>
+            </operator>
+            <operator>
+                <key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
+                <class>org.rapidprom.operators.conformance.PerformanceConformanceAnalysisOperator</class>
             </operator>
         </group>
         <group key="conversion">
