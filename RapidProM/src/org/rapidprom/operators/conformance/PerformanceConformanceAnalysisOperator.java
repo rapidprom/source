@@ -21,6 +21,9 @@ import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.semantics.petrinet.Marking;
+import org.processmining.plugins.astar.petrinet.PetrinetReplayerILPRestrictedMoveModel;
+import org.processmining.plugins.astar.petrinet.PetrinetReplayerNoILPRestrictedMoveModel;
+import org.processmining.plugins.astar.petrinet.manifestreplay.CostBasedCompleteManifestParam;
 import org.processmining.plugins.astar.petrinet.manifestreplay.ManifestFactory;
 import org.processmining.plugins.astar.petrinet.manifestreplay.PNManifestFlattener;
 import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
@@ -30,14 +33,13 @@ import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 import org.processmining.plugins.petrinet.manifestreplayresult.Manifest;
+import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.ManifestIOObject;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.XLogIOObject;
 
-import com.rapidminer.example.ExampleSet;
-import com.rapidminer.example.ExampleSetFactory;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -86,28 +88,39 @@ public class PerformanceConformanceAnalysisOperator extends Operator {
 		PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
 		XLogIOObject xLog = inputLog.getData(XLogIOObject.class);
 
-		PNManifestReplayerParameter parameter = getParameterObject(pNet,
-				xLog.getArtifact());
+		PNManifestReplayerParameter manifestParameters = getParameterObject(
+				pNet, xLog.getArtifact());
 
 		PNManifestFlattener flattener = new PNManifestFlattener(
-				pNet.getArtifact(), parameter);
+				pNet.getArtifact(), manifestParameters);
 
-		PNRepResult alignment = ConformanceAnalysisOperator.getAlignment(
-				flattener.getNet(), xLog.getArtifact(),
-				flattener.getInitMarking(), flattener.getFinalMarkings()[0]);
+		CostBasedCompleteManifestParam parameter = new CostBasedCompleteManifestParam(
+				flattener.getMapEvClass2Cost(), flattener.getMapTrans2Cost(),
+				flattener.getMapSync2Cost(), flattener.getInitMarking(),
+				flattener.getFinalMarkings(),
+				manifestParameters.getMaxNumOfStates(),
+				flattener.getFragmentTrans());
+		parameter.setGUIMode(false);
+		parameter.setCreateConn(false);
+
+		PNLogReplayer replayer = new PNLogReplayer();
+		PetrinetReplayerNoILPRestrictedMoveModel replayAlgorithm = new PetrinetReplayerNoILPRestrictedMoveModel();
 
 		Manifest result = null;
 		try {
+			PNRepResult alignment = replayer.replayLog(
+					manifestParameters.isGUIMode() ? pluginContext : null,
+					flattener.getNet(), xLog.getArtifact(), flattener.getMap(),
+					replayAlgorithm, parameter);
 			result = ManifestFactory.construct(pNet.getArtifact(),
-					pNet.getInitialMarking(),
-					new Marking[] { ConformanceAnalysisOperator
-							.getFinalMarking(pNet.getArtifact()) },
-					xLog.getArtifact(), flattener, alignment,
-					parameter.getMapping());
-
-		} catch (AStarException e) {
-			e.printStackTrace();
+					manifestParameters.getInitMarking(),
+					manifestParameters.getFinalMarkings(), xLog.getArtifact(),
+					flattener, alignment, manifestParameters.getMapping());
+		} catch (AStarException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -115,18 +128,16 @@ public class PerformanceConformanceAnalysisOperator extends Operator {
 				pluginContext);
 		outputManifest.deliver(manifestIOObject);
 
-		double sum = 0;
-		for (int j = 0; j < manifestIOObject.getArtifact()
-				.getCasePointers().length; j++) {
-			sum = sum + manifestIOObject.getArtifact().getTraceFitness(j);
-		}
-
-		ExampleSet es = ExampleSetFactory.createExampleSet(new Object[][] {
-				{ "fitness",
-						sum / (double) manifestIOObject.getArtifact()
-								.getCasePointers().length },
-				{ "precision", 0.0 } });
-		outputFitness.deliver(es);
+		/*
+		 * double sum = 0; for (int j = 0; j < manifestIOObject.getArtifact()
+		 * .getCasePointers().length; j++) { sum = sum +
+		 * manifestIOObject.getArtifact().getTraceFitness(j); }
+		 * 
+		 * ExampleSet es = ExampleSetFactory.createExampleSet(new Object[][] { {
+		 * "fitness", sum / (double) manifestIOObject.getArtifact()
+		 * .getCasePointers().length }, { "precision", 0.0 } });
+		 * outputFitness.deliver(es);
+		 */
 
 		logger.log(Level.INFO,
 				"End: replay log on petri net for performance/conformance checking ("
