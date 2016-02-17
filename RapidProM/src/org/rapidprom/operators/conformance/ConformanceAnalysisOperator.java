@@ -20,6 +20,7 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
+import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
@@ -508,7 +509,7 @@ public class ConformanceAnalysisOperator extends Operator {
 
 	// Boudewijn's methods for creating alignments
 
-	public PNRepResult getAlignment(Petrinet net, XLog log,
+	public static PNRepResult getAlignment(PetrinetGraph net, XLog log,
 			Marking initialMarking, Marking finalMarking) {
 
 		Map<Transition, Integer> costMOS = constructMOSCostFunction(net);
@@ -540,7 +541,8 @@ public class ConformanceAnalysisOperator extends Operator {
 		return result;
 	}
 
-	private Map<Transition, Integer> constructMOSCostFunction(Petrinet net) {
+	private static Map<Transition, Integer> constructMOSCostFunction(
+			PetrinetGraph net) {
 		Map<Transition, Integer> costMOS = new HashMap<Transition, Integer>();
 
 		for (Transition t : net.getTransitions())
@@ -552,8 +554,8 @@ public class ConformanceAnalysisOperator extends Operator {
 		return costMOS;
 	}
 
-	private Map<XEventClass, Integer> constructMOTCostFunction(Petrinet net,
-			XLog log, XEventClassifier eventClassifier) {
+	private static Map<XEventClass, Integer> constructMOTCostFunction(
+			PetrinetGraph net, XLog log, XEventClassifier eventClassifier) {
 		Map<XEventClass, Integer> costMOT = new HashMap<XEventClass, Integer>();
 		XLogInfo summary = XLogInfoFactory.createLogInfo(log, eventClassifier);
 
@@ -564,7 +566,7 @@ public class ConformanceAnalysisOperator extends Operator {
 		return costMOT;
 	}
 
-	private TransEvClassMapping constructMapping(Petrinet net, XLog log,
+	private static TransEvClassMapping constructMapping(PetrinetGraph net, XLog log,
 			XEventClassifier eventClassifier) {
 		TransEvClassMapping mapping = new TransEvClassMapping(eventClassifier,
 				new XEventClass("DUMMY", 99999));

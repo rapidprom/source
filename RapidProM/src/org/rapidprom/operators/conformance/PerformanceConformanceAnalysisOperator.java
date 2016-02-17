@@ -30,6 +30,7 @@ import org.processmining.plugins.petrinet.manifestreplayer.TransClass2PatternMap
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClass;
 import org.processmining.plugins.petrinet.manifestreplayer.transclassifier.TransClasses;
 import org.processmining.plugins.petrinet.manifestreplayresult.Manifest;
+import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.ManifestIOObject;
 import org.rapidprom.ioobjects.PetriNetIOObject;
@@ -85,19 +86,23 @@ public class PerformanceConformanceAnalysisOperator extends Operator {
 		PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
 		XLogIOObject xLog = inputLog.getData(XLogIOObject.class);
 
-		PNManifestReplayerParameter parameter = getParameterObject(
-				alignments.getPn(), alignments.getXLog());
+		PNManifestReplayerParameter parameter = getParameterObject(pNet,
+				xLog.getArtifact());
 
 		PNManifestFlattener flattener = new PNManifestFlattener(
-				alignments.getPn().getArtifact(), parameter);
+				pNet.getArtifact(), parameter);
+
+		PNRepResult alignment = ConformanceAnalysisOperator.getAlignment(
+				flattener.getNet(), xLog.getArtifact(),
+				flattener.getInitMarking(), flattener.getFinalMarkings()[0]);
 
 		Manifest result = null;
 		try {
-			result = ManifestFactory.construct(alignments.getPn().getArtifact(),
-					alignments.getPn().getInitialMarking(),
-					new Marking[] { ConformanceAnalysisOperator.getFinalMarking(
-							alignments.getPn().getArtifact()) },
-					alignments.getXLog(), flattener, alignments.getArtifact(),
+			result = ManifestFactory.construct(pNet.getArtifact(),
+					pNet.getInitialMarking(),
+					new Marking[] { ConformanceAnalysisOperator
+							.getFinalMarking(pNet.getArtifact()) },
+					xLog.getArtifact(), flattener, alignment,
 					parameter.getMapping());
 
 		} catch (AStarException e) {
