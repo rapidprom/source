@@ -437,7 +437,7 @@
   	   <operator>
         <name>Heuristics Miner (Heuristics Net)</name>
         <synopsis>This operator can be used to execute the Heuristics Miner algorithm.</synopsis>
-        <help>This operator can be used to execute the Heuristics Miner algorithm which provides a Heuristics Net. As input a ProM context and a log file is needed.</help>
+        <help>This operator can be used to execute the Heuristics Miner algorithm (defined in http://dx.doi.org/10.1109/CIDM.2011.5949453) which provides a Heuristics Net. As input a ProM context and a log file is needed.</help>
     	<key>heuristics_miner</key>
   	   </operator>
   	   
@@ -457,8 +457,8 @@
   
   	<operator>
         <name>Social Network Miner (Social Network)</name>
-        <synopsis>This operator can be used to execute the Handover-of-Work Social Network Miner in order to discover a Social Network.</synopsis>
-        <help>This operator can be used to execute the Handover-of-Work Social Network Miner which provides a Social Network. As input a ProM context and a log file is needed.</help>
+        <synopsis>This plugin reads an event log and generates social networks that can be used as a starting point for SNA. We can apply several techniques to analyze the social networks, e.g., find interaction patterns, evaluate the role of an individual in an organization, etc.</synopsis>
+        <help>An event log is requires as input</help>
     <key>social_network_miner</key>
   </operator>
   	<operator>
@@ -519,14 +519,14 @@
   	
   	<operator>
         <name>Transition System Miner (Transition System)</name>
-        <synopsis>This operator mines a transition system with default parameters</synopsis>
-        <help>A log is required for input</help>
+        <synopsis>This operator mines a transition system based on the selected parameters, as defined in (http://dx.doi.org/10.1016/j.is.2010.09.001)</synopsis>
+        <help>A log is required as input</help>
     	<key>mine_transition_system</key>
   	</operator>
 	
 	<operator>
         <name>Fuzzy Miner (Fuzzy Model)</name>
-        <synopsis>This operator mines a fuzzy model</synopsis>
+        <synopsis>This operator mines a fuzzy model as described in (http://dx.doi.org/10.6100/IR644335). This miner is best suited for flexible or unstructured processes, where other miners give very complex models as result.</synopsis>
         <help>A log is required for input</help>
     	<key>mine_fuzzy_model</key>
   	</operator>

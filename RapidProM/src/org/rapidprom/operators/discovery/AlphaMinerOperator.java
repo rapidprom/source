@@ -20,9 +20,23 @@ import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.tools.LogService;
 
+/**
+ * This operator implements different variants of the alpha miner algorithm
+ * The "classic" variant is defined in http://dx.doi.org/10.1109/TKDE.2004.47
+ * The "+" variant is defined in http://dx.doi.org/10.1007/978-3-540-30188-2_12
+ * The "++" variant is defined in http://dx.doi.org/10.1007/s10618-007-0065-y
+ * The "#" variant is defined in http://dx.doi.org/10.1016/j.datak.2010.06.001
+ * @author abolt
+ *
+ */
 public class AlphaMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
-	private static final String PARAMETER_1 = "Variant";
+	private static final String PARAMETER_1_KEY = "Variant",
+			PARAMETER_1_DESCR = "Defines which version of the AlphaMiner will be used: "
+					+ "The \"classic\" variant is defined in http://dx.doi.org/10.1109/TKDE.2004.47 . "
+					+ "The \"+\" variant is defined in http://dx.doi.org/10.1007/978-3-540-30188-2_12 . "
+					+ "The \"++\" variant is defined in http://dx.doi.org/10.1007/s10618-007-0065-y . "
+					+ "The \"#\" variant is defined in http://dx.doi.org/10.1016/j.datak.2010.06.001 .";
 
 	private static final String CLASSIC = "AlphaMiner classic",
 			PLUS = "AlphaMiner +", PLUSPLUS = "AlphaMiner ++",
@@ -53,7 +67,7 @@ public class AlphaMinerOperator extends AbstractRapidProMDiscoveryOperator {
 				.getFutureResultAwareContext(AlphaMinerPlugin.class);
 
 		Object[] result = null;
-		switch (getParameterAsString(PARAMETER_1)) {
+		switch (getParameterAsString(PARAMETER_1_KEY)) {
 		case CLASSIC:
 			result = AlphaMinerPlugin.applyAlphaClassic(pluginContext,
 					getXLog(), getXEventClassifier());
@@ -88,7 +102,7 @@ public class AlphaMinerOperator extends AbstractRapidProMDiscoveryOperator {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
 		ParameterTypeCategory parameter1 = new ParameterTypeCategory(
-				PARAMETER_1, PARAMETER_1,
+				PARAMETER_1_KEY, PARAMETER_1_DESCR,
 				new String[] { CLASSIC, PLUS, PLUSPLUS, SHARP }, 1);
 		parameterTypes.add(parameter1);
 

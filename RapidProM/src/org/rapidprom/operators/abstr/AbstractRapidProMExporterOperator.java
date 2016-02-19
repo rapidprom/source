@@ -28,14 +28,14 @@ import com.rapidminer.parameter.ParameterTypeString;
 public abstract class AbstractRapidProMExporterOperator<T extends AbstractRapidProMIOObject<T2>, T2, F>
 		extends AbstractWriter<T> {
 
-	protected final static String PARAMETER_KEY_FOLDER = "folder";
-	protected final static String PARAMETER_DESC_FOLDER = "The folder where the exported event log should be stored.";
+	protected final static String PARAMETER_KEY_FOLDER = "older";
+	protected final static String PARAMETER_DESC_FOLDER = "The folder where the file should be stored.";
 
 	protected final static String PARAMETER_KEY_FILE_NAME = "file_name";
-	protected final static String PARAMETER_DESC_FILE_NAME = "The file name of the exported event log.";
+	protected final static String PARAMETER_DESC_FILE_NAME = "The file name of the exported object.";
 
 	protected final static String PARAMETER_KEY_FILE_FORMAT = "file_format";
-	protected final static String PARAMETER_DESC_FILE_FORMAT = "The file format of the exported event log.";
+	protected final static String PARAMETER_DESC_FILE_FORMAT = "The file format of the exported object.";
 
 	protected final F[] PARAMETER_VALUES_FILE_FORMAT;
 	protected final F defaultFileFormat;

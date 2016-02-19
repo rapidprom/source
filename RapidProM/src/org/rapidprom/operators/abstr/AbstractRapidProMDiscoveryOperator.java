@@ -22,7 +22,7 @@ public class AbstractRapidProMDiscoveryOperator extends Operator {
 			"event log (ProM Event Log)", XLogIOObject.class);
 
 	private static final String PARAMETER_KEY_EVENT_CLASSIFIER = "event_classifier";
-	private static final String PARAMETER_DESC_EVENT_CLASSIFIER = "Specifies how to identify events within the event log";
+	private static final String PARAMETER_DESC_EVENT_CLASSIFIER = "Specifies how to identify events within the event log, as defined in http://www.xes-standard.org/";
 	private static XEventClassifier[] PARAMETER_DEFAULT_CLASSIFIERS = new XEventClassifier[] { new XEventAndClassifier(
 			new XEventNameClassifier()) };
 

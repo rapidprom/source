@@ -53,7 +53,14 @@ public class ExtractXLogOperator
 	}
 
 	public final static String PARAMETER_KEY_IMPORTER = "importer";
-	public final static String PARAMETER_DESC_IMPORTER = "Select the implementing importer, importers differ in terms of performance";
+	public final static String PARAMETER_DESC_IMPORTER = 
+			"Select the implementing importer, importers differ in terms of performance: "
+			+ "The \"Naive\" importer loads the Log completely in memory (faster, but more memory usage). "
+			+ "The \"Buffered by MAPDB\" importer loads only log, trace and event ids, "
+			+ "and the rest of the data (mainly attribute values) are stored in disk by MapDB "
+			+ "(slower, but less memory usage). "
+			+ "The \"Lightweight & Sequential IDs\" importer is a balance between the \"Naive\" and the \"Buffered by MapDB\" importers";
+	
 	public final static ImplementingPlugin[] PARAMETER_OPTIONS_IMPORTER = EnumSet
 			.allOf(ImplementingPlugin.class)
 			.toArray(new ImplementingPlugin[EnumSet
