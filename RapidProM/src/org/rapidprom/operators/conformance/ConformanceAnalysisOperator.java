@@ -62,12 +62,6 @@ import nl.tue.astar.AStarException;
 
 public class ConformanceAnalysisOperator extends Operator {
 
-	// private static final String PARAMETER_1 = "Replay Algorithm";
-
-	// private static final String[] ALGORITHMS = new String[] {
-	// "A* Cost-based Fitness", "A* Cost-based Fitness Express",
-	// "Prefix based A* Cost-based Fitness", };
-
 	private final String NAMECOL = "Name";
 	private final String VALUECOL = "Value";
 
