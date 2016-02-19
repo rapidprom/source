@@ -510,6 +510,13 @@
     	<key>merge_two_event_logs</key>
   	</operator>
   	
+  	<operator>
+  		<name>Add Classifier to Event Log</name>
+        <synopsis>This operator adds an event classifier to an event log. An event classifier defines how events are identified.</synopsis>
+        <help>An event log is needed as input.</help>
+        <key>add_classifier_log</key>                
+    </operator> 
+  	
   	 <operator>
         <name>Add Artificial Start and End Event</name>
         <synopsis>This operator adds a start and end event to each trace.</synopsis>

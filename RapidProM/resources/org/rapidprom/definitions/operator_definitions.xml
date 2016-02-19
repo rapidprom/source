@@ -160,6 +160,10 @@
             <operator>
                 <key>add_noise_log</key>
                 <class>org.rapidprom.operators.logmanipulation.AddNoiseOperator</class>
+            </operator>
+            <operator>
+                <key>add_classifier_log</key>
+                <class>org.rapidprom.operators.logmanipulation.AddClassifierOperator</class>
             </operator>   
             <operator>
                 <key>add_artificial_start_end_event_filter</key>
