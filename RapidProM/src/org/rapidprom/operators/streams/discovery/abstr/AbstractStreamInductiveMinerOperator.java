@@ -4,17 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.processmining.eventstream.core.interfaces.XSEventSignature;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.framework.util.Pair;
 import org.processmining.stream.core.interfaces.XSDataPacket;
 import org.processmining.stream.core.interfaces.XSReader;
-import org.processmining.stream.models.streamdatastore.factories.StreamBasedDataStoreFactory;
-import org.processmining.stream.models.streamdatastore.interfaces.StreamBasedDataStore;
-import org.processmining.stream.models.streamdatastore.types.StreamBasedDataStoreType;
+import org.processmining.stream.model.datastructure.DSParameter;
+import org.processmining.stream.model.datastructure.DSParameterDefinition;
+import org.processmining.stream.model.datastructure.DSParameterFactory;
+import org.processmining.stream.model.datastructure.DataStructureType;
 import org.processmining.streaminductiveminer.parameters.StreamInductiveMinerParameters;
 import org.processmining.streaminductiveminer.utils.StreamInductiveMinerUtils;
 import org.rapidprom.ioobjects.streams.XSReaderIOObject;
@@ -29,7 +28,6 @@ import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeCategory;
-import com.rapidminer.parameter.ParameterTypeDouble;
 import com.rapidminer.parameter.ParameterTypeInt;
 import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
@@ -48,26 +46,26 @@ public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<?
 	protected static final String PARAMETER_DEFAULT_CASE_IDENTIFIER = XSEventSignature.TRACE
 			.toString();
 
-	protected static final String PARAMETER_KEY_EVENT_IDENTIFIER = "event_identifier";
-	protected static final String PARAMETER_DESC_EVENT_IDENTIFIER = "Defines what key to use within the data packet to identify an event.";
+	protected static final String PARAMETER_KEY_EVENT_IDENTIFIER = "activity_identifier";
+	protected static final String PARAMETER_DESC_EVENT_IDENTIFIER = "Defines what key to use within the data packet to identify the activity of the event.";
 	protected static final String PARAMETER_DEFAULT_EVENT_IDENTIFIER = XConceptExtension.KEY_NAME;
 
 	protected static final String PARAMETER_KEY_REFRESH_RATE = "refresh_rate";
 	protected static final String PARAMETER_DESC_REFRESH_RATE = "Defines at what intervals (in terms of messages received) a new model should be queried.";
-	protected static final int PARAMETER_DEFAULT_REFRESH_RATE = 100000;
+	protected static final int PARAMETER_DEFAULT_REFRESH_RATE = -1;
 
 	protected static final String PARAMETER_KEY_CASE_ACTIVITY_STORE = "case_activity_store";
 	protected static final String PARAMETER_DESC_CASE_ACTIVITY_STORE = "Defines what stream-based data store to use for capturing CASE X ACTIVITY information.";
-	protected static final StreamBasedDataStoreType[] PARAMETER_OPTIONS_CASE_ACTIVITY_STORE = StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
+	protected static final DataStructureType[] PARAMETER_OPTIONS_CASE_ACTIVITY_STORE = StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
 			.toArray(
-					new StreamBasedDataStoreType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
+					new DataStructureType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
 							.size()]);
 
 	protected static final String PARAMETER_KEY_ACTIVITY_ACTIVITY_STORE = "activity_activity_store";
 	protected static final String PARAMETER_DESC_ACTIVITY_ACTIVITY_STORE = "Defines what stream-based data store to use for capturing ACITIVTY X ACTIVITY information.";
-	protected static final StreamBasedDataStoreType[] PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE = StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
+	protected static final DataStructureType[] PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE = StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
 			.toArray(
-					new StreamBasedDataStoreType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
+					new DataStructureType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
 							.size()]);
 
 	public AbstractStreamInductiveMinerOperator(
@@ -92,7 +90,7 @@ public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<?
 		StreamInductiveMinerParameters params = new StreamInductiveMinerParameters();
 		params.setCaseIdentifier(
 				getParameterAsString(PARAMETER_KEY_CASE_IDENTIFIER));
-		params.setEventIdentifier(
+		params.setActivityIdentifier(
 				getParameterAsString(PARAMETER_KEY_EVENT_IDENTIFIER));
 		params.setRefreshRate(getParameterAsInt(PARAMETER_KEY_REFRESH_RATE));
 		params = setCaseActivityStore(params);
@@ -106,27 +104,25 @@ public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<?
 	protected StreamInductiveMinerParameters setActivityActivityStore(
 			StreamInductiveMinerParameters params)
 					throws UndefinedParameterError {
-		StreamBasedDataStoreType caseActivityStoreType = PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE[getParameterAsInt(
+		DataStructureType activityActivityStoreType = PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE[getParameterAsInt(
 				PARAMETER_KEY_ACTIVITY_ACTIVITY_STORE)];
-		StreamBasedDataStore<Pair<XEventClass, XEventClass>> caseActivityStore = StreamBasedDataStoreFactory
-				.createDataStoreBasedOnTypeAndParameters(caseActivityStoreType,
-						getStoreParameters(
-								PARAMETER_KEY_ACTIVITY_ACTIVITY_STORE,
-								caseActivityStoreType));
-		params.setActivtyActivityPairStore(caseActivityStore);
+		params.setActivityActivityDataStructureType(activityActivityStoreType);
+		params.setActivityActivityDataStructureParameters(
+				getDataStructureParameters(
+						PARAMETER_KEY_ACTIVITY_ACTIVITY_STORE,
+						activityActivityStoreType));
 		return params;
 	}
 
 	protected StreamInductiveMinerParameters setCaseActivityStore(
 			StreamInductiveMinerParameters params)
 					throws UndefinedParameterError {
-		StreamBasedDataStoreType caseActivityStoreType = PARAMETER_OPTIONS_CASE_ACTIVITY_STORE[getParameterAsInt(
+		DataStructureType caseActivityStoreType = PARAMETER_OPTIONS_CASE_ACTIVITY_STORE[getParameterAsInt(
 				PARAMETER_KEY_CASE_ACTIVITY_STORE)];
-		StreamBasedDataStore<Pair<String, XEventClass>> caseActivityStore = StreamBasedDataStoreFactory
-				.createDataStoreBasedOnTypeAndParameters(caseActivityStoreType,
-						getStoreParameters(PARAMETER_KEY_CASE_ACTIVITY_STORE,
-								caseActivityStoreType));
-		params.setCaseActivityPairStore(caseActivityStore);
+		params.setCaseActivityDataStructureType(caseActivityStoreType);
+		params.setCaseActivityDataStructureParameters(
+				getDataStructureParameters(PARAMETER_KEY_CASE_ACTIVITY_STORE,
+						caseActivityStoreType));
 		return params;
 	}
 
@@ -151,7 +147,7 @@ public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<?
 				ObjectUtils.toString(PARAMETER_OPTIONS_CASE_ACTIVITY_STORE), 0,
 				false));
 
-		params = addStreamBasedDataStoreDependencyConditions(
+		params = addDataStructureDependencyConditions(
 				PARAMETER_KEY_CASE_ACTIVITY_STORE,
 				PARAMETER_OPTIONS_CASE_ACTIVITY_STORE, params);
 
@@ -162,50 +158,52 @@ public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<?
 								PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE),
 						0, false));
 
-		params = addStreamBasedDataStoreDependencyConditions(
+		params = addDataStructureDependencyConditions(
 				PARAMETER_KEY_ACTIVITY_ACTIVITY_STORE,
 				PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE, params);
 
 		return params;
 	}
 
-	protected List<ParameterType> addStreamBasedDataStoreDependencyConditions(
-			String parameterTypeKey, StreamBasedDataStoreType[] options,
+	protected List<ParameterType> addDataStructureDependencyConditions(
+			String parameterTypeKey, DataStructureType[] options,
 			List<ParameterType> params) {
-		for (StreamBasedDataStoreType sbdst : options) {
-			for (Map.Entry<String, Double> dsParam : sbdst
-					.getDefaultParameters().entrySet()) {
-				// TODO: We should add descriptions in the
-				// StreamBasedDataStoreType enums
-				ParameterType param = new ParameterTypeDouble(
-						getSubKey(parameterTypeKey, sbdst, dsParam.getKey()),
-						"TODO", Double.MIN_VALUE, Double.MAX_VALUE,
-						dsParam.getValue(), false);
+		for (DataStructureType dataStructureType : options) {
+			for (DSParameterDefinition paramDef : dataStructureType
+					.getParameterDefinition()) {
+				String key = getDataStructureParameterSubKey(parameterTypeKey,
+						dataStructureType, paramDef.getName());
+				ParameterType param = new ParameterTypeString(key, "",
+						paramDef.getDefaultValue().toString(), false);
 				param.setOptional(true);
 				param.registerDependencyCondition(new EqualStringCondition(this,
-						parameterTypeKey, true, sbdst.toString()));
+						parameterTypeKey, true, dataStructureType.toString()));
 				params.add(param);
 			}
 		}
 		return params;
 	}
 
-	protected String getSubKey(String parentParameterTypeKey,
-			StreamBasedDataStoreType sbdst, String param) {
+	protected String getDataStructureParameterSubKey(
+			String parentParameterTypeKey, DataStructureType sbdst,
+			String param) {
 		return sbdst.toString().toLowerCase() + "_" + parentParameterTypeKey
 				+ "_" + param;
 	}
 
-	protected Map<String, Double> getStoreParameters(String parameterTypeKey,
-			StreamBasedDataStoreType dataStore) throws UndefinedParameterError {
-		Map<String, Double> result = new HashMap<String, Double>();
-		// TODO: update stream package, let the datastore return the keyset of
-		// the default params.
-		for (Map.Entry<String, Double> paramOption : dataStore
-				.getDefaultParameters().entrySet()) {
-			result.put(paramOption.getKey(),
-					getParameterAsDouble(getSubKey(parameterTypeKey, dataStore,
-							paramOption.getKey())));
+	protected Map<DSParameterDefinition, DSParameter<?>> getDataStructureParameters(
+			String parameterTypeKey, DataStructureType dataStructureType)
+					throws UndefinedParameterError {
+		Map<DSParameterDefinition, DSParameter<?>> result = new HashMap<DSParameterDefinition, DSParameter<?>>();
+		for (DSParameterDefinition paramDef : dataStructureType
+				.getParameterDefinition()) {
+			String subKey = getDataStructureParameterSubKey(parameterTypeKey,
+					dataStructureType, paramDef.getName());
+			String userValue = getParameterAsString(subKey);
+			DSParameter<?> paramInstance = DSParameterFactory
+					.createParameter(paramDef.getParameterType()
+							.cast(paramDef.parse(paramDef, userValue)));
+			result.put(paramDef, paramInstance);
 		}
 		return result;
 	}

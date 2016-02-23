@@ -4,7 +4,7 @@ import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.eventstream.readers.processtree.XSEventStreamToProcessTreeReader;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.streaminductiveminer.parameters.StreamInductiveMinerParameters;
-import org.processmining.streaminductiveminer.plugins.StreamInductiveMinerPTPlugin;
+import org.processmining.streaminductiveminer.plugins.StreamInductiveMinerProcessTreePlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamToProcessTreePetriNetReaderIOObject;
 import org.rapidprom.operators.streams.discovery.abstr.AbstractStreamInductiveMinerOperator;
@@ -23,19 +23,21 @@ public class StreamInductiveMinerProcessTreeOperator extends
 	protected XSEventStreamToProcessTreeReader getAlgorithm(
 			PluginContext context, XSEventStream stream,
 			StreamInductiveMinerParameters parameters) {
-		return StreamInductiveMinerPTPlugin.apply(context, stream, parameters);
+		StreamInductiveMinerProcessTreePlugin plugin = new StreamInductiveMinerProcessTreePlugin();
+		return plugin.apply(context, stream, parameters);
 	}
 
 	@Override
 	protected PluginContext getPluginContextForISM() {
 		return ProMPluginContextManager.instance().getFutureResultAwareContext(
-				StreamInductiveMinerPTPlugin.class);
+				StreamInductiveMinerProcessTreePlugin.class);
 	}
 
 	@Override
 	protected XSEventStreamToProcessTreePetriNetReaderIOObject getIOObject(
 			XSEventStreamToProcessTreeReader algorithm, PluginContext context) {
-		return new XSEventStreamToProcessTreePetriNetReaderIOObject(algorithm, context);
+		return new XSEventStreamToProcessTreePetriNetReaderIOObject(algorithm,
+				context);
 	}
 
 }

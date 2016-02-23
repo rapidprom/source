@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import org.processmining.eventstream.core.interfaces.XSEvent;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.stream.core.interfaces.XSStream;
-import org.processmining.stream.core.visualizer.XSStreamVisualizer;
+import org.processmining.stream.core.visualizers.XSStreamVisualizer;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
 
 import com.rapidminer.gui.renderer.AbstractRenderer;

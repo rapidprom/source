@@ -27,10 +27,8 @@ import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeBoolean;
 import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.parameter.ParameterTypeInt;
-import com.rapidminer.parameter.ParameterTypeLong;
 import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
-import com.rapidminer.parameter.conditions.BooleanParameterCondition;
 import com.rapidminer.parameter.conditions.EqualStringCondition;
 import com.rapidminer.tools.LogService;
 
@@ -79,13 +77,6 @@ public class CPNToEventStreamOperator extends Operator {
 
 	private static final String PARAMETER_KEY_IGNORE_PATTERSNS = "ignore_patterns";
 	private static final String PARAMETER_LABEL_IGNORE_PATTERNS = "Provide a comma separated list of patterns to ignore for event emission";
-
-	private static final String PARAMETER_KEY_USE_SEED = "use_seed";
-	private static final String PARAMETER_LABEL_USE_SEED = "Use a random seed in stream generation";
-
-	private static final String PARAMETER_KEY_SEED = "seed";
-	private static final String PARAMETER_LABEL_SEED = "Value of the seed";
-	private static final long PARAMETER_DEFAULT_SEED = 1337l;
 
 	private InputPort inputCPNModel = getInputPorts()
 			.createPort("model (CPN model)", CPNModelIOObject.class);
@@ -168,23 +159,7 @@ public class CPNToEventStreamOperator extends Operator {
 		parameterTypes = setupCommunicationType(parameterTypes);
 		parameterTypes = setupIgnorePageParameter(parameterTypes);
 		parameterTypes = setupIgnorePatternsParameter(parameterTypes);
-		parameterTypes = setupSeedParameters(parameterTypes);
 		return parameterTypes;
-	}
-
-	private List<ParameterType> setupSeedParameters(
-			List<ParameterType> params) {
-
-		params.add(new ParameterTypeBoolean(PARAMETER_KEY_USE_SEED,
-				PARAMETER_LABEL_USE_SEED, false, false));
-		ParameterTypeLong seedParam = new ParameterTypeLong(PARAMETER_KEY_SEED,
-				PARAMETER_LABEL_SEED, Long.MIN_VALUE, Long.MAX_VALUE,
-				PARAMETER_DEFAULT_SEED, false);
-		seedParam.setOptional(true);
-		seedParam.registerDependencyCondition(new BooleanParameterCondition(
-				this, PARAMETER_KEY_USE_SEED, true, true));
-		params.add(seedParam);
-		return params;
 	}
 
 	private List<ParameterType> setupIgnorePatternsParameter(
@@ -226,13 +201,6 @@ public class CPNToEventStreamOperator extends Operator {
 						: getParameterAsString(PARAMETER_KEY_IGNORE_PATTERSNS)
 								.split(",");
 		streamParams.setIgnorePatterns(ignorePatterns);
-
-		if (getParameterAsBoolean(PARAMETER_KEY_USE_SEED)) {
-			streamParams.setUseSeed(true);
-			streamParams.setSeed(getParameterAsLong(PARAMETER_KEY_SEED));
-		} else {
-			streamParams.setUseSeed(false);
-		}
 		return streamParams;
 	}
 

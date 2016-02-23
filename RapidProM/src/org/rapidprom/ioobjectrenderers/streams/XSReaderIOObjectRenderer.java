@@ -4,7 +4,7 @@ import javax.swing.JComponent;
 
 import org.processmining.stream.core.interfaces.XSDataPacket;
 import org.processmining.stream.core.interfaces.XSReader;
-import org.processmining.stream.core.visualizer.XSReaderVisualizer;
+import org.processmining.stream.core.visualizers.XSReaderVisualizer;
 import org.rapidprom.ioobjectrenderers.abstr.AbstractRapidProMIOObjectRenderer;
 import org.rapidprom.ioobjects.streams.XSReaderIOObject;
 
