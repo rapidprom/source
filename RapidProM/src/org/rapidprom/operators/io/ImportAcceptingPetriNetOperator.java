@@ -21,7 +21,8 @@ public class ImportAcceptingPetriNetOperator
 			"pnml" };
 
 	public ImportAcceptingPetriNetOperator(OperatorDescription description) {
-		super(description, AcceptingPetriNetIOObject.class);
+		super(description, AcceptingPetriNetIOObject.class,
+				SUPPORTED_FILE_FORMATS);
 	}
 
 	@Override

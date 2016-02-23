@@ -13,18 +13,24 @@ import com.rapidminer.operator.UserError;
 import com.rapidminer.operator.io.AbstractReader;
 import com.rapidminer.tools.LogService;
 
+/**
+ * 
+ * @author svzelst
+ *
+ * @param <T>
+ */
 public abstract class AbstractRapidProMImportOperator<T extends IOObject>
 		extends AbstractReader<T> {
 
 	protected final static String PARAMETER_KEY_FILE = "file";
 	protected final static String PARAMETER_DESC_FILE = "Select the file you would like to use to import.";
-
 	protected Class<? extends IOObject> generatedClass;
 
 	public AbstractRapidProMImportOperator(OperatorDescription description,
-			Class<? extends IOObject> clazz) {
+			Class<? extends IOObject> clazz, String[] supportedExtentions) {
 		super(description, clazz);
 		generatedClass = clazz;
+		registerExtentions(supportedExtentions);
 	}
 
 	protected boolean checkFileParameterMetaData(String key) throws UserError {
@@ -67,11 +73,10 @@ public abstract class AbstractRapidProMImportOperator<T extends IOObject>
 		return getParameterAsFile(PARAMETER_KEY_FILE);
 	}
 
-	public static void registerExtentions(String[] exts) {
+	public void registerExtentions(String[] exts) {
 		for (String ext : exts) {
 			AbstractReader.registerReaderDescription(new ReaderDescription(ext,
 					ImportXLogOperator.class, PARAMETER_KEY_FILE));
 		}
 	}
-
 }

@@ -145,7 +145,7 @@
 		class="org.rapidprom.ioobjects.streams.event.XSEventStreamToAcceptingPetriNetReaderIOObject"
 		reportable="false" >
 		<renderer>org.rapidprom.ioobjectrenderers.streams.XSReaderIOObjectRenderer</renderer>	
-	</ioobject>	
+	</ioobject>
 	<ioobject
 		name="Reader"
 		class="org.rapidprom.ioobjects.streams.XSReaderIOObject"
@@ -157,5 +157,9 @@
 		class="org.rapidprom.ioobjects.streams.XSStreamAnalyzerIOObject"
 		reportable="false" >
 		<renderer>org.rapidprom.ioobjectrenderers.streams.XSStreamAnalyzerIOObjectRenderer</renderer>	
-	</ioobject>	
+	</ioobject>
+	<ioobject name="Static Event Stream"
+		class="org.rapidprom.ioobjects.streams.XSStaticXSEventStreamIOObject"
+		reportable="false">
+	</ioobject>
 </ioobjects>

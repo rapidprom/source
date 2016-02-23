@@ -45,11 +45,12 @@
         <key>import_cpn</key>
     </operator>
     <operator>
-   		<name>Import Petri Net List</name>
-   		<synopsis>Import a List of Petri Nets</synopsis>
-   		<help> </help>
-   		<key>import_petri_net_list</key>
-   	</operator>
+    	<name>Import Static Event Stream</name>
+    	<synopsis>Import a static event stream</synopsis>
+    	<help>Allows for importing a static event stream. Static event streams allow us to do repeated experiments using the same event stream.</help>
+    	<key>import_static_event_stream</key>
+    </operator>
+    
     
    <operator>
     	<name>Add Source and Sink to Petri net</name>
@@ -244,7 +245,13 @@
 		<synopsis>This operator can be used to export an event log.</synopsis>
         <help>This operator can be used to export a event log. As log format XES, XES.GZ, MXML, and MXML.GZ are available. As input this operator needs an event log.</help>
 		<key>export_log</key>
-	</operator>  
+	</operator> 
+	<operator>
+		<name>Export Static Event Stream</name>
+		<synopsis>This operator can be used to export a static event stream.</synopsis>
+		<help></help>
+		<key>export_static_event_stream</key>
+	</operator>
 	<operator>
         <name>Event Log to Data Table (Exampleset)</name>
         <synopsis>This operator can be used to convert a ProM log into an Exampleset (data table).</synopsis>
@@ -540,10 +547,16 @@
   	
   	<!-- STREAMS -->
     <operator>
-        <name>Generate event stream from CPN</name>
+        <name>Generate Event Stream from CPN</name>
         <synopsis>Generate stream from CPN</synopsis>
         <help></help>
         <key>stream_from_cpn</key>
+    </operator>
+    <operator>
+        <name>Generate Event Stream from Static Event Stream</name>
+        <synopsis>Generate an event stream from a static event stream.</synopsis>
+        <help></help>
+        <key>stream_from_static_event_stream</key>
     </operator>
     <operator>
         <name>Stream Inductive Miner (Accepting Petri Net)</name>

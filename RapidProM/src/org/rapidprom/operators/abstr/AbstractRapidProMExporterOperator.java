@@ -28,7 +28,7 @@ import com.rapidminer.parameter.ParameterTypeString;
 public abstract class AbstractRapidProMExporterOperator<T extends AbstractRapidProMIOObject<T2>, T2, F>
 		extends AbstractWriter<T> {
 
-	protected final static String PARAMETER_KEY_FOLDER = "older";
+	protected final static String PARAMETER_KEY_FOLDER = "folder";
 	protected final static String PARAMETER_DESC_FOLDER = "The folder where the file should be stored.";
 
 	protected final static String PARAMETER_KEY_FILE_NAME = "file_name";

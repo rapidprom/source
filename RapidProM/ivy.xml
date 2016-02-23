@@ -17,7 +17,7 @@
         <dependency org="org.rapidprom" name="DataPetriNets" rev="6.5.291" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="DottedChart" rev="6.5.17" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="EvolutionaryTreeMiner" rev="6.5.53" rapidprom:release="3.0.0" />
-        <dependency org="org.rapidprom" name="EventStream" rev="6.5.59" rapidprom:release="3.0.0" />
+        <dependency org="org.rapidprom" name="EventStream" rev="6.5.63" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="FeaturePrediction" rev="6.5.61" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="Fuzzy" rev="6.5.33" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="GraphViz" rev="6.5.142" rapidprom:release="3.0.0" />

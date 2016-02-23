@@ -52,8 +52,8 @@ public class ExtractXLogOperator
 		}
 	}
 
-	public final static String PARAMETER_KEY_IMPORTER = "importer";
-	public final static String PARAMETER_DESC_IMPORTER = 
+	private final static String PARAMETER_KEY_IMPORTER = "importer";
+	private final static String PARAMETER_DESC_IMPORTER = 
 			"Select the implementing importer, importers differ in terms of performance: "
 			+ "The \"Naive\" importer loads the Log completely in memory (faster, but more memory usage). "
 			+ "The \"Buffered by MAPDB\" importer loads only log, trace and event ids, "
@@ -61,7 +61,7 @@ public class ExtractXLogOperator
 			+ "(slower, but less memory usage). "
 			+ "The \"Lightweight & Sequential IDs\" importer is a balance between the \"Naive\" and the \"Buffered by MapDB\" importers";
 	
-	public final static ImplementingPlugin[] PARAMETER_OPTIONS_IMPORTER = EnumSet
+	private final static ImplementingPlugin[] PARAMETER_OPTIONS_IMPORTER = EnumSet
 			.allOf(ImplementingPlugin.class)
 			.toArray(new ImplementingPlugin[EnumSet
 					.allOf(ImplementingPlugin.class).size()]);
@@ -101,7 +101,7 @@ public class ExtractXLogOperator
 		return types;
 	}
 
-	public static ParameterType createImporterParameterTypeCategory(String key,
+	private ParameterType createImporterParameterTypeCategory(String key,
 			String desc, ImplementingPlugin[] importers) {
 		String[] importersStr = new String[importers.length];
 		for (int i = 0; i < importersStr.length; i++) {

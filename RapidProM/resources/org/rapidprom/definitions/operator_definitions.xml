@@ -118,12 +118,6 @@
             </operator>
             
         </group>
-        <!-- <group key="experimental">
-         <operator>
-                <key>sequence_miner</key>
-                <class>com.rapidminer.operator.miningplugins.SequencePainterTask</class>
-            </operator> 
-        </group>-->
         <group key="export">
             <operator>
                 <key>export_petri_net</key>
@@ -132,6 +126,10 @@
             <operator>
                 <key>export_log</key>
                 <class>org.rapidprom.operators.io.ExportXLogOperator</class>
+            </operator>
+            <operator>
+                <key>export_static_event_stream</key>
+                <class>org.rapidprom.operators.io.ExportXSStaticXSEventStream</class>
             </operator>
         </group>
         <group key="import">
@@ -154,6 +152,10 @@
             <operator>
                 <key>import_petri_net</key>
                 <class>org.rapidprom.operators.io.ImportPetriNetOperator</class>
+            </operator>
+            <operator>
+                <key>import_static_event_stream</key>
+                <class>org.rapidprom.operators.io.ImportXSStaticXSEventStreamOperator</class>
             </operator>
         </group>
         <group key="log_manipulation">
@@ -211,6 +213,10 @@
                 <operator>
                     <key>stream_from_cpn</key>
                     <class>org.rapidprom.operators.streams.generators.CPNToEventStreamOperator</class>
+                </operator>
+                <operator>
+                    <key>stream_from_static_event_stream</key>
+                    <class>org.rapidprom.operators.streams.generators.StaticEventStreamToEventStreamOperator</class>
                 </operator>
             </group>
         </group>

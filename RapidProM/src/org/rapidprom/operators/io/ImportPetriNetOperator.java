@@ -21,19 +21,13 @@ public class ImportPetriNetOperator
 	private final static String[] SUPPORTED_FILE_FORMATS = new String[] {
 			"pnml" };
 
-	static {
-		registerExtentions(SUPPORTED_FILE_FORMATS);
-	}
-
 	public ImportPetriNetOperator(OperatorDescription description) {
-		super(description, PetriNetIOObject.class);
+		super(description, PetriNetIOObject.class, SUPPORTED_FILE_FORMATS);
 	}
 
 	@Override
 	public List<ParameterType> getParameterTypes() {
 		List<ParameterType> types = super.getParameterTypes();
-		// we can not implement this in the super class due to a cyclic
-		// call to getParameterTypes()
 		types.add(new ParameterTypeFile(PARAMETER_KEY_FILE, PARAMETER_DESC_FILE,
 				false, SUPPORTED_FILE_FORMATS));
 		return types;
