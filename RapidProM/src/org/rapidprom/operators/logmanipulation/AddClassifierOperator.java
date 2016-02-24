@@ -6,19 +6,17 @@ import org.deckfour.xes.classification.XEventAndClassifier;
 import org.deckfour.xes.classification.XEventLifeTransClassifier;
 import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.classification.XEventResourceClassifier;
-import org.deckfour.xes.info.XLogInfo;
-import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XLog;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
 import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.operators.ports.metadata.XLogIOObjectMetaData;
 
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
-import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeCategory;
 
@@ -38,8 +36,6 @@ public class AddClassifierOperator extends Operator {
 
 	public AddClassifierOperator(OperatorDescription description) {
 		super(description);
-		getTransformer().addRule(
-				new GenerateNewMDRule(outputEventLog, XLogIOObject.class));
 	}
 
 	public void doWork() throws OperatorException {
@@ -47,14 +43,15 @@ public class AddClassifierOperator extends Operator {
 		XLogIOObject logObject = inputXLog.getData(XLogIOObject.class);
 
 		XLog newLog = (XLog) logObject.getArtifact().clone();
-		XLogInfo newinfo = new XLogInfoImpl(newLog, null, null);
+		XLogIOObjectMetaData md = (XLogIOObjectMetaData) inputXLog
+				.getMetaData();
 
 		switch (getParameterAsString(PARAMETER_1_KEY)) {
 		case NONE:
 			break;
 		case EN:
 			newLog.getClassifiers().add(new XEventNameClassifier());
-			
+
 			break;
 		case EN_LT:
 			newLog.getClassifiers()
@@ -63,14 +60,20 @@ public class AddClassifierOperator extends Operator {
 			break;
 		case EN_LT_RE:
 			newLog.getClassifiers()
-			.add(new XEventAndClassifier(new XEventNameClassifier(),
-					new XEventLifeTransClassifier(), new XEventResourceClassifier()));
+					.add(new XEventAndClassifier(new XEventNameClassifier(),
+							new XEventLifeTransClassifier(),
+							new XEventResourceClassifier()));
 			break;
 		}
 
 		XLogIOObject result = new XLogIOObject(newLog,
 				ProMPluginContextManager.instance().getContext());
 		result.setVisualizationType(XLogIOObjectVisualizationType.DEFAULT);
+
+		md.getXEventClassifiers().clear();
+		md.getXEventClassifiers().addAll(newLog.getClassifiers());
+
+		outputEventLog.deliverMD(md);
 
 		outputEventLog.deliver(result);
 	}
