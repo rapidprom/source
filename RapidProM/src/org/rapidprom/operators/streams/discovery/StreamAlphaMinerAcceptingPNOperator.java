@@ -3,18 +3,18 @@ package org.rapidprom.operators.streams.discovery;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.eventstream.readers.acceptingpetrinet.XSEventStreamToAcceptingPetriNetReader;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.streaminductiveminer.parameters.StreamInductiveMinerParameters;
-import org.processmining.streaminductiveminer.plugins.StreamInductiveMinerAcceptingPetriNetPlugin;
+import org.processmining.streamalphaminer.parameters.StreamAlphaMinerParameters;
+import org.processmining.streamalphaminer.plugins.StreamAlphaMinerAcepptingPetriNetPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamToAcceptingPetriNetReaderIOObject;
 import org.rapidprom.operators.streams.discovery.abstr.AbstractDFABasedMinerOperator;
 
 import com.rapidminer.operator.OperatorDescription;
 
-public class StreamInductiveMinerAcceptingPNOperator extends
-		AbstractDFABasedMinerOperator<XSEventStreamToAcceptingPetriNetReader, XSEventStreamToAcceptingPetriNetReaderIOObject, StreamInductiveMinerParameters> {
+public class StreamAlphaMinerAcceptingPNOperator extends
+		AbstractDFABasedMinerOperator<XSEventStreamToAcceptingPetriNetReader, XSEventStreamToAcceptingPetriNetReaderIOObject, StreamAlphaMinerParameters> {
 
-	public StreamInductiveMinerAcceptingPNOperator(
+	public StreamAlphaMinerAcceptingPNOperator(
 			OperatorDescription description) {
 		super(description);
 	}
@@ -22,15 +22,15 @@ public class StreamInductiveMinerAcceptingPNOperator extends
 	@Override
 	protected PluginContext getPluginContextForAlgorithm() {
 		return ProMPluginContextManager.instance().getFutureResultAwareContext(
-				StreamInductiveMinerAcceptingPetriNetPlugin.class);
+				StreamAlphaMinerAcepptingPetriNetPlugin.class);
 	}
 
 	@Override
 	protected XSEventStreamToAcceptingPetriNetReader getAlgorithm(
 			PluginContext context, XSEventStream stream,
-			StreamInductiveMinerParameters parameters) {
-		StreamInductiveMinerAcceptingPetriNetPlugin plugin = new StreamInductiveMinerAcceptingPetriNetPlugin();
-		return plugin.apply(context, stream, parameters);
+			StreamAlphaMinerParameters parameters) {
+		return StreamAlphaMinerAcepptingPetriNetPlugin.apply(context, stream,
+				parameters);
 	}
 
 	@Override
@@ -42,8 +42,8 @@ public class StreamInductiveMinerAcceptingPNOperator extends
 	}
 
 	@Override
-	protected StreamInductiveMinerParameters getAlgorithmParameterObject() {
-		return new StreamInductiveMinerParameters();
+	protected StreamAlphaMinerParameters getAlgorithmParameterObject() {
+		return new StreamAlphaMinerParameters();
 	}
 
 }

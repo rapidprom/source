@@ -559,6 +559,12 @@
         <key>stream_from_static_event_stream</key>
     </operator>
     <operator>
+        <name>Stream Alpha Miner (Accepting Petri Net)</name>
+        <synopsis>Discover a Petri net from an event stream using a stream-based implementation of the alpha miner</synopsis>
+        <key>stream_alpha_miner_apn</key>
+        <help />
+    </operator>
+    <operator>
         <name>Stream Inductive Miner (Accepting Petri Net)</name>
         <synopsis>Discover a Petri net from an event stream using a stream-based implementation of the inductive miner</synopsis>
         <help />
@@ -566,7 +572,7 @@
 	</operator>
 	<operator>
         <name>Stream Inductive Miner (Process Tree)</name>
-        <synopsis>Discover a Petri net from an event stream using a stream-based implementation of the inductive miner</synopsis>
+        <synopsis>Discover a process tree from an event stream using a stream-based implementation of the inductive miner</synopsis>
         <help />
         <key>stream_inductive_miner_pt</key>
     </operator>

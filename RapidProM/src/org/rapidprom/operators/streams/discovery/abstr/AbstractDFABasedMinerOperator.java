@@ -7,6 +7,7 @@ import java.util.Map;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.processmining.eventstream.core.interfaces.XSEventSignature;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
+import org.processmining.eventstream.readers.abstractions.XSEventStreamToDFAReaderParameters;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.stream.core.interfaces.XSDataPacket;
 import org.processmining.stream.core.interfaces.XSReader;
@@ -14,7 +15,6 @@ import org.processmining.stream.model.datastructure.DSParameter;
 import org.processmining.stream.model.datastructure.DSParameterDefinition;
 import org.processmining.stream.model.datastructure.DSParameterFactory;
 import org.processmining.stream.model.datastructure.DataStructureType;
-import org.processmining.streaminductiveminer.parameters.StreamInductiveMinerParameters;
 import org.processmining.streaminductiveminer.utils.StreamInductiveMinerUtils;
 import org.rapidprom.ioobjects.streams.XSReaderIOObject;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
@@ -33,7 +33,7 @@ import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.parameter.conditions.EqualStringCondition;
 
-public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<? extends XSDataPacket<?, ?>, ?>, T2 extends XSReaderIOObject<T1>>
+public abstract class AbstractDFABasedMinerOperator<T1 extends XSReader<? extends XSDataPacket<?, ?>, ?>, T2 extends XSReaderIOObject<T1>, P extends XSEventStreamToDFAReaderParameters>
 		extends Operator {
 
 	private InputPort streamInputPort = getInputPorts()
@@ -68,17 +68,16 @@ public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<?
 					new DataStructureType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
 							.size()]);
 
-	public AbstractStreamInductiveMinerOperator(
-			OperatorDescription description) {
+	public AbstractDFABasedMinerOperator(OperatorDescription description) {
 		super(description);
 		getTransformer().addRule(new GenerateNewMDRule(readerOutputPort,
 				XSReaderIOObject.class));
 	}
 
-	protected abstract PluginContext getPluginContextForISM();
+	protected abstract PluginContext getPluginContextForAlgorithm();
 
 	protected abstract T1 getAlgorithm(PluginContext context,
-			XSEventStream stream, StreamInductiveMinerParameters parameters);
+			XSEventStream stream, P parameters);
 
 	protected abstract T2 getIOObject(T1 algorithm, PluginContext context);
 
@@ -86,24 +85,24 @@ public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<?
 	public void doWork() throws UserError {
 		XSEventStream eventStream = streamInputPort
 				.getData(XSEventStreamIOObject.class).getArtifact();
-		PluginContext context = getPluginContextForISM();
-		StreamInductiveMinerParameters params = new StreamInductiveMinerParameters();
+		PluginContext context = getPluginContextForAlgorithm();
+		P params = getAlgorithmParameterObject();
 		params.setCaseIdentifier(
 				getParameterAsString(PARAMETER_KEY_CASE_IDENTIFIER));
 		params.setActivityIdentifier(
 				getParameterAsString(PARAMETER_KEY_EVENT_IDENTIFIER));
 		params.setRefreshRate(getParameterAsInt(PARAMETER_KEY_REFRESH_RATE));
-		params = setCaseActivityStore(params);
-		params = setActivityActivityStore(params);
+		params = setCaseActivityDataStructure(params);
+		params = setActivityActivityDataStructure(params);
 		T1 reader = getAlgorithm(context, eventStream, params);
 		reader.start();
 		readerOutputPort.deliver(getIOObject(reader, context));
-
 	}
 
-	protected StreamInductiveMinerParameters setActivityActivityStore(
-			StreamInductiveMinerParameters params)
-					throws UndefinedParameterError {
+	protected abstract P getAlgorithmParameterObject();
+
+	protected P setActivityActivityDataStructure(P params)
+			throws UndefinedParameterError {
 		DataStructureType activityActivityStoreType = PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE[getParameterAsInt(
 				PARAMETER_KEY_ACTIVITY_ACTIVITY_STORE)];
 		params.setActivityActivityDataStructureType(activityActivityStoreType);
@@ -114,9 +113,7 @@ public abstract class AbstractStreamInductiveMinerOperator<T1 extends XSReader<?
 		return params;
 	}
 
-	protected StreamInductiveMinerParameters setCaseActivityStore(
-			StreamInductiveMinerParameters params)
-					throws UndefinedParameterError {
+	protected P setCaseActivityDataStructure(P params) throws UndefinedParameterError {
 		DataStructureType caseActivityStoreType = PARAMETER_OPTIONS_CASE_ACTIVITY_STORE[getParameterAsInt(
 				PARAMETER_KEY_CASE_ACTIVITY_STORE)];
 		params.setCaseActivityDataStructureType(caseActivityStoreType);

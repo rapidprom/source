@@ -193,6 +193,10 @@
             </group>
             <group key="discovery">
                 <operator>
+                    <key>stream_alpha_miner_apn</key>
+                    <class>org.rapidprom.operators.streams.discovery.StreamAlphaMinerAcceptingPNOperator</class>
+                </operator>
+                <operator>
                     <key>stream_inductive_miner_apn</key>
                     <class>org.rapidprom.operators.streams.discovery.StreamInductiveMinerAcceptingPNOperator</class>
                 </operator>
