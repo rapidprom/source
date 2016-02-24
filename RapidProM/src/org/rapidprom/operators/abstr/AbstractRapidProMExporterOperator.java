@@ -78,17 +78,25 @@ public abstract class AbstractRapidProMExporterOperator<T extends AbstractRapidP
 		dir.setOptional(false);
 		types.add(dir);
 
-		types.add(new ParameterTypeString(PARAMETER_KEY_FILE_NAME,
-				PARAMETER_DESC_FILE_NAME));
+		ParameterTypeString fileNameParam = new ParameterTypeString(
+				PARAMETER_KEY_FILE_NAME, PARAMETER_DESC_FILE_NAME);
+		fileNameParam.setExpert(false);
+		fileNameParam.setOptional(false);
+		types.add(fileNameParam);
 
 		String[] fileFormatStr = new String[PARAMETER_VALUES_FILE_FORMAT.length];
 		for (int i = 0; i < fileFormatStr.length; i++) {
 			fileFormatStr[i] = PARAMETER_VALUES_FILE_FORMAT[i].toString();
 		}
-		types.add(new ParameterTypeCategory(PARAMETER_KEY_FILE_FORMAT,
-				PARAMETER_DESC_FILE_FORMAT, fileFormatStr,
-				Arrays.asList(PARAMETER_VALUES_FILE_FORMAT)
-						.indexOf(defaultFileFormat)));
+
+		ParameterTypeCategory fileFormat = new ParameterTypeCategory(
+				PARAMETER_KEY_FILE_FORMAT, PARAMETER_DESC_FILE_FORMAT,
+				fileFormatStr, Arrays.asList(PARAMETER_VALUES_FILE_FORMAT)
+						.indexOf(defaultFileFormat));
+		fileFormat.setExpert(false);
+		fileFormat.setOptional(false);
+
+		types.add(fileFormat);
 		return types;
 	}
 }

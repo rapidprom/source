@@ -127,10 +127,6 @@
                 <key>export_log</key>
                 <class>org.rapidprom.operators.io.ExportXLogOperator</class>
             </operator>
-            <operator>
-                <key>export_static_event_stream</key>
-                <class>org.rapidprom.operators.io.ExportXSStaticXSEventStream</class>
-            </operator>
         </group>
         <group key="import">
             <operator>
@@ -152,10 +148,6 @@
             <operator>
                 <key>import_petri_net</key>
                 <class>org.rapidprom.operators.io.ImportPetriNetOperator</class>
-            </operator>
-            <operator>
-                <key>import_static_event_stream</key>
-                <class>org.rapidprom.operators.io.ImportXSStaticXSEventStreamOperator</class>
             </operator>
         </group>
         <group key="log_manipulation">
@@ -207,6 +199,24 @@
                 <operator>
                     <key>stream_inductive_miner_pt</key>
                     <class>org.rapidprom.operators.streams.discovery.StreamInductiveMinerProcessTreeOperator</class>
+                </operator>
+            </group>
+            <group key="export">
+                 <operator>
+                    <key>export_static_event_stream</key>
+                    <class>org.rapidprom.operators.io.ExportXSStaticXSEventStream</class>
+                </operator>
+            </group>
+            <group key="extract">
+                <operator>
+                    <key>extract_static_event_stream_from_event_stream</key>
+                    <class>org.rapidprom.operators.streams.extract.EventStreamToStaticEventStream</class>
+                </operator>
+            </group>
+            <group key="import">
+                <operator>
+                    <key>import_static_event_stream</key>
+                    <class>org.rapidprom.operators.io.ImportXSStaticXSEventStreamOperator</class>
                 </operator>
             </group>
             <group key="generators">

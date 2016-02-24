@@ -576,4 +576,10 @@
         <help />
         <key>event_stream_analysis_proj_rec_prec_apn</key>
 	</operator>
+	<operator>
+		<name> Extract Static Event Stream </name>
+		<synopsis> This operator allows for extracting a static event stream from a live event stream.</synopsis>
+		<help> This operator allows for extracting a static event stream from a live event stream. The static event stream can be used repeatedly (i.e. for repeated experiments). The user needs to specify how many packets should be captured by the extractor. The primary input is an (inactive) event stream. As a secondary, optional, input an author object can be given. If the author is not started yet the operator will start the underlying author.</help>
+	    <key>extract_static_event_stream_from_event_stream</key>
+	</operator>
 </operatorHelp>
