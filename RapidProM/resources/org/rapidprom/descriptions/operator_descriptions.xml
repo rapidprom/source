@@ -41,7 +41,7 @@
 	<operator>
 		<name>Import CPN Model</name>
         <synopsis>Import CPN Model</synopsis>
-        <help> </help>
+        <help>This operator imports a coloured-Petri net. These can be obtained from other tools such as CPN tools. </help>
         <key>import_cpn</key>
     </operator>
     <operator>
@@ -103,15 +103,9 @@
   <operator>
   		<name>Petri Net to BPMN</name>
         <synopsis>This operator transforms a Petri net into a BPMN diagram</synopsis>
-        <help>For using this operator, you need a context and a petri net. </help>
+        <help>For using this operator, you need a petri net as input. The conversion used is described in http://dx.doi.org/10.1007/s10270-015-0502-0 </help>
 		<key>convert_petrinet_to_bpmn</key>
 	</operator>
-	<operator>
-		<name>Petri Nets to Petri Net List</name>
-		<synopsis>This operator transforms a number of Petri nets to a list containing them</synopsis>
-		<help></help>
-		<key>convert_petri_nets_to_petri_net_list</key>
-	</operator>	
   <operator>
   		<name>Transition System to Petri Net </name>
         <synopsis>This operator transforms a Transition System (Reachability Graph) into a petri net</synopsis>
@@ -128,16 +122,17 @@
     <operator>
         <name>Import Accepting Petri Net</name>
         <synopsis>Import an Accepting Petri Net</synopsis>
-        <help />
+        <help>This operator imports an accepting Petri net (a Petri net with initial and final markings).</help>
         <key>import_accepting_petri_net</key>
     </operator>
     
   <operator>
   		<name>Import Petri Net</name>
-        <synopsis>This operator is used to import a Petri net</synopsis>
-        <help> </help>
+        <synopsis>This operator is used to import a Petri net in a pnml format</synopsis>
+        <help>This operator can be used to read a PNML file. PNML files that are accepted are the ones that are produced by ProM itself or the ones that are produced by Yasper. As input a pnml file is needed.</help>
 		<key>import_petri_net</key>
 	</operator>
+	
   <operator>
   		<name>Animate Log in Fuzzy Model</name>
         <synopsis>This operator is used to animate (replay) an event log into a selected fuzzy instance</synopsis>
@@ -147,7 +142,7 @@
   <operator>
   		<name>Select Fuzzy Instance</name>
         <synopsis>This operator is used to select the best fuzzy instance for the Fuzzy Animation</synopsis>
-        <help>For using this operator, a context and a Fuzzy Model (MetricsRepository object) are necessary as inputs. </help>
+        <help>For using this operator, a Fuzzy Model (MetricsRepository object) is necessary as input. </help>
 		<key>select_best_fuzzy_instance</key>
 	</operator>  
    <operator>
@@ -163,13 +158,6 @@
         <synopsis>This operator can be used to read a ProM XES log file from a file object (useful for loops over file collections)</synopsis>
         <help>This operator can be used to read a ProM XES log file</help>
     <key>extract_log_from_file</key>
-  </operator>
-  
-  <operator>
-        <name>Read PNML</name>
-        <synopsis>This operator can be used to read a PNML file.</synopsis>
-        <help>This operator can be used to read a PNML file. PNML files that are accepted are the ones that are produced by ProM itself or the ones that are produced by Yasper. As input a ProM context and a pnml file is needed.</help>
-    <key>read_pnml_file</key>
   </operator>
   
   <operator>
@@ -471,7 +459,7 @@
   	<operator>
         <name>Add Noise</name>
         <synopsis>This filter randomly adds noise to the log.</synopsis>
-        <help>This operator can be used to add noise to a log. There are 5 possible noise types: remove head, remove body, swap tasks, remove task, and add task. The noise types remove head and remove body respectively remove at most the first or second 1/3 of a trace. The noise type swap randomly swaps two event in a trace. The noise type remove randomly removes event from a trace. The add type randomly adds an event to a trace. As input a log file is needed.</help>
+        <help>This operator can be used to add specific noise to a log. Check the parameter descriptions for more info on how noise is added. An event log is required as input.</help>
     	<key>add_noise_log</key>
   	</operator>
   	
@@ -513,7 +501,7 @@
   	 <operator>
         <name>Merge Event Logs</name>
         <synopsis>This operator merges two event logs.</synopsis>
-        <help>This operator merges two event logs. As input two logs are needed.</help>
+        <help>This operator merges two event logs by collecting all the traces into a consolidated event log. As input two logs are needed.</help>
     	<key>merge_two_event_logs</key>
   	</operator>
   	
