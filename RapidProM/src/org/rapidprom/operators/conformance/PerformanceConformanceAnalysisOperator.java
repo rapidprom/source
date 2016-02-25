@@ -26,6 +26,8 @@ import org.processmining.plugins.astar.petrinet.PetrinetReplayerNoILPRestrictedM
 import org.processmining.plugins.astar.petrinet.manifestreplay.CostBasedCompleteManifestParam;
 import org.processmining.plugins.astar.petrinet.manifestreplay.ManifestFactory;
 import org.processmining.plugins.astar.petrinet.manifestreplay.PNManifestFlattener;
+import org.processmining.plugins.astar.petrinet.manifestreplay.ui.CreatePatternPanel;
+import org.processmining.plugins.astar.petrinet.manifestreplay.ui.MapPattern2TransStep;
 import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayer;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
@@ -40,6 +42,8 @@ import org.rapidprom.ioobjects.ManifestIOObject;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.operators.abstr.AbstractRapidProMDiscoveryOperator;
 
+import com.rapidminer.example.ExampleSet;
+import com.rapidminer.example.ExampleSetFactory;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
@@ -56,7 +60,8 @@ import nl.tue.astar.AStarException;
 public class PerformanceConformanceAnalysisOperator
 		extends AbstractRapidProMDiscoveryOperator {
 
-	private static final String PARAMETER_1 = "Max Explored States (in Hundreds)";
+	private static final String PARAMETER_1_KEY = "Max Explored States (in Thousands)",
+			PARAMETER_2_DESCR = "The maximum number of states that are searched for a trace alignment.";
 
 	private InputPort inputPN = getInputPorts()
 			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
@@ -126,16 +131,18 @@ public class PerformanceConformanceAnalysisOperator
 				pluginContext);
 		outputManifest.deliver(manifestIOObject);
 
-		/*
-		 * double sum = 0; for (int j = 0; j < manifestIOObject.getArtifact()
-		 * .getCasePointers().length; j++) { sum = sum +
-		 * manifestIOObject.getArtifact().getTraceFitness(j); }
-		 * 
-		 * ExampleSet es = ExampleSetFactory.createExampleSet(new Object[][] { {
-		 * "fitness", sum / (double) manifestIOObject.getArtifact()
-		 * .getCasePointers().length }, { "precision", 0.0 } });
-		 * outputFitness.deliver(es);
-		 */
+		double sum = 0;
+		for (int j = 0; j < manifestIOObject.getArtifact()
+				.getCasePointers().length; j++) {
+			sum = sum + manifestIOObject.getArtifact().getTraceFitness(j);
+		}
+
+		ExampleSet es = ExampleSetFactory.createExampleSet(new Object[][] {
+				{ "fitness",
+						sum / (double) manifestIOObject.getArtifact()
+								.getCasePointers().length },
+				{ "precision", 0.0 } });
+		outputFitness.deliver(es);
 
 		logger.log(Level.INFO,
 				"End: replay log on petri net for performance/conformance checking ("
@@ -146,14 +153,15 @@ public class PerformanceConformanceAnalysisOperator
 			PetriNetIOObject pNet, XLog log) throws UndefinedParameterError {
 		PNManifestReplayerParameter parameter = new PNManifestReplayerParameter();
 		try {
+			parameter.setGUIMode(false);
 			parameter.setInitMarking(pNet.getInitialMarking());
 			parameter.setFinalMarkings(getFinalMarking(pNet.getArtifact()));
-			parameter.setMaxNumOfStates(getParameterAsInt(PARAMETER_1));
+			parameter.setMaxNumOfStates(
+					getParameterAsInt(PARAMETER_1_KEY) * 1000);
 			TransClasses tc = new TransClasses(pNet.getArtifact());
 			Map<TransClass, Set<EvClassPattern>> pattern = new HashMap<TransClass, Set<EvClassPattern>>();
 
-			XEventClassifier classifier = new XEventAndClassifier(
-					new XEventNameClassifier());
+			XEventClassifier classifier = getXEventClassifier();
 			Collection<XEventClass> eventClasses = XLogInfoFactory
 					.createLogInfo(log, classifier).getEventClasses()
 					.getClasses();
@@ -185,10 +193,9 @@ public class PerformanceConformanceAnalysisOperator
 				costsSync.put(t, 0);
 			}
 			parameter.setTrans2Cost(costs);
-
 			parameter.setTransSync2Cost(costsSync);
-			parameter.setMaxNumOfStates(getParameterAsInt(PARAMETER_1));
 
+			parameter = new PNManifestReplayerParameter();
 		} catch (ObjectNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -199,8 +206,8 @@ public class PerformanceConformanceAnalysisOperator
 	public List<ParameterType> getParameterTypes() {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
-		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_1,
-				PARAMETER_1, 0, Integer.MAX_VALUE, 100);
+		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_1_KEY,
+				PARAMETER_1_KEY, 0, Integer.MAX_VALUE, 100);
 		parameterTypes.add(parameterType2);
 
 		return parameterTypes;
@@ -228,24 +235,25 @@ public class PerformanceConformanceAnalysisOperator
 
 	private PNManifestReplayerParameter getParameter(PetrinetGraph net,
 			XLog log) {
-		// /**
-		// * Utilities
-		// */
-		// XEventClassifier classifier = getXEventClassifier();
-		//
-		// // results, required earlier for wizard
-		// PNManifestReplayerParameter parameter = new
-		// PNManifestReplayerParameter();
-		//
-		// // generate pattern mapping GUI
-		// MapPattern2TransStep mapPatternStep = new MapPattern2TransStep(net,
-		// log, (CreatePatternPanel) createPatternStep.getComponent(parameter));
-		//
-		// TransClasses transClasses = patternMappingPanel.getTransClasses();
-		// TransClass2PatternMap mapping = new TransClass2PatternMap(log, net,
-		// patternCreatorPanel.getSelectedEvClassifier(),
-		// transClasses, patternMappingPanel.getMapPattern());
-		// model.setMapping(mapping);
+		 /**
+		 * Utilities
+		 */
+//		 XEventClassifier classifier = getXEventClassifier();
+//		
+//		 // results, required earlier for wizard
+//		 PNManifestReplayerParameter parameter = new
+//		 PNManifestReplayerParameter();
+//		
+//		 CreatePatternPanel createPatternStep;
+//		 // generate pattern mapping GUI
+//		 MapPattern2TransStep mapPatternStep = new MapPattern2TransStep(net,
+//		 log, (CreatePatternPanel) createPatternStep.getComponent(parameter));
+//		
+//		 TransClasses transClasses = patternMappingPanel.getTransClasses();
+//		 TransClass2PatternMap mapping = new TransClass2PatternMap(log, net,
+//		 patternCreatorPanel.getSelectedEvClassifier(),
+//		 transClasses, patternMappingPanel.getMapPattern());
+//		 model.setMapping(mapping);
 		//
 		// // generate algorithm selection GUI, look for initial marking and
 		// final markings

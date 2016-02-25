@@ -1,34 +1,12 @@
 <?xml version="1.0" encoding="windows-1252" standalone="no"?>
 <operatorHelp lang="en_EN">
-    <!--  This is an example how to specify the description of operators and the translation of it's key identifier
-    to names. 
-
-   <operator>
-      <name>SingleTextInput</name>
-      <synopsis>Generates word vectors from a single text.</synopsis>
-      <help />
-   </operator>
-   <operator>
-      <name>TextObjectWriter</name>
-      <synopsis>Writes a textobject into a file.</synopsis>
-      <help>This operator writes a given textObject into a file. It might be specified if an existing file with the same name should be overwritten.</help>
-   </operator>
-
-    This is how group ids are translated:
-    
-   <group>
-      <key>text_processing</key>
-      <name>Text Processing</name>
-   </group>
-
-    -->
-    
+       
     <!-- IMPORTERS -->
 
    <operator>
         <name>Measure Model Precision based on alignments</name>
-        <synopsis></synopsis>
-        <help> </help>
+        <synopsis>Measures model precision and generalization based on pre-calculated alignments, as defined in: http://dx.doi.org/10.6100/IR770080</synopsis>
+        <help>For this operator, you need alignments (PNRepResult) as input.</help>
         <key>measure_precision</key>
    </operator>
    <operator>
@@ -66,32 +44,32 @@
 	</operator>
   <operator>
   		<name>Soundness analysis (WOFLAN)</name>
-        <synopsis>This operator analyzes the soundness of a petri net</synopsis>
+        <synopsis>This operator analyzes the soundness of a petri net using the Woflan workflow diagnosis tool, as defined in: http://dx.doi.org/10.1007/3-540-44988-4_28 </synopsis>
         <help>For using this operator, you need a context and a petri net. </help>
 		<key>analyze_with_woflan</key>
 	</operator>
   <operator>
   		<name>Feature Prediction (Decision Trees)</name>
-        <synopsis>This operator performs Predictions of Business Process Features</synopsis>
-        <help>For using this operator, you need a context and a log. </help>
+        <synopsis>This operator performs Predictions of Business Process Features, as defined in http://dx.doi.org/10.1007/978-3-319-10172-9_16 </synopsis>
+        <help>For using this operator, you need an event log. The actual tool will be launched when visualized.</help>
 		<key>perform_predictions_of_business_process_features</key>
 	</operator>
   <operator>
   		<name>Conformance Checking</name>
-        <synopsis>This operator replays a log into a petrinet and show visual results</synopsis>
+        <synopsis>This operator replays a log into a petrinet and show visual results, as described in http://dx.doi.org/10.6100/IR770080</synopsis>
         <help>For using this operator, you need a context, a petri net and a log. </help>
 		<key>replay_a_log_on_petri_net_for_conformance_analysis</key>
 	</operator>
   <operator>
   		<name>Inductive Visual Miner</name>
-        <synopsis>This operator creates a process model using the Inductive Visual Miner</synopsis>
-        <help>For using this operator, you need a context and a log. </help>
+        <synopsis>This operator creates a process model using the Inductive Visual Miner as described in: http://repository.tue.nl/25a7fd81-8bf4-4606-a903-d9b78b95cdd3</synopsis>
+        <help>For using this operator, you need an event log. </help>
 		<key>mine_with_inductive_visual_miner</key>
 	</operator>
   <operator>
   		<name>Visualize Model using PomPom (visualization)</name>
-        <synopsis>This operator shows a PomPom view over a PetriNet</synopsis>
-        <help>For using this operator, you need a context, a petri net and a log. </help>
+        <synopsis>This operator shows a PomPom view over a PetriNet. The PomPom operator visualizes a Petri-net/EPC that emphasizes those parts of the process that correspond to high-frequent events in a given log. The visualizer will attempt to reduce low-frequent transitions/functions as much as possible. </synopsis>
+        <help>For using this operator, you need a petri net and a log. </help>
 		<key>show_pompom_view</key>
 	</operator>
   <operator>
@@ -102,19 +80,19 @@
 	</operator>
   <operator>
   		<name>Petri Net to BPMN</name>
-        <synopsis>This operator transforms a Petri net into a BPMN diagram</synopsis>
-        <help>For using this operator, you need a petri net as input. The conversion used is described in http://dx.doi.org/10.1007/s10270-015-0502-0 </help>
+        <synopsis>This operator transforms a Petri net into a BPMN diagram. The conversion used is described in http://dx.doi.org/10.1007/s10270-015-0502-0</synopsis>
+        <help>For using this operator, you need a petri net as input.  </help>
 		<key>convert_petrinet_to_bpmn</key>
 	</operator>
   <operator>
   		<name>Transition System to Petri Net </name>
-        <synopsis>This operator transforms a Transition System (Reachability Graph) into a petri net</synopsis>
-        <help>For using this operator, you need a context and a transition system (reachability graph). </help>
+        <synopsis>This operator transforms a Transition System (Reachability Graph) into a petri net, using Petrify: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.17.8484</synopsis>
+        <help>For using this operator, you need a transition system (reachability graph). </help>
 		<key>transition_system_to_petrinet</key>
 	</operator>
   <operator>
   		<name>Petri Net to Reachability Graph</name>
-        <synopsis>This operator transforms a petri net into a Transition System (Reachability Graph)</synopsis>
+        <synopsis>This operator transforms a petri net into a Transition System (Reachability Graph), using Petrify: http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.17.8484</synopsis>
         <help>For using this operator, you need a context, a petri net and an initial marking set. </help>
 		<key>construct_reachability_graph_of_a_petri_net</key>
 	</operator>
@@ -134,17 +112,12 @@
 	</operator>
 	
   <operator>
-  		<name>Animate Log in Fuzzy Model</name>
-        <synopsis>This operator is used to animate (replay) an event log into a selected fuzzy instance</synopsis>
-        <help>For using this operator, a context, an event log, and a Fuzzy Instance (MutableFuzzyGraph object) are necessary as inputs. </help>
+  		<name>Animate Log in Fuzzy Graph</name>
+        <synopsis>This operator is used to animate (replay) an event log into a fuzzy graph as described in: http://dx.doi.org/10.6100/IR644335</synopsis>
+        <help>For using this operator, an event log, and a Fuzzy Graph are necessary as inputs. </help>
 		<key>animate_event_log_in_fuzzy_instance</key>
 	</operator>
-  <operator>
-  		<name>Select Fuzzy Instance</name>
-        <synopsis>This operator is used to select the best fuzzy instance for the Fuzzy Animation</synopsis>
-        <help>For using this operator, a Fuzzy Model (MetricsRepository object) is necessary as input. </help>
-		<key>select_best_fuzzy_instance</key>
-	</operator>  
+  
    <operator>
         <name>Import Event Log</name>
         <synopsis>This operator can be used to import a ProM XES event log from a file.</synopsis>
@@ -210,15 +183,15 @@
  
 	<operator>
         <name>Repair Model (Petri Net)</name>
-        <synopsis>This operator can be used to execute the repaid model algorithm.</synopsis>
-        <help>This operator can be used to execute the repair model algorithm which provides a Petri Net. As input a ProM context, a log file, and a Petri Net is needed.</help>
+        <synopsis>This operator can be used to execute the repaid model algorithm as defined in: http://dx.doi.org/10.1007/978-3-642-32885-5_19 </synopsis>
+        <help>This operator can be used to execute the repair model algorithm which provides a repaired Petri net as result. As input an event log and a Petri Net are needed.</help>
     <key>repair_model</key>
   </operator>
   
 	<operator>
         <name>Reduce Silent Transitions (Petri Net)</name>
-        <synopsis>This operator can be used to execute the reduce silent transitions algorithm.</synopsis>
-        <help>This operator can be used to execute the reduce silent transitions algorithm which provides a Petri Net and a marking. As input a ProM context, a Petri Net, and a marking is needed.</help>
+        <synopsis>This operator can be used to reduce silent transitions using the Murata rules, as defined in: http://dx.doi.org/10.1109/5.24143.</synopsis>
+        <help>This operator can be used to execute the reduce silent transitions algorithm which returns a Petri net. As input a Petri Net is needed.</help>
     <key>reduce_silent_transitions</key>
   </operator>
   
@@ -264,7 +237,7 @@
 	<operator>
         <name>Heuristics Net to Petri Net</name>
         <synopsis>This operator can be used to convert a Heuristics Net into a Petri Net.</synopsis>
-        <help>This operator can be used to convert a Heuristics Net into a Petri Net and a marking. As input a ProM context and a Heuristics Net is needed.</help>
+        <help>This operator can be used to convert a Heuristics Net into a Petri Net. As input a Heuristics Net is needed.</help>
     <key>convert_heuristics_net_into_petri_net</key>
   </operator>
   

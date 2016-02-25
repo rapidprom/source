@@ -25,8 +25,9 @@ import com.rapidminer.tools.LogService;
 
 public class AnimateLogInFuzzyModelAnalysisOperator extends Operator {
 
-	private static final String PARAMETER_1 = "Lookahead",
-			PARAMETER_2 = "Extra lookahead";
+	private static final String PARAMETER_1_KEY = "Lookahead", PARAMETER_1_DESCR = "Indicates the size of the window of event that can be potentially connected to an event.",
+			PARAMETER_2_KEY = "Extra lookahead",
+			PARAMETER_2_DESCR = "Indicates the number of events that can be potentially connected to an event.";
 
 	private InputPort inputMetricsRepository = getInputPorts().createPort(
 			"model (MetricsRepository)", MetricsRepositoryIOObject.class);
@@ -62,7 +63,7 @@ public class AnimateLogInFuzzyModelAnalysisOperator extends Operator {
 
 		FuzzyAnimation animation = new FuzzyAnimation(pluginContext,
 				fuzzyInstance, xLog.getArtifact(),
-				getParameterAsInt(PARAMETER_1), getParameterAsInt(PARAMETER_2));
+				getParameterAsInt(PARAMETER_1_KEY), getParameterAsInt(PARAMETER_2_KEY));
 		animation.initialize(pluginContext, fuzzyInstance, xLog.getArtifact());
 
 		outputFuzzyAnimation.deliver(new FuzzyAnimationIOObject(animation,
@@ -74,12 +75,12 @@ public class AnimateLogInFuzzyModelAnalysisOperator extends Operator {
 	public List<ParameterType> getParameterTypes() {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
-		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_1,
-				PARAMETER_1, 1, 25, 5, false);
+		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_1_KEY,
+				PARAMETER_1_DESCR, 1, 25, 5, false);
 		parameterTypes.add(parameterType2);
 
-		ParameterTypeInt parameterType3 = new ParameterTypeInt(PARAMETER_2,
-				PARAMETER_2, 0, 15, 3, false);
+		ParameterTypeInt parameterType3 = new ParameterTypeInt(PARAMETER_2_KEY,
+				PARAMETER_2_DESCR, 0, 15, 3, false);
 		parameterTypes.add(parameterType3);
 
 		return parameterTypes;
