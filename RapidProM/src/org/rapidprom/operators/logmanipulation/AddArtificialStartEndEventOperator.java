@@ -33,13 +33,15 @@ import com.rapidminer.tools.LogService;
 
 public class AddArtificialStartEndEventOperator extends Operator {
 
-	private static final String PARAMETER_1 = "Add Start Event",
-			PARAMETER_2 = "Add End Event";
+	private static final String PARAMETER_1_KEY = "Add Start Event",
+			PARAMETER_1_DESCR = "Adds a \"start\" event before the first event of the trace.",
+			PARAMETER_2_KEY = "Add End Event",
+			PARAMETER_2_DESCR = "Adds an \"end\" event after the last event of the trace.";
 
-	private InputPort inputXLog = getInputPorts().createPort(
-			"event log (ProM Event Log)", XLogIOObject.class);
-	private OutputPort outputEventLog = getOutputPorts().createPort(
-			"event log (ProM Event Log)");
+	private InputPort inputXLog = getInputPorts()
+			.createPort("event log (ProM Event Log)", XLogIOObject.class);
+	private OutputPort outputEventLog = getOutputPorts()
+			.createPort("event log (ProM Event Log)");
 
 	public AddArtificialStartEndEventOperator(OperatorDescription description) {
 		super(description);
@@ -69,11 +71,11 @@ public class AddArtificialStartEndEventOperator extends Operator {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
 		ParameterTypeBoolean parameterType1 = new ParameterTypeBoolean(
-				PARAMETER_1, PARAMETER_1, true);
+				PARAMETER_1_KEY, PARAMETER_1_DESCR, true);
 		parameterTypes.add(parameterType1);
 
 		ParameterTypeBoolean parameterType3 = new ParameterTypeBoolean(
-				PARAMETER_2, PARAMETER_2, true);
+				PARAMETER_2_KEY, PARAMETER_2_DESCR, true);
 		parameterTypes.add(parameterType3);
 
 		return parameterTypes;
@@ -87,13 +89,13 @@ public class AddArtificialStartEndEventOperator extends Operator {
 			XTrace newTrace = new XTraceImpl(
 					copyAttMap(oldTrace.getAttributes()));
 			String name = XConceptExtension.instance().extractName(oldTrace);
-			System.out.println("ADD ARTIFICIAL EVENT: TRACE" + name
-					+ ", size: " + oldTrace.size());
+			System.out.println("ADD ARTIFICIAL EVENT: TRACE" + name + ", size: "
+					+ oldTrace.size());
 			// add start event
 
 			Date time = new Date();
 			boolean changed = false;
-			if (getParameterAsBoolean(PARAMETER_1)) {
+			if (getParameterAsBoolean(PARAMETER_1_KEY)) {
 				try {
 					time = getTime(oldTrace.get(0));
 					if (time != null) {
@@ -113,7 +115,7 @@ public class AddArtificialStartEndEventOperator extends Operator {
 			}
 
 			// add end event
-			if (getParameterAsBoolean(PARAMETER_2)) {
+			if (getParameterAsBoolean(PARAMETER_2_KEY)) {
 				time = new Date();
 				try {
 					time = getTime(oldTrace.get(oldTrace.size() - 1));
@@ -165,11 +167,13 @@ public class AddArtificialStartEndEventOperator extends Operator {
 		return res;
 	}
 
-	public static void putLiteral(XAttributeMap attMap, String key, String value) {
+	public static void putLiteral(XAttributeMap attMap, String key,
+			String value) {
 		attMap.put(key, new XAttributeLiteralImpl(key, value));
 	}
 
-	public static void putTimestamp(XAttributeMap attMap, String key, Date value) {
+	public static void putTimestamp(XAttributeMap attMap, String key,
+			Date value) {
 		attMap.put(key, new XAttributeTimestampImpl(key, value));
 	}
 

@@ -30,15 +30,26 @@ import com.rapidminer.tools.LogService;
 
 public class AddNoiseOperator extends Operator {
 
-	private static final String PARAMETER_1 = "Noise Percentage",
-			PARAMETER_2 = "Noise Type", PARAMETER_3 = "Seed";
+	private static final String PARAMETER_1_KEY = "Noise Percentage",
+			PARAMETER_1_DESCR = "The probabilitiy that, for any given trace, noise will be added to it.",
+			PARAMETER_2_KEY = "Noise Type",
+			PARAMETER_2_DESCR = "There are 5 possible noise types: remove head, remove body, swap tasks, "
+					+ "remove task, and add task. The noise types \"remove head\" and \"remove body\" "
+					+ "respectively remove at most the first or second 1/3 of a trace. "
+					+ "The noise type swap randomly swaps two event in a trace. "
+					+ "The noise type remove randomly removes event from a trace. "
+					+ "The add type randomly adds an event to a trace.",
+
+			PARAMETER_3_KEY = "Seed",
+			PARAMETER_3_DESCR = "This parameter defines the seed used to evaluate noise "
+					+ "probability and apply the noise type.";
 	private static final String HEAD = "Remove Head", BODY = "Remove Body",
 			EXTRA = "Add Event", SWAP = "Swap Tasks", REMOVE = "Remove Task";
 
-	private InputPort inputXLog = getInputPorts().createPort(
-			"event log (ProM Event Log)", XLogIOObject.class);
-	private OutputPort outputEventLog = getOutputPorts().createPort(
-			"event log (ProM Event Log)");
+	private InputPort inputXLog = getInputPorts()
+			.createPort("event log (ProM Event Log)", XLogIOObject.class);
+	private OutputPort outputEventLog = getOutputPorts()
+			.createPort("event log (ProM Event Log)");
 
 	public AddNoiseOperator(OperatorDescription description) {
 		super(description);
@@ -68,17 +79,17 @@ public class AddNoiseOperator extends Operator {
 				.createLog(log.getAttributes());
 		XFactoryRegistry.instance().setCurrentDefault(new XFactoryNaiveImpl());
 		int traceCounter = 0;
-		Random rOverall = new Random(getParameterAsInt(PARAMETER_3));
+		Random rOverall = new Random(getParameterAsInt(PARAMETER_3_KEY));
 		for (XTrace t : log) {
 			XTrace copy = XFactoryRegistry.instance().currentDefault()
 					.createTrace(t.getAttributes());
-			Random r = new Random(getParameterAsInt(PARAMETER_3)
+			Random r = new Random(getParameterAsInt(PARAMETER_3_KEY)
 					+ new Integer(traceCounter).hashCode());
 			double nextDouble = rOverall.nextDouble();
 			// System.out.println("nextDouble:" + nextDouble);
-			if (nextDouble < getParameterAsDouble(PARAMETER_1)) {
+			if (nextDouble < getParameterAsDouble(PARAMETER_1_KEY)) {
 				double oneThird = t.size() / 3.0;
-				if (getParameterAsString(PARAMETER_2).equals(HEAD)) {
+				if (getParameterAsString(PARAMETER_2_KEY).equals(HEAD)) {
 					int start = safeNextInt(r, (int) oneThird);
 					for (int i = start; i < t.size(); i++) {
 						XEvent e = t.get(i);
@@ -87,7 +98,7 @@ public class AddNoiseOperator extends Operator {
 								.createEvent(e.getAttributes());
 						copy.add(copyEvent);
 					}
-				} else if (getParameterAsString(PARAMETER_2).equals(BODY)) {
+				} else if (getParameterAsString(PARAMETER_2_KEY).equals(BODY)) {
 					int stopFirst = safeNextInt(r, (int) oneThird);
 					for (int i = 0; i < stopFirst; i++) {
 						XEvent e = t.get(i);
@@ -105,7 +116,8 @@ public class AddNoiseOperator extends Operator {
 								.createEvent(e.getAttributes());
 						copy.add(copyEvent);
 					}
-				} else if (getParameterAsString(PARAMETER_2).equals(EXTRA)) {
+				} else if (getParameterAsString(PARAMETER_2_KEY)
+						.equals(EXTRA)) {
 					for (XEvent e : t) {
 						XEvent copyEvent = XFactoryRegistry.instance()
 								.currentDefault()
@@ -131,37 +143,28 @@ public class AddNoiseOperator extends Operator {
 
 					if ((lowb != null) && (upb != null)) {
 						// the new event has timestamp in between
-						copy.add(
-								pos,
-								createEvent(
-										log,
-										log.size(),
-										r,
-										new Date((upb.getTime() + lowb
-												.getTime()) / 2),
-										XTimeExtension.instance()));
+						copy.add(pos,
+								createEvent(log, log.size(), r, new Date(
+										(upb.getTime() + lowb.getTime()) / 2),
+								XTimeExtension.instance()));
 					} else if (lowb != null) {
 						// there is a lower bound
-						copy.add(
-								pos,
+						copy.add(pos,
 								createEvent(log, log.size(), r,
 										new Date(lowb.getTime() + 1),
 										XTimeExtension.instance()));
 					} else if (upb != null) {
 						// there is an upper bound
-						copy.add(
-								pos,
+						copy.add(pos,
 								createEvent(log, log.size(), r,
 										new Date(upb.getTime() - 1),
 										XTimeExtension.instance()));
 					} else {
 						// there is neither a lower or an upper bound
-						copy.add(
-								pos,
-								createEvent(log, log.size(), r, null,
-										XTimeExtension.instance()));
+						copy.add(pos, createEvent(log, log.size(), r, null,
+								XTimeExtension.instance()));
 					}
-				} else if (getParameterAsString(PARAMETER_2).equals(SWAP)) {
+				} else if (getParameterAsString(PARAMETER_2_KEY).equals(SWAP)) {
 					int indexFirstTaskToSwap = safeNextInt(r, t.size());
 					int indexSecondTaskToSwap = safeNextInt(r, t.size());
 					XEvent firstTaskToSwap = null;
@@ -180,33 +183,29 @@ public class AddNoiseOperator extends Operator {
 						for (int i = 0; i < t.size(); i++) {
 							if (i == indexFirstTaskToSwap) {
 								event = (XEvent) firstTaskToSwap.clone();
-								XTimeExtension.instance().assignTimestamp(
-										event, secondTimestamp);
+								XTimeExtension.instance().assignTimestamp(event,
+										secondTimestamp);
 							} else if (i == indexSecondTaskToSwap) {
 								event = (XEvent) secondTaskToSwap.clone();
-								XTimeExtension.instance().assignTimestamp(
-										event, firstTimestamp);
+								XTimeExtension.instance().assignTimestamp(event,
+										firstTimestamp);
 							} else {
 								event = t.get(i);
 							}
-							XEvent copyEvent = XFactoryRegistry
-									.instance()
+							XEvent copyEvent = XFactoryRegistry.instance()
 									.currentDefault()
-									.createEvent(
-											(XAttributeMap) event
-													.getAttributes().clone());
+									.createEvent((XAttributeMap) event
+											.getAttributes().clone());
 							copy.add(copyEvent);
 
 						}
 					} else {
 						// we still need to copy
 						for (XEvent e : t) {
-							XEvent copyEvent = XFactoryRegistry
-									.instance()
+							XEvent copyEvent = XFactoryRegistry.instance()
 									.currentDefault()
-									.createEvent(
-											(XAttributeMap) e.getAttributes()
-													.clone());
+									.createEvent((XAttributeMap) e
+											.getAttributes().clone());
 							copy.add(copyEvent);
 						}
 					}
@@ -250,9 +249,7 @@ public class AddNoiseOperator extends Operator {
 												// events
 			pos++;
 
-		XEvent newEvt = XFactoryRegistry
-				.instance()
-				.currentDefault()
+		XEvent newEvt = XFactoryRegistry.instance().currentDefault()
 				.createEvent(
 						(XAttributeMap) tr.get(pos).getAttributes().clone());
 		if (date != null) {
@@ -265,17 +262,17 @@ public class AddNoiseOperator extends Operator {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
 		ParameterTypeDouble parameterType1 = new ParameterTypeDouble(
-				PARAMETER_1, PARAMETER_1, 0, 1, 0.05);
+				PARAMETER_1_KEY, PARAMETER_1_DESCR, 0, 1, 0.05);
 		parameterTypes.add(parameterType1);
 
 		String[] par2categories = new String[] { REMOVE, HEAD, BODY, EXTRA,
 				SWAP };
 		ParameterTypeCategory parameterType2 = new ParameterTypeCategory(
-				PARAMETER_2, PARAMETER_2, par2categories, 0);
+				PARAMETER_2_KEY, PARAMETER_2_DESCR, par2categories, 0);
 		parameterTypes.add(parameterType2);
 
-		ParameterTypeInt parameterType3 = new ParameterTypeInt(PARAMETER_3,
-				PARAMETER_3, 0, Integer.MAX_VALUE, 1);
+		ParameterTypeInt parameterType3 = new ParameterTypeInt(PARAMETER_3_KEY,
+				PARAMETER_3_DESCR, 0, Integer.MAX_VALUE, 1);
 		parameterTypes.add(parameterType3);
 		return parameterTypes;
 	}

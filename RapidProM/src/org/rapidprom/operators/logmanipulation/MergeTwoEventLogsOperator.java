@@ -24,7 +24,8 @@ import com.rapidminer.tools.LogService;
 
 public class MergeTwoEventLogsOperator extends Operator {
 
-	private static final String PARAMETER_1 = "Merge traces with same identifier";
+	private static final String PARAMETER_1_KEY = "Merge traces with same identifier",
+			PARAMETER_1_DESCR  = "If two traces have the same identifier, the traces are merged (true) and their event will be put under the same collection, or they are kept separately as independent traces (false).";
 
 	private InputPort inputLog1 = getInputPorts().createPort(
 			"event log 1 (ProM Event Log)", XLogIOObject.class);
@@ -50,7 +51,7 @@ public class MergeTwoEventLogsOperator extends Operator {
 		XLog xLog2 = logIO2.getArtifact();
 
 		// configuration
-		boolean dontMergeDouble = !getParameterAsBoolean(PARAMETER_1);
+		boolean dontMergeDouble = !getParameterAsBoolean(PARAMETER_1_KEY);
 		// first copy entire log1
 		XLog result = XFactoryRegistry.instance().currentDefault()
 				.createLog(xLog1.getAttributes());
@@ -85,7 +86,7 @@ public class MergeTwoEventLogsOperator extends Operator {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
 		ParameterTypeBoolean parameterType1 = new ParameterTypeBoolean(
-				PARAMETER_1, PARAMETER_1, false);
+				PARAMETER_1_KEY, PARAMETER_1_DESCR, false);
 		parameterTypes.add(parameterType1);
 
 		return parameterTypes;
