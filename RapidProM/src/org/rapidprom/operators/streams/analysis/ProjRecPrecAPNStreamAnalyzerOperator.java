@@ -117,7 +117,7 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
 		List<XSEventStreamToAcceptingPetriNetReader> algos = new ArrayList<XSEventStreamToAcceptingPetriNetReader>();
 		for (InputPort i : algorithmsPort.getManagedPorts()) {
 			try {
-				algos.add(i
+				algos.add((XSEventStreamToAcceptingPetriNetReader) i
 						.getData(
 								XSEventStreamToAcceptingPetriNetReaderIOObject.class)
 						.getArtifact());

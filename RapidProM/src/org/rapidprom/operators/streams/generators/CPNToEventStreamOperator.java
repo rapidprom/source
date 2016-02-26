@@ -78,11 +78,10 @@ public class CPNToEventStreamOperator extends Operator {
 	private static final String PARAMETER_KEY_IGNORE_PATTERSNS = "ignore_patterns";
 	private static final String PARAMETER_LABEL_IGNORE_PATTERNS = "Provide a comma separated list of patterns to ignore for event emission";
 
-	private InputPort inputCPNModel = getInputPorts()
-			.createPort("cpn model", CPNModelIOObject.class);
-	private OutputPort outputAuthor = getOutputPorts().createPort("author");
-	private OutputPort outputStream = getOutputPorts()
-			.createPort("stream");
+	private InputPort inputCPNModel = getInputPorts().createPort("cpn model",
+			CPNModelIOObject.class);
+	private OutputPort outputAuthor = getOutputPorts().createPort("generator");
+	private OutputPort outputStream = getOutputPorts().createPort("stream");
 
 	public CPNToEventStreamOperator(OperatorDescription description) {
 		super(description);

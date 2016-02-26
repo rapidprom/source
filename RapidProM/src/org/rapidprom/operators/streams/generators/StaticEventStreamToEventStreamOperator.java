@@ -25,7 +25,7 @@ public class StaticEventStreamToEventStreamOperator extends Operator {
 
 	private InputPort inputStaticStream = getInputPorts()
 			.createPort("static stream", XSStaticXSEventStreamIOObject.class);
-	private OutputPort outputAuthor = getOutputPorts().createPort("author");
+	private OutputPort outputAuthor = getOutputPorts().createPort("generator");
 	private OutputPort outputStream = getOutputPorts().createPort("stream");
 
 	public StaticEventStreamToEventStreamOperator(
