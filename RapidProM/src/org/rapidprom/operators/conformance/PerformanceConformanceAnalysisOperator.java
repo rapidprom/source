@@ -166,12 +166,15 @@ public class PerformanceConformanceAnalysisOperator
 					.createLogInfo(log, classifier).getEventClasses()
 					.getClasses();
 
-			EvClassPattern pat = new EvClassPattern(eventClasses.size());
-			pat.addAll(eventClasses);
-			Set<EvClassPattern> p = new HashSet<EvClassPattern>();
-			p.add(pat);
-
 			for (TransClass t : tc.getTransClasses()) {
+				Set<EvClassPattern> p = new HashSet<EvClassPattern>();
+				for (XEventClass clazz : eventClasses)
+					// look for exact matches on the id
+					if (clazz.getId().equals(t.getId())) {
+						EvClassPattern pat = new EvClassPattern();
+						pat.add(clazz);
+						p.add(pat);
+					}
 				pattern.put(t, p);
 			}
 			TransClass2PatternMap mapping = new TransClass2PatternMap(log,
@@ -179,8 +182,7 @@ public class PerformanceConformanceAnalysisOperator
 			parameter.setMapping(mapping);
 
 			Map<XEventClass, Integer> mapEvClass2Cost = new HashMap<XEventClass, Integer>();
-			for (XEventClass c : XLogInfoFactory.createLogInfo(log, classifier)
-					.getEventClasses().getClasses()) {
+			for (XEventClass c : eventClasses) {
 				mapEvClass2Cost.put(c, 1);
 			}
 
@@ -195,7 +197,6 @@ public class PerformanceConformanceAnalysisOperator
 			parameter.setTrans2Cost(costs);
 			parameter.setTransSync2Cost(costsSync);
 
-			parameter = new PNManifestReplayerParameter();
 		} catch (ObjectNotFoundException e1) {
 			e1.printStackTrace();
 		}
@@ -235,25 +236,25 @@ public class PerformanceConformanceAnalysisOperator
 
 	private PNManifestReplayerParameter getParameter(PetrinetGraph net,
 			XLog log) {
-		 /**
+		/**
 		 * Utilities
 		 */
-//		 XEventClassifier classifier = getXEventClassifier();
-//		
-//		 // results, required earlier for wizard
-//		 PNManifestReplayerParameter parameter = new
-//		 PNManifestReplayerParameter();
-//		
-//		 CreatePatternPanel createPatternStep;
-//		 // generate pattern mapping GUI
-//		 MapPattern2TransStep mapPatternStep = new MapPattern2TransStep(net,
-//		 log, (CreatePatternPanel) createPatternStep.getComponent(parameter));
-//		
-//		 TransClasses transClasses = patternMappingPanel.getTransClasses();
-//		 TransClass2PatternMap mapping = new TransClass2PatternMap(log, net,
-//		 patternCreatorPanel.getSelectedEvClassifier(),
-//		 transClasses, patternMappingPanel.getMapPattern());
-//		 model.setMapping(mapping);
+		// XEventClassifier classifier = getXEventClassifier();
+		//
+		// // results, required earlier for wizard
+		// PNManifestReplayerParameter parameter = new
+		// PNManifestReplayerParameter();
+		//
+		// CreatePatternPanel createPatternStep;
+		// // generate pattern mapping GUI
+		// MapPattern2TransStep mapPatternStep = new MapPattern2TransStep(net,
+		// log, (CreatePatternPanel) createPatternStep.getComponent(parameter));
+		//
+		// TransClasses transClasses = patternMappingPanel.getTransClasses();
+		// TransClass2PatternMap mapping = new TransClass2PatternMap(log, net,
+		// patternCreatorPanel.getSelectedEvClassifier(),
+		// transClasses, patternMappingPanel.getMapPattern());
+		// model.setMapping(mapping);
 		//
 		// // generate algorithm selection GUI, look for initial marking and
 		// final markings
