@@ -33,7 +33,7 @@ import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.parameter.conditions.EqualStringCondition;
 
-public abstract class AbstractDFABasedMinerOperator<T1 extends XSReader<? extends XSDataPacket<?, ?>, ?>, T2 extends XSReaderIOObject<T1>, P extends XSEventStreamToDFAReaderParameters>
+public abstract class AbstractDFABasedMinerOperator<D extends XSDataPacket<?, ?>, R, P extends XSEventStreamToDFAReaderParameters>
 		extends Operator {
 
 	private InputPort streamInputPort = getInputPorts()
@@ -76,10 +76,11 @@ public abstract class AbstractDFABasedMinerOperator<T1 extends XSReader<? extend
 
 	protected abstract PluginContext getPluginContextForAlgorithm();
 
-	protected abstract T1 getAlgorithm(PluginContext context,
+	protected abstract XSReader<D, R> getAlgorithm(PluginContext context,
 			XSEventStream stream, P parameters);
 
-	protected abstract T2 getIOObject(T1 algorithm, PluginContext context);
+	protected abstract XSReaderIOObject<D, R> getIOObject(
+			XSReader<D, R> algorithm, PluginContext context);
 
 	@Override
 	public void doWork() throws UserError {
@@ -94,7 +95,7 @@ public abstract class AbstractDFABasedMinerOperator<T1 extends XSReader<? extend
 		params.setRefreshRate(getParameterAsInt(PARAMETER_KEY_REFRESH_RATE));
 		params = setCaseActivityDataStructure(params);
 		params = setActivityActivityDataStructure(params);
-		T1 reader = getAlgorithm(context, eventStream, params);
+		XSReader<D, R> reader = getAlgorithm(context, eventStream, params);
 		reader.start();
 		readerOutputPort.deliver(getIOObject(reader, context));
 	}
@@ -113,7 +114,8 @@ public abstract class AbstractDFABasedMinerOperator<T1 extends XSReader<? extend
 		return params;
 	}
 
-	protected P setCaseActivityDataStructure(P params) throws UndefinedParameterError {
+	protected P setCaseActivityDataStructure(P params)
+			throws UndefinedParameterError {
 		DataStructureType caseActivityStoreType = PARAMETER_OPTIONS_CASE_ACTIVITY_STORE[getParameterAsInt(
 				PARAMETER_KEY_CASE_ACTIVITY_STORE)];
 		params.setCaseActivityDataStructureType(caseActivityStoreType);

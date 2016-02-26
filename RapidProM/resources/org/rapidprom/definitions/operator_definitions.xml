@@ -233,6 +233,20 @@
                     <class>org.rapidprom.operators.streams.generators.StaticEventStreamToEventStreamOperator</class>
                 </operator>
             </group>
+            <group key="utility">
+                <operator>
+                    <key>poll_xsrunnable</key>
+                    <class>org.rapidprom.operators.streams.util.PollXSRunnableOperator</class>
+                </operator>
+                <operator>
+                    <key>start_xsrunnable</key>
+                    <class>org.rapidprom.operators.streams.util.StartXSRunnableOperator</class>
+                </operator>
+                <operator>
+                    <key>stop_xsrunnable</key>
+                    <class>org.rapidprom.operators.streams.util.StopXSRunnableOperator</class>
+                </operator>
+            </group>
         </group>
     </group>
 </operators>

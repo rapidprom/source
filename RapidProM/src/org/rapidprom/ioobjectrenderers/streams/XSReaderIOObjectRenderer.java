@@ -3,13 +3,12 @@ package org.rapidprom.ioobjectrenderers.streams;
 import javax.swing.JComponent;
 
 import org.processmining.stream.core.interfaces.XSDataPacket;
-import org.processmining.stream.core.interfaces.XSReader;
 import org.processmining.stream.core.visualizers.XSReaderVisualizer;
 import org.rapidprom.ioobjectrenderers.abstr.AbstractRapidProMIOObjectRenderer;
 import org.rapidprom.ioobjects.streams.XSReaderIOObject;
 
 public class XSReaderIOObjectRenderer extends
-		AbstractRapidProMIOObjectRenderer<XSReaderIOObject<? extends XSReader<? extends XSDataPacket<?, ?>, ?>>> {
+		AbstractRapidProMIOObjectRenderer<XSReaderIOObject<? extends XSDataPacket<?, ?>, ?>> {
 
 	@Override
 	public String getName() {
@@ -18,7 +17,7 @@ public class XSReaderIOObjectRenderer extends
 
 	@Override
 	protected JComponent runVisualization(
-			XSReaderIOObject<? extends XSReader<? extends XSDataPacket<?, ?>, ?>> ioObject) {
+			XSReaderIOObject<? extends XSDataPacket<?, ?>, ?> ioObject) {
 		return XSReaderVisualizer.visualize(ioObject.getArtifact());
 	}
 

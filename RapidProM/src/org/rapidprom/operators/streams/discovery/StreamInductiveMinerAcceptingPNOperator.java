@@ -1,18 +1,22 @@
 package org.rapidprom.operators.streams.discovery;
 
+import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
+import org.processmining.eventstream.core.interfaces.XSEvent;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.eventstream.readers.acceptingpetrinet.XSEventStreamToAcceptingPetriNetReader;
 import org.processmining.framework.plugin.PluginContext;
+import org.processmining.stream.core.interfaces.XSReader;
 import org.processmining.streaminductiveminer.parameters.StreamInductiveMinerParameters;
 import org.processmining.streaminductiveminer.plugins.StreamInductiveMinerAcceptingPetriNetPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjects.streams.XSReaderIOObject;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamToAcceptingPetriNetReaderIOObject;
 import org.rapidprom.operators.streams.discovery.abstr.AbstractDFABasedMinerOperator;
 
 import com.rapidminer.operator.OperatorDescription;
 
 public class StreamInductiveMinerAcceptingPNOperator extends
-		AbstractDFABasedMinerOperator<XSEventStreamToAcceptingPetriNetReader, XSEventStreamToAcceptingPetriNetReaderIOObject, StreamInductiveMinerParameters> {
+		AbstractDFABasedMinerOperator<XSEvent, AcceptingPetriNet, StreamInductiveMinerParameters> {
 
 	public StreamInductiveMinerAcceptingPNOperator(
 			OperatorDescription description) {
@@ -34,16 +38,16 @@ public class StreamInductiveMinerAcceptingPNOperator extends
 	}
 
 	@Override
-	protected XSEventStreamToAcceptingPetriNetReaderIOObject getIOObject(
-			XSEventStreamToAcceptingPetriNetReader algorithm,
-			PluginContext context) {
-		return new XSEventStreamToAcceptingPetriNetReaderIOObject(algorithm,
-				context);
+	protected StreamInductiveMinerParameters getAlgorithmParameterObject() {
+		return new StreamInductiveMinerParameters();
 	}
 
 	@Override
-	protected StreamInductiveMinerParameters getAlgorithmParameterObject() {
-		return new StreamInductiveMinerParameters();
+	protected XSReaderIOObject<XSEvent, AcceptingPetriNet> getIOObject(
+			XSReader<XSEvent, AcceptingPetriNet> algorithm,
+			PluginContext context) {
+		return new XSEventStreamToAcceptingPetriNetReaderIOObject(algorithm,
+				context);
 	}
 
 }

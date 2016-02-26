@@ -159,7 +159,20 @@
 		<renderer>org.rapidprom.ioobjectrenderers.streams.XSStreamAnalyzerIOObjectRenderer</renderer>	
 	</ioobject>
 	<ioobject name="Static Event Stream"
-		class="org.rapidprom.ioobjects.streams.XSStaticXSEventStreamIOObject"
+		class="org.rapidprom.ioobjects.streams.event.XSStaticXSEventStreamIOObject"
+		reportable="false">
+	</ioobject>
+	<!-- (internal) IOObjects for automated workflow -->
+	<ioobject name="XSWritable (XSRunnable)"
+		class="org.rapidprom.ioobjects.streams.XSWritableXSRunnableIOObject"
+		reportable="false">
+	</ioobject>
+	<ioobject name="XSWriter (XSRunnable)"
+		class="org.rapidprom.ioobjects.streams.XSWriterXSRunnableIOObject"
+		reportable="false">
+	</ioobject>
+	<ioobject name="XSRunnable"
+		class="org.rapidprom.ioobjects.streams.XSRunnableIOObject"
 		reportable="false">
 	</ioobject>
 </ioobjects>
