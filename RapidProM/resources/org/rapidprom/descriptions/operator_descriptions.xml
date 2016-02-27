@@ -362,8 +362,8 @@
   
        <operator>
         <name>Evolutionary Tree Miner (Process Tree)</name>
-        <synopsis>Mine a Process Using the ETM Algorithm.</synopsis>
-        <help>Mine a Process Using the ETM Algorithm.</help>
+        <synopsis>Discovers a Process Tree from an event log using the Evolutionary Tree Miner described in: http://dx.doi.org/10.6100/IR780920. The Evolutionary Tree Miner (or ETM) is an evolutionary algorithm to discover a process model (in our case a process tree) from an event log. It does so by creating several process models, checking how good they are (w.r.t the event log) using several quality dimensions, and then slightly modifying the best ones in the hope that they will become even better. By repeating this, and always keeping a list of the best ones found so far, the ETM will discover better and better process models. The main advantage is that many quality dimensions can be used to define what a ‘better’ process model is.</synopsis>
+        <help>Mine a Process Using the ETM Algorithm from an event log.</help>
     	<key>etm_miner</key>
   	  </operator>
   	  
@@ -390,7 +390,7 @@
   	  
   	  <operator>
         <name>Analyze Performance (Manifest) </name>
-        <synopsis>A log is replayed on a petri net to get performance and conformance information.</synopsis>
+        <synopsis>A log is replayed on a petri net to get performance information. This operator projects performance measurements in a process model such as bottlenecks.</synopsis>
         <help>A log is replayed on a petri net to get performance and conformance information.</help>
     	<key>replay_a_log_on_petri_net_for_performance_conformance_analysis</key>
   	  </operator>
@@ -411,15 +411,15 @@
   	   
   	   <operator>
         <name>Inductive Miner (Petri Net)</name>
-        <synopsis>This operator can be used to execute the Inductive Miner in order to discover a Petri Net.</synopsis>
-        <help>This operator can be used to execute the Inductive Miner algorithm which provides a Petri Net. As input a ProM context and a log file is needed.</help>
+        <synopsis>This operator can be used to execute the Inductive Miner in order to discover a Petri Net as defined in: http://dx.doi.org/10.1007/978-3-642-38697-8_17.</synopsis>
+        <help>This operator can be used to execute the Inductive Miner algorithm which provides a Petri Net. As input an event log is needed.</help>
     	<key>mine_petri_net_with_inductive_miner</key>
   		</operator>
   		
   		<operator>
         <name>Inductive Miner (Process Tree)</name>
-        <synopsis>This operator can be used to execute the Inductive Miner in order to discover a Process Tree.</synopsis>
-        <help>This operator can be used to execute the Inductive Miner algorithm which provides a Process Tree. As input a ProM context and a log file is needed.</help>
+        <synopsis>This operator can be used to execute the Inductive Miner in order to discover a Process Tree as defined in: http://dx.doi.org/10.1007/978-3-642-38697-8_17.</synopsis>
+        <help>This operator can be used to execute the Inductive Miner algorithm which provides a Process Tree. As input an event log is needed.</help>
     	<key>mine_process_tree_with_inductive_miner</key>
   		</operator>
   

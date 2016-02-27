@@ -25,28 +25,76 @@ import com.rapidminer.tools.LogService;
 
 public class ETMdMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
-	private static final String PARAMETER_1 = "Population Size",
-			PARAMETER_2 = "Elite Count",
-			PARAMETER_3 = "Number of Random Trees",
-			PARAMETER_4 = "Crossover Probability",
-			PARAMETER_5 = "Mutation Probability",
-			PARAMETER_6 = "Maximum Generations",
-			PARAMETER_7 = "Target Fitness",
-			PARAMETER_8 = "Max Allowed Fitness",
-			PARAMETER_9 = "Single Trace Alignment Timeout",
-			PARAMETER_10 = "Weight: Replay Fitness",
-			PARAMETER_11 = "Weight: Precision",
-			PARAMETER_12 = "Weight: Generalization",
-			PARAMETER_13 = "Weight: Simplicity";
+	private static final String PARAMETER_1_KEY = "Population Size",
+			PARAMETER_1_DESCR = "the number of candidate process models to change and evaluate "
+					+ "in each generation (/round). Recommendation: 20",
+			PARAMETER_2_KEY = "Elite Count",
+			PARAMETER_2_DESCR = "The number of candidate process models to keep unchanged, "
+					+ "e.g. the top X of process models. Recommendation: 20% to 25% of the "
+					+ "population size, minimally 1 otherwise quality can be reduced.",
+			PARAMETER_3_KEY = "Number of Random Trees",
+			PARAMETER_3_DESCR = "The number of completely random process models/trees to be "
+					+ "added in each round. A high number of random trees helps in finding "
+					+ "process models/trees that are different that the current ones, but "
+					+ "at the same time slows the ETM down. Recommendation: ~10% of the "
+					+ "population size, minimum 1, maximum 50% of the population size.",
+			PARAMETER_4_KEY = "Crossover Probability",
+			PARAMETER_4_DESCR = "The probability for 2 process models/trees to ‘mate’: "
+					+ "e.g. to have parts swapped between them to create offspring. "
+					+ "Experiments show that crossover should be kept low, possibly "
+					+ "even at 0.0, maximum 0.25.",
+			PARAMETER_5_KEY = "Mutation Probability", 
+			PARAMETER_5_DESCR = "The probability for a process model/tree to have a (random) "
+					+ "mutation applied. We recommend this to be set high, e.g. close to 1.0.",
+			PARAMETER_6_KEY = "Maximum Generations", 
+			PARAMETER_6_DESCR = "The number of generations/rounds the ETM goes through. "
+					+ "The more rounds the higher the quality of the process model/tree "
+					+ "but the longer it takes for the ETM to finish. Recommendation: "
+					+ "set to 100+. When the population size is around 20, then 500+ is recommended.",
+			PARAMETER_7_KEY = "Target Fitness",
+			PARAMETER_7_DESCR = "The fitness, or process model/tree quality, at which the "
+					+ "ETM is allowed to stop. When set to 1.0 then the number of generations "
+					+ "will effectively determine when to stop.",
+			PARAMETER_8_KEY = "Fitness Limit",
+			PARAMETER_8_DESCR = "Stop calculations for a particular process tree as soon "
+					+ "as the replay fitness is lower than the provided value (double between "
+					+ "0 and 1), or -1 to disable.  This is used to save time and not waste "
+					+ "it on bad process trees.",
+			PARAMETER_9_KEY = "Single Trace Alignment Timeout",
+			PARAMETER_9_DESCR = "Maximum time (in milliseconds (so 1000 = 1 second)) "
+					+ "after which the calculation time for a single trace is cancelled. "
+					+ "Recommendation: keep at default, or -1 to disable.",
+			PARAMETER_10_KEY = "Weight: Replay Fitness",
+			PARAMETER_10_DESCR = "The weight used for the replay fitness quality dimension "
+					+ "in the overall quality/fitness of a process model/tree. Recommendation "
+					+ "is to have this as the highest of all four quality dimensions. Replay "
+					+ "fitness is the same as recall in data mining: the fraction of the observed "
+					+ "data that can be replayed correctly on the process model. Recommended is a "
+					+ "weight of 10 to 15.",
+			PARAMETER_11_KEY = "Weight: Precision",
+			PARAMETER_11_DESCR = "The weight used for the precision quality dimension in the "
+					+ "overall quality/fitness of the process model/tree. Precision punishes "
+					+ "the process model/tree if it allows for more behaviour than seen in "
+					+ "the data. A delicate balance between replay fitness and precision "
+					+ "results in a ‘good’ process model. Recommended is a weight of 5 to 10.",
+			PARAMETER_12_KEY = "Weight: Generalization",
+			PARAMETER_12_DESCR = "The weight used for the generalization quality dimension in "
+					+ "the overall quality/fitness of the process model/tree. This dimension "
+					+ "is required next to replay fitness and precision, but plays a less important "
+					+ "role. Recommended setting is a weight of 1.",
+			PARAMETER_13_KEY = "Weight: Simplicity",
+			PARAMETER_13_DESCR = "The weight used for the simplicity quality dimension in the "
+					+ "overall quality/fitness of the process model/tree. This dimension is "
+					+ "required next to replay fitness and precision, but plays a less important "
+					+ "role. Recommended setting is a weight of 1.";
 
-	private OutputPort outputProcessTree = getOutputPorts().createPort(
-			"model (ProM ProcessTree)");
+	private OutputPort outputProcessTree = getOutputPorts()
+			.createPort("model (ProM ProcessTree)");
 
 	public ETMdMinerOperator(OperatorDescription description) {
 		super(description);
-		getTransformer().addRule(
-				new GenerateNewMDRule(outputProcessTree,
-						ProcessTreeIOObject.class));
+		getTransformer().addRule(new GenerateNewMDRule(outputProcessTree,
+				ProcessTreeIOObject.class));
 	}
 
 	public void doWork() throws OperatorException {
@@ -58,19 +106,17 @@ public class ETMdMinerOperator extends AbstractRapidProMDiscoveryOperator {
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(ETMwithoutGUI.class);
 		XLog xLog = getXLog();
-		
+
 		ETMParam eTMParam = getConfiguration(xLog, pluginContext);
 
 		ProcessTreeIOObject processTreeIOObject = new ProcessTreeIOObject(
 				ETMwithoutGUI.minePTWithParameters(pluginContext, xLog,
-						getXEventClassifier(),
-						eTMParam),pluginContext);
+						getXEventClassifier(), eTMParam),
+				pluginContext);
 		outputProcessTree.deliver(processTreeIOObject);
 
-		logger.log(
-				Level.INFO,
-				"End: evolutionary tree miner " + "("
-						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
+		logger.log(Level.INFO, "End: evolutionary tree miner " + "("
+				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 
 	}
 
@@ -78,56 +124,56 @@ public class ETMdMinerOperator extends AbstractRapidProMDiscoveryOperator {
 
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
-		ParameterTypeInt parameter1 = new ParameterTypeInt(PARAMETER_1,
-				PARAMETER_1, 0, Integer.MAX_VALUE, 20);
+		ParameterTypeInt parameter1 = new ParameterTypeInt(PARAMETER_1_KEY,
+				PARAMETER_1_DESCR, 0, Integer.MAX_VALUE, 20);
 		parameterTypes.add(parameter1);
 
-		ParameterTypeInt parameter2 = new ParameterTypeInt(PARAMETER_2,
-				PARAMETER_2, 0, Integer.MAX_VALUE, 5);
+		ParameterTypeInt parameter2 = new ParameterTypeInt(PARAMETER_2_KEY,
+				PARAMETER_2_DESCR, 0, Integer.MAX_VALUE, 5);
 		parameterTypes.add(parameter2);
 
-		ParameterTypeInt parameter3 = new ParameterTypeInt(PARAMETER_3,
-				PARAMETER_3, 0, Integer.MAX_VALUE, 0);
+		ParameterTypeInt parameter3 = new ParameterTypeInt(PARAMETER_3_KEY,
+				PARAMETER_3_DESCR, 0, Integer.MAX_VALUE, 2);
 		parameterTypes.add(parameter3);
 
-		ParameterTypeDouble parameter4 = new ParameterTypeDouble(PARAMETER_4,
-				PARAMETER_4, 0, 1, 0.25);
+		ParameterTypeDouble parameter4 = new ParameterTypeDouble(
+				PARAMETER_4_KEY, PARAMETER_4_DESCR, 0, 1, 0.2);
 		parameterTypes.add(parameter4);
 
-		ParameterTypeDouble parameter5 = new ParameterTypeDouble(PARAMETER_5,
-				PARAMETER_5, 0, 1, 0.25);
+		ParameterTypeDouble parameter5 = new ParameterTypeDouble(
+				PARAMETER_5_KEY, PARAMETER_5_DESCR, 0, 1, 0.8);
 		parameterTypes.add(parameter5);
 
-		ParameterTypeInt parameter6 = new ParameterTypeInt(PARAMETER_6,
-				PARAMETER_6, 0, Integer.MAX_VALUE, 100);
+		ParameterTypeInt parameter6 = new ParameterTypeInt(PARAMETER_6_KEY,
+				PARAMETER_6_DESCR, 0, Integer.MAX_VALUE, 500);
 		parameterTypes.add(parameter6);
 
-		ParameterTypeDouble parameter7 = new ParameterTypeDouble(PARAMETER_7,
-				PARAMETER_7, 0, 1, 1);
+		ParameterTypeDouble parameter7 = new ParameterTypeDouble(PARAMETER_7_KEY,
+				PARAMETER_7_DESCR, 0, 1, 1);
 		parameterTypes.add(parameter7);
 
-		ParameterTypeDouble parameter8 = new ParameterTypeDouble(PARAMETER_8,
-				PARAMETER_8, 0, 1, 1);
+		ParameterTypeDouble parameter8 = new ParameterTypeDouble(PARAMETER_8_KEY,
+				PARAMETER_8_DESCR, -1, 1, 1);
 		parameterTypes.add(parameter8);
 
-		ParameterTypeInt parameter9 = new ParameterTypeInt(PARAMETER_9,
-				PARAMETER_9, 0, Integer.MAX_VALUE, 100);
+		ParameterTypeInt parameter9 = new ParameterTypeInt(PARAMETER_9_KEY,
+				PARAMETER_9_DESCR, -1, Integer.MAX_VALUE, 100);
 		parameterTypes.add(parameter9);
 
-		ParameterTypeInt parameter10 = new ParameterTypeInt(PARAMETER_10,
-				PARAMETER_10, 0, Integer.MAX_VALUE, 10);
+		ParameterTypeInt parameter10 = new ParameterTypeInt(PARAMETER_10_KEY,
+				PARAMETER_10_DESCR, 0, Integer.MAX_VALUE, 10);
 		parameterTypes.add(parameter10);
 
-		ParameterTypeInt parameter11 = new ParameterTypeInt(PARAMETER_11,
-				PARAMETER_11, 0, Integer.MAX_VALUE, 5);
+		ParameterTypeInt parameter11 = new ParameterTypeInt(PARAMETER_11_KEY,
+				PARAMETER_11_DESCR, 0, Integer.MAX_VALUE, 5);
 		parameterTypes.add(parameter11);
 
-		ParameterTypeInt parameter12 = new ParameterTypeInt(PARAMETER_12,
-				PARAMETER_12, 0, Integer.MAX_VALUE, 1);
+		ParameterTypeInt parameter12 = new ParameterTypeInt(PARAMETER_12_KEY,
+				PARAMETER_12_DESCR, 0, Integer.MAX_VALUE, 1);
 		parameterTypes.add(parameter12);
 
-		ParameterTypeInt parameter13 = new ParameterTypeInt(PARAMETER_13,
-				PARAMETER_13, 0, Integer.MAX_VALUE, 1);
+		ParameterTypeInt parameter13 = new ParameterTypeInt(PARAMETER_13_KEY,
+				PARAMETER_13_DESCR, 0, Integer.MAX_VALUE, 1);
 		parameterTypes.add(parameter13);
 
 		return parameterTypes;
@@ -136,26 +182,21 @@ public class ETMdMinerOperator extends AbstractRapidProMDiscoveryOperator {
 	private ETMParam getConfiguration(XLog log, PluginContext context) {
 		ETMParam param;
 		try {
-			 param = ETMParamFactory.buildParam(
-				    log,
-					context,
-					getParameterAsInt(PARAMETER_1),
-					getParameterAsInt(PARAMETER_2),
-					getParameterAsInt(PARAMETER_3),
-					getParameterAsDouble(PARAMETER_4),
-					getParameterAsDouble(PARAMETER_5),
-					true, // always remove duplicates
-					getParameterAsInt(PARAMETER_6),
-					getParameterAsDouble(PARAMETER_7),
-					getParameterAsDouble(PARAMETER_10),
-					getParameterAsDouble(PARAMETER_8),
-					getParameterAsDouble(PARAMETER_9),
-					getParameterAsDouble(PARAMETER_11),
-					getParameterAsDouble(PARAMETER_12),
-					getParameterAsDouble(PARAMETER_13),
-					null,
-					0.0);
-			 
+			param = ETMParamFactory.buildParam(log, context,
+					getParameterAsInt(PARAMETER_1_KEY),
+					getParameterAsInt(PARAMETER_2_KEY),
+					getParameterAsInt(PARAMETER_3_KEY),
+					getParameterAsDouble(PARAMETER_4_KEY),
+					getParameterAsDouble(PARAMETER_5_KEY), true, 
+					getParameterAsInt(PARAMETER_6_KEY),
+					getParameterAsDouble(PARAMETER_7_KEY),
+					getParameterAsDouble(PARAMETER_10_KEY),
+					getParameterAsDouble(PARAMETER_8_KEY),
+					getParameterAsDouble(PARAMETER_9_KEY),
+					getParameterAsDouble(PARAMETER_11_KEY),
+					getParameterAsDouble(PARAMETER_12_KEY),
+					getParameterAsDouble(PARAMETER_13_KEY), null, 0.0);
+
 		} catch (UndefinedParameterError e) {
 			e.printStackTrace();
 			param = null;
