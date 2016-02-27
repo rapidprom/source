@@ -74,7 +74,7 @@ public class ProMLibraryManager extends ProgressThread {
 			while (current < total) {
 				current = FileUtils.listFiles(rapidProMIvyFolder,
 						TrueFileFilter.TRUE, TrueFileFilter.TRUE).size();
-				progress.setCompleted(Integer.min(total, current));
+				progress.setCompleted(Math.min(total, current));
 				try {
 					Thread.sleep(TIMEOUT_MS);
 				} catch (InterruptedException e) {
