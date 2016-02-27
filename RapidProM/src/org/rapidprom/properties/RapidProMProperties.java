@@ -20,6 +20,12 @@ public class RapidProMProperties {
 	private static RapidProMProperties instance = null;
 	private final Properties properties;
 
+	private Deployment deployment = null;
+
+	public enum Deployment {
+		DEVELOPMENT, LIVE;
+	}
+
 	private RapidProMProperties() {
 		properties = setup();
 	}
@@ -50,11 +56,32 @@ public class RapidProMProperties {
 		return properties;
 	}
 
+	public Deployment getDeployment() {
+		if (deployment == null) {
+			String deploymentProp = properties
+					.getProperty("rapidprom_deployment");
+			if (deploymentProp != null) {
+				if (deploymentProp.equals("live")) {
+					deployment = Deployment.LIVE;
+				} else {
+					deployment = Deployment.DEVELOPMENT;
+				}
+			}
+		}
+		return deployment;
+	}
+
 	public String getRapidProMPackagesLocationString() {
 		return System.getProperty(
 				properties.getProperty("prom_packages_location_key"))
 				+ File.separator + properties.getProperty("prom_package_dir")
 				+ "-" + properties.getProperty("extension.version") + "."
+				+ properties.getProperty("extension.revision") + "."
+				+ properties.getProperty("extension.update");
+	}
+
+	public String getVersionsRevisionUpdate() {
+		return properties.getProperty("extension.version") + "."
 				+ properties.getProperty("extension.revision") + "."
 				+ properties.getProperty("extension.update");
 	}
