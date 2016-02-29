@@ -11,23 +11,18 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.deckfour.xes.classification.XEventAndClassifier;
 import org.deckfour.xes.classification.XEventClass;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.info.XLogInfoFactory;
 import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
-import org.processmining.models.graphbased.directed.petrinet.PetrinetGraph;
 import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerNoILPRestrictedMoveModel;
 import org.processmining.plugins.astar.petrinet.manifestreplay.CostBasedCompleteManifestParam;
 import org.processmining.plugins.astar.petrinet.manifestreplay.ManifestFactory;
 import org.processmining.plugins.astar.petrinet.manifestreplay.PNManifestFlattener;
-import org.processmining.plugins.astar.petrinet.manifestreplay.ui.CreatePatternPanel;
-import org.processmining.plugins.astar.petrinet.manifestreplay.ui.MapPattern2TransStep;
 import org.processmining.plugins.petrinet.manifestreplayer.EvClassPattern;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayer;
 import org.processmining.plugins.petrinet.manifestreplayer.PNManifestReplayerParameter;
@@ -208,7 +203,7 @@ public class PerformanceConformanceAnalysisOperator
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
 		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_1_KEY,
-				PARAMETER_1_KEY, 0, Integer.MAX_VALUE, 100);
+				PARAMETER_2_DESCR, 0, Integer.MAX_VALUE, 200);
 		parameterTypes.add(parameterType2);
 
 		return parameterTypes;
@@ -232,159 +227,5 @@ public class PerformanceConformanceAnalysisOperator
 			finalMarking.add(m);
 		}
 		return finalMarking.toArray(new Marking[finalMarking.size()]);
-	}
-
-	private PNManifestReplayerParameter getParameter(PetrinetGraph net,
-			XLog log) {
-		/**
-		 * Utilities
-		 */
-		// XEventClassifier classifier = getXEventClassifier();
-		//
-		// // results, required earlier for wizard
-		// PNManifestReplayerParameter parameter = new
-		// PNManifestReplayerParameter();
-		//
-		// CreatePatternPanel createPatternStep;
-		// // generate pattern mapping GUI
-		// MapPattern2TransStep mapPatternStep = new MapPattern2TransStep(net,
-		// log, (CreatePatternPanel) createPatternStep.getComponent(parameter));
-		//
-		// TransClasses transClasses = patternMappingPanel.getTransClasses();
-		// TransClass2PatternMap mapping = new TransClass2PatternMap(log, net,
-		// patternCreatorPanel.getSelectedEvClassifier(),
-		// transClasses, patternMappingPanel.getMapPattern());
-		// model.setMapping(mapping);
-		//
-		// // generate algorithm selection GUI, look for initial marking and
-		// final markings
-		// Marking initialMarking;
-		// ConnectionManager connManager = context.getConnectionManager();
-		// check existence of initial marking
-		// try {
-		// InitialMarkingConnection initCon =
-		// connManager.getFirstConnection(InitialMarkingConnection.class,
-		// context,
-		// net);
-		//
-		// initialMarking = (Marking)
-		// initCon.getObjectWithRole(InitialMarkingConnection.MARKING);
-		// if (initialMarking.isEmpty()) {
-		// JOptionPane
-		// .showMessageDialog(
-		// new JPanel(),
-		// "The initial marking is an empty marking. If this is not intended,
-		// remove the currently existing InitialMarkingConnection object and
-		// then use \"Create Initial Marking\" plugin to create a non-empty
-		// initial marking.",
-		// "Empty Initial Marking", JOptionPane.INFORMATION_MESSAGE);
-		// }
-		// } catch (ConnectionCannotBeObtained exc) {
-		// if (0 == JOptionPane.showConfirmDialog(new JPanel(),
-		// "No initial marking is found for this model. Do you want to create
-		// one?", "No Initial Marking",
-		// JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE)) {
-		// createMarking(context, net, InitialMarkingConnection.class);
-		// try {
-		// initialMarking =
-		// connManager.getFirstConnection(InitialMarkingConnection.class,
-		// context, net)
-		// .getObjectWithRole(InitialMarkingConnection.MARKING);
-		// } catch (ConnectionCannotBeObtained e) {
-		// e.printStackTrace();
-		// initialMarking = new Marking();
-		// }
-		// } else {
-		// initialMarking = new Marking();
-		// }
-		// ;
-		// } catch (Exception e) {
-		// e.printStackTrace();
-		// initialMarking = new Marking();
-		// }
-		//
-		// Marking[] finalMarkings;
-		// try {
-		// Collection<FinalMarkingConnection> conns =
-		// connManager.getConnections(FinalMarkingConnection.class,
-		// context, net);
-		// finalMarkings = new Marking[conns.size()];
-		// if (conns != null) {
-		// int i = 0;
-		// for (FinalMarkingConnection fmConn : conns) {
-		// finalMarkings[i] =
-		// fmConn.getObjectWithRole(FinalMarkingConnection.MARKING);
-		// i++;
-		// }
-		// }
-		// } catch (ConnectionCannotBeObtained excCon) {
-		// if (0 == JOptionPane
-		// .showConfirmDialog(
-		// new JPanel(),
-		// "No final marking is found for this model. Current manifest replay
-		// require final marking. Do you want to create one?",
-		// "No Final Marking", JOptionPane.YES_NO_OPTION,
-		// JOptionPane.INFORMATION_MESSAGE)) {
-		// if (!createMarking(context, net, FinalMarkingConnection.class)) {
-		// return null;
-		// }
-		// ;
-		// try {
-		// finalMarkings = new Marking[1];
-		// finalMarkings[0] =
-		// connManager.getFirstConnection(FinalMarkingConnection.class, context,
-		// net)
-		// .getObjectWithRole(FinalMarkingConnection.MARKING);
-		// if (finalMarkings[0] != null) {
-		// JOptionPane.showMessageDialog(new JPanel(), "A final marking (" +
-		// finalMarkings[0]
-		// + ") is created. Please re-run the plugin.");
-		// }
-		// return null;
-		// } catch (ConnectionCannotBeObtained e) {
-		// e.printStackTrace();
-		// finalMarkings = new Marking[0];
-		// }
-		// } else {
-		// return null;
-		// }
-		// ;
-		// } catch (Exception exc) {
-		// finalMarkings = new Marking[0];
-		// }
-		// ChooseAlgorithmStep chooseAlgorithmStep = new
-		// ChooseAlgorithmStep(net, log, initialMarking, finalMarkings);
-		//
-		// // generate cost setting GUI
-		// MapCostStep mapCostStep = new
-		// MapCostStep(createPatternStep.getPatternCreatorPanel(),
-		// mapPatternStep.getPatternMappingPanel());
-		//
-		// // construct dialog wizard
-		// ArrayList<ProMWizardStep<PNManifestReplayerParameter>> listSteps =
-		// new ArrayList<ProMWizardStep<PNManifestReplayerParameter>>(
-		// 4);
-		// listSteps.add(createPatternStep);
-		// listSteps.add(mapPatternStep);
-		// listSteps.add(chooseAlgorithmStep);
-		// listSteps.add(mapCostStep);
-		//
-		// ListWizard<PNManifestReplayerParameter> wizard = new
-		// ListWizard<PNManifestReplayerParameter>(listSteps);
-		//
-		// // show wizard
-		// parameter = ProMWizardDisplay.show(context, wizard, parameter);
-		//
-		// if (parameter == null) {
-		// return null;
-		// }
-		//
-		// // show message: GUI mode
-		// parameter.setGUIMode(true);
-		//
-		// IPNManifestReplayAlgorithm alg =
-		// chooseAlgorithmStep.getSelectedAlgorithm();
-		// return new Object[] { alg, parameter };
-		return null;
 	}
 }

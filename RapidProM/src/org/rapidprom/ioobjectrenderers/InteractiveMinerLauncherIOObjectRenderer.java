@@ -31,6 +31,7 @@ public class InteractiveMinerLauncherIOObjectRenderer extends
 			return isCancelled;
 		}
 
+		@SuppressWarnings("unused")
 		public void cancel() {
 			isCancelled = true;
 		}
