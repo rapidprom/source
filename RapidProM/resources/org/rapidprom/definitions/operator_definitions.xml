@@ -243,6 +243,17 @@
                     <class>org.rapidprom.operators.streams.util.StopXSRunnableOperator</class>
                 </operator>
             </group>
+            
         </group>
+        <group key="generation">
+            	<operator>
+                    <key>generate_process_tree</key>
+                    <class>org.rapidprom.operators.generation.GenerateProcessTreesOperator</class>
+                </operator>
+                <operator>
+                    <key>generate_log</key>
+                    <class>org.rapidprom.operators.generation.GenerateLogOperator</class>
+                </operator>
+            </group>
     </group>
 </operators>

@@ -567,4 +567,19 @@
 		<help> This operator allows to poll a runnable entity from the stream framework (i.e. generator, stream algorithm etc.). The operator checks whether the entity is still active. If the entity has become inactive, the operator will pass the entity on as an output object. This operator can be used within repeated experiments of stream related operators</help>
 		<key>poll_xsrunnable</key>
 	</operator>
+	<operator>
+		<name>Generate Newick Tree Collection </name>
+		<synopsis>  </synopsis>
+		<help> </help>
+		<key>generate_process_tree</key>
+	</operator>
+	<operator>
+		<name>Generate Event Log from Newick Tree</name>
+		<synopsis>  </synopsis>
+		<help> </help>
+		<key>generate_log</key>
+	</operator>
+	
+	
+	
 </operatorHelp>
