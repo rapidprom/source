@@ -56,7 +56,7 @@ public class PerformanceConformanceAnalysisOperator
 		extends AbstractRapidProMDiscoveryOperator {
 
 	private static final String PARAMETER_1_KEY = "Max Explored States (in Thousands)",
-			PARAMETER_2_DESCR = "The maximum number of states that are searched for a trace alignment.";
+			PARAMETER_1_DESCR = "The maximum number of states that are searched for a trace alignment.";
 
 	private InputPort inputPN = getInputPorts()
 			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
@@ -203,7 +203,7 @@ public class PerformanceConformanceAnalysisOperator
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
 		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_1_KEY,
-				PARAMETER_2_DESCR, 0, Integer.MAX_VALUE, 200);
+				PARAMETER_1_DESCR, 0, Integer.MAX_VALUE, 200);
 		parameterTypes.add(parameterType2);
 
 		return parameterTypes;

@@ -37,6 +37,7 @@ import org.rapidprom.ioobjectrenderers.PNRepResultIOObjectVisualizationType;
 import org.rapidprom.ioobjects.PNRepResultIOObject;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.operators.abstr.AbstractRapidProMDiscoveryOperator;
 
 import com.rapidminer.example.Attribute;
 import com.rapidminer.example.ExampleSet;
@@ -44,7 +45,6 @@ import com.rapidminer.example.table.AttributeFactory;
 import com.rapidminer.example.table.DataRow;
 import com.rapidminer.example.table.DataRowFactory;
 import com.rapidminer.example.table.MemoryExampleTable;
-import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.io.AbstractDataReader.AttributeColumn;
@@ -54,13 +54,20 @@ import com.rapidminer.operator.ports.metadata.AttributeMetaData;
 import com.rapidminer.operator.ports.metadata.ExampleSetMetaData;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.operator.ports.metadata.MDInteger;
+import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeInt;
+import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.tools.LogService;
 import com.rapidminer.tools.Ontology;
 
 import javassist.tools.rmi.ObjectNotFoundException;
 import nl.tue.astar.AStarException;
 
-public class ConformanceAnalysisOperator extends Operator {
+public class ConformanceAnalysisOperator
+		extends AbstractRapidProMDiscoveryOperator {
+	
+	private static final String PARAMETER_1_KEY = "Max Explored States (in Thousands)",
+			PARAMETER_1_DESCR = "The maximum number of states that are searched for a trace alignment.";
 
 	private final String NAMECOL = "Name";
 	private final String VALUECOL = "Value";
@@ -70,8 +77,6 @@ public class ConformanceAnalysisOperator extends Operator {
 	private final String TRACEINDEX = "Trace Index";
 	private final String RELIABLE = "Unreliable Alignments Exist";
 
-	private InputPort inputLog = getInputPorts()
-			.createPort("event log (ProM Event Log)", XLogIOObject.class);
 	private InputPort inputPN = getInputPorts()
 			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
 	private OutputPort output = getOutputPorts()
@@ -195,7 +200,7 @@ public class ConformanceAnalysisOperator extends Operator {
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(PNLogReplayer.class);
 
-		XLogIOObject xLog = inputLog.getData(XLogIOObject.class);
+		XLogIOObject xLog = new XLogIOObject(getXLog(),pluginContext);
 		PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
 
 		PNRepResult repResult = null;
@@ -428,52 +433,7 @@ public class ConformanceAnalysisOperator extends Operator {
 		return finalMarking;
 	}
 
-	// private IPNReplayParameter getParameter(TransEvClassMapping map)
-	// throws UserError, ObjectNotFoundException {
-	//
-	// IPNReplayParameter parameter = null;
-	// switch (getParameterAsInt(PARAMETER_1)) {
-	// case 0:
-	// case 1:
-	// case 2:
-	// parameter = new CostBasedCompleteParam(map.values(),
-	// map.getDummyEventClass(), map.keySet(), 1, 1);
-	// break;
-	// case 3:
-	// parameter = new CostBasedPrefixParam();
-	// break;
-	// }
-	//
-	// parameter.setInitialMarking(
-	// inputPN.getData(PetriNetIOObject.class).getInitialMarking());
-	// parameter.setFinalMarkings(getFinalMarking(
-	// inputPN.getData(PetriNetIOObject.class).getArtifact()));
-	// return parameter;
-	// }
-
-	// private IPNReplayAlgorithm getAlgorithm(PluginContext pc, Petrinet pn,
-	// XLog log, TransEvClassMapping mapping)
-	// throws UserError, ObjectNotFoundException {
-	//
-	// IPNReplayAlgorithm algorithm = null;
-	// switch (getParameterAsInt(PARAMETER_1)) {
-	// case 0:
-	// algorithm = new CostBasedCompletePruneAlg();
-	// break;
-	// case 1:
-	// algorithm = new PetrinetReplayerWithoutILP();
-	// break;
-	// case 2:
-	// algorithm = new PrefixBasedPetrinetReplayer();
-	// break;
-	// }
-	// if (algorithm.isAllReqSatisfied(pc, pn, log, mapping,
-	// getParameter(mapping)))
-	// return algorithm;
-	// else
-	// return null;
-	// }
-
+	
 	private void fillTableWithRow(MemoryExampleTable table, String name,
 			Object value, List<Attribute> attributes) {
 		// fill table
@@ -491,23 +451,13 @@ public class ConformanceAnalysisOperator extends Operator {
 		table.addDataRow(dataRow);
 	}
 
-	// public List<ParameterType> getParameterTypes() {
-	// List<ParameterType> parameterTypes = super.getParameterTypes();
-	//
-	// ParameterTypeCategory parameterType1 = new ParameterTypeCategory(
-	// PARAMETER_1, PARAMETER_1, ALGORITHMS, 0);
-	// parameterTypes.add(parameterType1);
-	//
-	// return parameterTypes;
-	// }
-
 	// Boudewijn's methods for creating alignments
 
-	public static PNRepResult getAlignment(PetrinetGraph net, XLog log,
-			Marking initialMarking, Marking finalMarking) {
+	public PNRepResult getAlignment(PetrinetGraph net, XLog log,
+			Marking initialMarking, Marking finalMarking) throws UndefinedParameterError {
 
 		Map<Transition, Integer> costMOS = constructMOSCostFunction(net);
-		XEventClassifier eventClassifier = XLogInfoImpl.NAME_CLASSIFIER;
+		XEventClassifier eventClassifier =getXEventClassifier();
 		Map<XEventClass, Integer> costMOT = constructMOTCostFunction(net, log,
 				eventClassifier);
 		TransEvClassMapping mapping = constructMapping(net, log,
@@ -522,6 +472,8 @@ public class ConformanceAnalysisOperator extends Operator {
 		parameters.setGUIMode(false);
 		parameters.setCreateConn(false);
 		parameters.setNumThreads(8);
+		((CostBasedCompleteParam) parameters).setMaxNumOfStates(
+				getParameterAsInt(PARAMETER_1_KEY) * 1000);
 
 		PNRepResult result = null;
 		try {
@@ -560,8 +512,8 @@ public class ConformanceAnalysisOperator extends Operator {
 		return costMOT;
 	}
 
-	private static TransEvClassMapping constructMapping(PetrinetGraph net, XLog log,
-			XEventClassifier eventClassifier) {
+	private static TransEvClassMapping constructMapping(PetrinetGraph net,
+			XLog log, XEventClassifier eventClassifier) {
 		TransEvClassMapping mapping = new TransEvClassMapping(eventClassifier,
 				new XEventClass("DUMMY", 99999));
 
@@ -580,6 +532,16 @@ public class ConformanceAnalysisOperator extends Operator {
 		}
 
 		return mapping;
+	}
+	
+	public List<ParameterType> getParameterTypes() {
+		List<ParameterType> parameterTypes = super.getParameterTypes();
+
+		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_1_KEY,
+				PARAMETER_1_DESCR, 0, Integer.MAX_VALUE, 200);
+		parameterTypes.add(parameterType2);
+
+		return parameterTypes;
 	}
 
 }
