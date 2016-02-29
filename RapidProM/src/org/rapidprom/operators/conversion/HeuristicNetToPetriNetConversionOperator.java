@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.petrinet.Petrinet;
+import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.heuristicsnet.miner.heuristics.converter.HeuristicsNetToPetriNetConverter;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.HeuristicsNetIOObject;
@@ -44,8 +45,11 @@ public class HeuristicNetToPetriNetConversionOperator extends Operator {
 		Object[] result = HeuristicsNetToPetriNetConverter.converter(
 				pluginContext,
 				input.getData(HeuristicsNetIOObject.class).getArtifact());
-		output.deliver(
-				new PetriNetIOObject((Petrinet) result[0], pluginContext));
+
+		PetriNetIOObject finalPetriNet = new PetriNetIOObject(
+				(Petrinet) result[0], pluginContext);
+		finalPetriNet.setInitialMarking((Marking) result[1]);
+		output.deliver(finalPetriNet);
 
 		logger.log(Level.INFO, "End: heuristics net to petri net conversion ("
 				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
