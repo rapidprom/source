@@ -29,6 +29,7 @@
         <dependency org="org.rapidprom" name="Log" rev="6.5.225" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="LogDialog" rev="6.5.42" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="LogProjection" rev="6.5.38" rapidprom:release="3.0.0" />
+        <dependency org="org.rapidprom" name="ModelRepair" rev="6.5.5" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="Murata" rev="6.5.48" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="PetriNets" rev="6.5.65" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="PNetAlignmentAnalysis" rev="6.5.35" rapidprom:release="3.0.0" />
@@ -41,7 +42,7 @@
         <dependency org="org.rapidprom" name="StreamInductiveMiner" rev="6.5.40" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="TransitionSystems" rev="6.5.54" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="TSPetriNet" rev="6.5.35" rapidprom:release="3.0.0" />
-        <dependency org="org.rapidprom" name="Uma" rev="6.5.28" rapidprom:release="3.0.0" />
+        <dependency org="org.rapidprom" name="Uma" rev="6.5.46" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="Woflan" rev="6.5.33" rapidprom:release="3.0.0" />
         <dependency org="org.rapidprom" name="XESLite" rev="6.5.168" rapidprom:release="3.0.0" />
         <exclude org="*" ext="*" type="source"/>
