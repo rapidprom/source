@@ -57,7 +57,7 @@ public class ProMLibraryManager extends ProgressThread {
 		private final File rapidProMIvyFolder;
 		private final int total;
 		private int current = 0;
-		private static final long TIMEOUT_MS = 5000;
+		private static final long TIMEOUT_MS = 15000;
 
 		public IvyInstallationProgressionTracker(ProgressListener progress,
 				File rapidProMIvyFolder) {
