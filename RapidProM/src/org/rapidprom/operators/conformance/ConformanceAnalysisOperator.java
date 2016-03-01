@@ -7,6 +7,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +41,7 @@ import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.XLogIOObject;
 import org.rapidprom.operators.abstr.AbstractRapidProMDiscoveryOperator;
 
+import com.google.common.util.concurrent.SimpleTimeLimiter;
 import com.rapidminer.example.Attribute;
 import com.rapidminer.example.ExampleSet;
 import com.rapidminer.example.table.AttributeFactory;
@@ -65,9 +68,14 @@ import nl.tue.astar.AStarException;
 
 public class ConformanceAnalysisOperator
 		extends AbstractRapidProMDiscoveryOperator {
-	
+
 	private static final String PARAMETER_1_KEY = "Max Explored States (in Thousands)",
-			PARAMETER_1_DESCR = "The maximum number of states that are searched for a trace alignment.";
+			PARAMETER_1_DESCR = "The maximum number of states that are searched for a trace alignment.",
+			PARAMETER_2_KEY = "Timeout (sec)",
+			PARAMETER_2_DESCR = "The number of seconds that this operator will run before "
+					+ "returning whatever it could manage to calculate (or null otherwise).";
+
+	private PNRepResultIOObject alignments;
 
 	private final String NAMECOL = "Name";
 	private final String VALUECOL = "Value";
@@ -188,6 +196,8 @@ public class ConformanceAnalysisOperator
 		this.metaData4 = new ExampleSetMetaData();
 		getTransformer()
 				.addRule(new GenerateNewMDRule(outputReliable, this.metaData4));
+
+		alignments = null;
 	}
 
 	@Override
@@ -197,30 +207,19 @@ public class ConformanceAnalysisOperator
 				"Start: replay log on petri net for conformance checking");
 		long time = System.currentTimeMillis();
 
-		PluginContext pluginContext = ProMPluginContextManager.instance()
-				.getFutureResultAwareContext(PNLogReplayer.class);
-
-		XLogIOObject xLog = new XLogIOObject(getXLog(),pluginContext);
-		PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
+		SimpleTimeLimiter limiter = new SimpleTimeLimiter();
 
 		PNRepResult repResult = null;
 		try {
-			repResult = getAlignment(pNet.getArtifact(), xLog.getArtifact(),
-					pNet.getInitialMarking(),
-					getFinalMarking(pNet.getArtifact()));
-		} catch (ObjectNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			alignments = limiter.callWithTimeout(new ALIGNMENT_CALCULATOR(),
+					getParameterAsInt(PARAMETER_2_KEY), TimeUnit.SECONDS, true);
+			repResult = alignments.getArtifact();
+
+			output.deliver(alignments);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
 		}
-
-		PNRepResultIOObject result = new PNRepResultIOObject(repResult,
-				pluginContext, pNet, xLog.getArtifact(),
-				constructMapping(pNet.getArtifact(), xLog.getArtifact(),
-						XLogInfoImpl.NAME_CLASSIFIER));
-		result.setVisualizationType(
-				PNRepResultIOObjectVisualizationType.PROJECT_ON_MODEL);
-
-		output.deliver(result);
 
 		Iterator<SyncReplayResult> iterator3 = repResult.iterator();
 		boolean unreliable = false;
@@ -373,7 +372,7 @@ public class ConformanceAnalysisOperator
 					next.getTraceIndex().toString());
 			for (Integer s : listArray) {
 				// get the right trace
-				XTrace xTrace = xLog.getArtifact().get(s);
+				XTrace xTrace = getXLog().get(s);
 				String name = XConceptExtension.instance().extractName(xTrace);
 				vals[0] = name;
 				DataRow dataRow = factory.create(vals, attribArray);
@@ -399,6 +398,42 @@ public class ConformanceAnalysisOperator
 		logger.log(Level.INFO,
 				"End: replay log on petri net for conformance checking ("
 						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
+	}
+
+	class ALIGNMENT_CALCULATOR implements Callable<PNRepResultIOObject> {
+
+		public ALIGNMENT_CALCULATOR() {
+		}
+
+		@Override
+		public PNRepResultIOObject call() throws Exception {
+
+			PluginContext pluginContext = ProMPluginContextManager.instance()
+					.getFutureResultAwareContext(PNLogReplayer.class);
+
+			XLogIOObject xLog = new XLogIOObject(getXLog(), pluginContext);
+			PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
+
+			PNRepResult repResult = null;
+			try {
+				repResult = getAlignment(pNet.getArtifact(), xLog.getArtifact(),
+						pNet.getInitialMarking(),
+						getFinalMarking(pNet.getArtifact()));
+			} catch (ObjectNotFoundException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+
+			PNRepResultIOObject result = new PNRepResultIOObject(repResult,
+					pluginContext, pNet, xLog.getArtifact(),
+					constructMapping(pNet.getArtifact(), xLog.getArtifact(),
+							XLogInfoImpl.NAME_CLASSIFIER));
+			result.setVisualizationType(
+					PNRepResultIOObjectVisualizationType.PROJECT_ON_MODEL);
+
+			return result;
+		}
+
 	}
 
 	private List<Integer> convertIntListToArray(String s) {
@@ -433,7 +468,6 @@ public class ConformanceAnalysisOperator
 		return finalMarking;
 	}
 
-	
 	private void fillTableWithRow(MemoryExampleTable table, String name,
 			Object value, List<Attribute> attributes) {
 		// fill table
@@ -454,10 +488,11 @@ public class ConformanceAnalysisOperator
 	// Boudewijn's methods for creating alignments
 
 	public PNRepResult getAlignment(PetrinetGraph net, XLog log,
-			Marking initialMarking, Marking finalMarking) throws UndefinedParameterError {
+			Marking initialMarking, Marking finalMarking)
+					throws UndefinedParameterError {
 
 		Map<Transition, Integer> costMOS = constructMOSCostFunction(net);
-		XEventClassifier eventClassifier =getXEventClassifier();
+		XEventClassifier eventClassifier = getXEventClassifier();
 		Map<XEventClass, Integer> costMOT = constructMOTCostFunction(net, log,
 				eventClassifier);
 		TransEvClassMapping mapping = constructMapping(net, log,
@@ -472,8 +507,8 @@ public class ConformanceAnalysisOperator
 		parameters.setGUIMode(false);
 		parameters.setCreateConn(false);
 		parameters.setNumThreads(8);
-		((CostBasedCompleteParam) parameters).setMaxNumOfStates(
-				getParameterAsInt(PARAMETER_1_KEY) * 1000);
+		((CostBasedCompleteParam) parameters)
+				.setMaxNumOfStates(getParameterAsInt(PARAMETER_1_KEY) * 1000);
 
 		PNRepResult result = null;
 		try {
@@ -533,12 +568,16 @@ public class ConformanceAnalysisOperator
 
 		return mapping;
 	}
-	
+
 	public List<ParameterType> getParameterTypes() {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
-		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_1_KEY,
+		ParameterTypeInt parameterType1 = new ParameterTypeInt(PARAMETER_1_KEY,
 				PARAMETER_1_DESCR, 0, Integer.MAX_VALUE, 200);
+		parameterTypes.add(parameterType1);
+
+		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_2_KEY,
+				PARAMETER_2_DESCR, 0, Integer.MAX_VALUE, 60);
 		parameterTypes.add(parameterType2);
 
 		return parameterTypes;
