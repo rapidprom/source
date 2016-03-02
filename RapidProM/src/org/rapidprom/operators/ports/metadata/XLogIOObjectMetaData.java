@@ -35,4 +35,14 @@ public class XLogIOObjectMetaData extends MetaData {
 		return classifiers;
 	}
 
+	public void setXEventClassifiers(List<XEventClassifier> classifiers) {
+		this.classifiers = classifiers;
+	}
+
+	@Override
+	public MetaData clone() {
+		XLogIOObjectMetaData clone = (XLogIOObjectMetaData) super.clone();
+		clone.setXEventClassifiers(new ArrayList<>(getXEventClassifiers()));
+		return clone;
+	}
 }
