@@ -404,6 +404,13 @@
 		<key>generate_log</key>
 	</operator>
 	
+	<operator>
+		<name>Convert Newick Tree to Process Tree</name>
+		<synopsis>  </synopsis>
+		<help> </help>
+        <key>convert_newickTree_to_processTree</key>
+    </operator>
+	
 	
 	
 </operatorHelp>

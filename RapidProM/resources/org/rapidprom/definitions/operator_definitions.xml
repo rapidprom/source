@@ -248,11 +248,15 @@
         <group key="generation">
             	<operator>
                     <key>generate_process_tree</key>
-                    <class>org.rapidprom.operators.generation.GenerateProcessTreesOperator</class>
+                    <class>org.rapidprom.operators.generation.GenerateNewickTreeOperator</class>
                 </operator>
                 <operator>
                     <key>generate_log</key>
-                    <class>org.rapidprom.operators.generation.GenerateLogOperator</class>
+                    <class>org.rapidprom.operators.generation.GenerateEventLogOperator</class>
+                </operator>
+                <operator>
+                    <key>convert_newickTree_to_processTree</key>
+                    <class>org.rapidprom.operators.generation.ConvertNewickTreeToProcessTree</class>
                 </operator>
             </group>
     </group>

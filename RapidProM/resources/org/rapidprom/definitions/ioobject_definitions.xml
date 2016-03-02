@@ -176,8 +176,8 @@
 		reportable="false">
 	</ioobject>
 	<ioobject name="NewickTreeIOObject"
-		class="org.rapidprom.ioobjects.NewickTreeIOObject"
+		class="org.rapidprom.ioobjects.experimental.NewickTreeIOObject"
 		reportable="true">
-		<renderer>org.rapidprom.ioobjectrenderers.NewickTreeIOObjectRenderer</renderer>
+		<renderer>org.rapidprom.ioobjectrenderers.experimental.NewickTreeIOObjectRenderer</renderer>
 	</ioobject>
 </ioobjects>
