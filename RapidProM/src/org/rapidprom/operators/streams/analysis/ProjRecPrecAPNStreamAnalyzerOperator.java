@@ -13,7 +13,9 @@ import org.processmining.eventstream.core.interfaces.XSEvent;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.eventstream.readers.acceptingpetrinet.XSEventStreamToAcceptingPetriNetReader;
 import org.processmining.framework.plugin.PluginContext;
+import org.processmining.projectedrecallandprecision.framework.CompareParameters;
 import org.processmining.streamanalysis.core.interfaces.XSStreamAnalyzer;
+import org.processmining.streamanalysis.parameters.ProjRecPrecAnalyzerParametersImpl;
 import org.processmining.streamanalysis.parameters.XSEventStreamAnalyzerParameters;
 import org.processmining.streamanalysis.parameters.XSEventStreamAnalyzerParameters.AnalysisScheme;
 import org.processmining.streamanalysis.plugins.ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin;
@@ -83,6 +85,14 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
 	private final static String PARAMETER_KEY_STORE_MODEL_DIR = "store_model_dir";
 	private final static String PARAMETER_DESC_STORE_MODEL_DIR = "Directory where to store the model sequence";
 
+	private final static String PARAMETER_KEY_MAX_STATE_SPACE = "max_state_space";
+	private final static String PARAMETER_DESC_MAX_STATE_SPACE = "Determine the maximal size of the state space of the underlying automaton.";
+	private final static int PARAMETER_DEFAULT_MAX_STATE_SPACE = 2000;
+
+	private final static String PARAMETER_KEY_PROJECTION_SIZE = "projection_size";
+	private final static String PARAMETER_DESC_PROJECTION_SIZE = "Determine the number of activities taken into account per projection";
+	private final static int PARAMETER_DEFAULT_PROJECTION_SIZE = 2;
+
 	public ProjRecPrecAPNStreamAnalyzerOperator(
 			OperatorDescription description) {
 		super(description);
@@ -94,7 +104,7 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
 
 	@Override
 	public void doWork() throws OperatorException {
-		XSEventStreamAnalyzerParameters params;
+		ProjRecPrecAnalyzerParametersImpl params;
 		try {
 			params = getParameterObject();
 		} catch (IOException e) {
@@ -134,7 +144,7 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
 						analyzer, context));
 	}
 
-	private XSEventStreamAnalyzerParameters getParameterObject()
+	private ProjRecPrecAnalyzerParametersImpl getParameterObject()
 			throws UserError, IOException {
 		XSEventStreamAnalyzerParameters params = new XSEventStreamAnalyzerParameters();
 		AnalysisScheme scheme = PARAMETER_REFERENCE_ANALYSIS_SCHEME[getParameterAsInt(
@@ -162,7 +172,12 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
 			params.setModelSequenceDirectory(dir);
 		}
 		params.setVerbose(true);
-		return params;
+
+		CompareParameters compareParameters = new CompareParameters(
+				getParameterAsInt(PARAMETER_KEY_PROJECTION_SIZE));
+		compareParameters.setMaxStatesReachabilityGraph(
+				getParameterAsInt(PARAMETER_KEY_MAX_STATE_SPACE));
+		return new ProjRecPrecAnalyzerParametersImpl(params, compareParameters);
 	}
 
 	@Override
@@ -202,6 +217,9 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
 				.registerDependencyCondition(new BooleanParameterCondition(this,
 						PARAMETER_KEY_STORE_MODEL_SEQUENCE, true, true));
 		params.add(modelSequenceDir);
+
+		params.add(createMaxStateSpaceParameterType());
+		params.add(createProjectionSizeParameterType());
 		return params;
 	}
 
@@ -234,6 +252,18 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends Operator {
 		return new ParameterTypeCategory(PARAMETER_KEY_ANALYSIS_SCHEME,
 				PARAMETER_DESC_ANALYSIS_SCHEME,
 				PARAMETER_OPTIONS_ANALYSIS_SCHEME, 0);
+	}
+
+	private ParameterTypeInt createMaxStateSpaceParameterType() {
+		return new ParameterTypeInt(PARAMETER_KEY_MAX_STATE_SPACE,
+				PARAMETER_DESC_MAX_STATE_SPACE, 1, Integer.MAX_VALUE,
+				PARAMETER_DEFAULT_MAX_STATE_SPACE, true);
+	}
+
+	private ParameterTypeInt createProjectionSizeParameterType() {
+		return new ParameterTypeInt(PARAMETER_KEY_PROJECTION_SIZE,
+				PARAMETER_DESC_PROJECTION_SIZE, 2, 3,
+				PARAMETER_DEFAULT_PROJECTION_SIZE, true);
 	}
 
 	private static AnalysisScheme[] getAnalysisSchemes() {
