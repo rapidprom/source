@@ -64,7 +64,7 @@
             </operator>
             <operator>
                 <key>exampleset_to_xlog</key>
-                <class>org.rapidprom.operators.conversion.ExampleSetToXLogConversionOperator</class>
+                <class>org.rapidprom.operators.conversion.CaseDataExtractorOperator</class>
             </operator>
             <operator>
                 <key>convert_heuristics_net_into_petri_net</key>
