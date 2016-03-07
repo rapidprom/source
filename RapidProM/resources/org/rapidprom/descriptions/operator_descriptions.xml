@@ -410,6 +410,13 @@
 		<help> </help>
         <key>convert_newickTree_to_processTree</key>
     </operator>
+    
+    <operator>
+    	<name>Generate Noisy Log</name>
+		<synopsis>This operator creates a log with noise: each trace of the original log is modified until it no longer fits the given petri net.</synopsis>
+		<help> </help>
+        <key>generate_noisy_log</key>      
+    </operator>
 	
 	
 	

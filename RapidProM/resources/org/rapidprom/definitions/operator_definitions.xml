@@ -258,6 +258,10 @@
                     <key>convert_newickTree_to_processTree</key>
                     <class>org.rapidprom.operators.generation.ConvertNewickTreeToProcessTree</class>
                 </operator>
+                <operator>
+                    <key>generate_noisy_log</key>
+                    <class>org.rapidprom.operators.generation.GenerateNoisyLogOperator</class>
+                </operator>
             </group>
     </group>
 </operators>
