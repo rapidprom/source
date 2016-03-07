@@ -186,6 +186,10 @@
                     <key>event_stream_analysis_proj_rec_prec_apn</key>
                     <class>org.rapidprom.operators.streams.analysis.ProjRecPrecAPNStreamAnalyzerOperator</class>
                 </operator>
+                <operator>
+                    <key>event_stream_analysis_alignments_apn</key>
+                    <class>org.rapidprom.operators.streams.analysis.AlignmentAPNAnalyzerOperator</class>
+                </operator>
             </group>
             <group key="discovery">
                 <operator>
