@@ -397,4 +397,12 @@
 		<help> This operator allows to poll a runnable entity from the stream framework (i.e. generator, stream algorithm etc.). The operator checks whether the entity is still active. If the entity has become inactive, the operator will pass the entity on as an output object. This operator can be used within repeated experiments of stream related operators</help>
 		<key>poll_xsrunnable</key>
 	</operator>
+	
+	<operator>
+	    <name>Case Data Extractor </name>
+		<synopsis> This extracts data from the traces contained in an event log, such as relative occurrence, etc... </synopsis>
+		<help> An Event log is required as input </help>		
+        <key>case_data_extractor</key>                
+    </operator>
+	
 </operatorHelp>

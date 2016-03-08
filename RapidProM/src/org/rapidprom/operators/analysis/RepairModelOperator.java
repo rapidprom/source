@@ -16,8 +16,8 @@ import org.processmining.models.semantics.petrinet.Marking;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.operators.abstr.AbstractRapidProMDiscoveryOperator;
 
-import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
@@ -31,7 +31,7 @@ import com.rapidminer.tools.LogService;
 
 import javassist.tools.rmi.ObjectNotFoundException;
 
-public class RepairModelOperator extends Operator {
+public class RepairModelOperator extends AbstractRapidProMDiscoveryOperator {
 
 	private static final String PARAMETER_1_KEY = "Detect loops",
 			PARAMETER_1_DESCR = "If set to 'true', the plugin will apply a few heuristics "
@@ -106,8 +106,6 @@ public class RepairModelOperator extends Operator {
 					+ "require a repair. Usually, the smallest number is found after one global "
 					+ "analysis (default value '1'). ";
 
-	private InputPort inputXLog = getInputPorts()
-			.createPort("event log (ProM Event Log)", XLogIOObject.class);
 	private InputPort inputPetrinet = getInputPorts()
 			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
 	private OutputPort outputPetrinet = getOutputPorts()
@@ -129,7 +127,7 @@ public class RepairModelOperator extends Operator {
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(Uma_RepairModel_Plugin.class);
 
-		XLogIOObject xLog = inputXLog.getData(XLogIOObject.class);
+		XLogIOObject xLog = new XLogIOObject(getXLog(),pluginContext);
 
 		PetriNetIOObject petriNet = inputPetrinet
 				.getData(PetriNetIOObject.class);
@@ -142,9 +140,9 @@ public class RepairModelOperator extends Operator {
 
 		Object[] result = null;
 		try {
-			result = repairer.repairModel(pluginContext, xLog.getArtifact(),
+			result = repairer.repairModel_buildT2Econnection(pluginContext, xLog.getArtifact(),
 					petriNet.getArtifact(), petriNet.getInitialMarking(),
-					finalMarking, getConfiguration());
+					finalMarking, getConfiguration(), getXEventClassifier());
 		} catch (ObjectNotFoundException e) {
 			e.printStackTrace();
 		}
