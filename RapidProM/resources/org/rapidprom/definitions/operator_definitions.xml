@@ -30,6 +30,10 @@
                 <key>mine_with_inductive_visual_miner</key>
                 <class>org.rapidprom.operators.analysis.InductiveVisualMinerOperator</class>
             </operator>
+             <operator>
+                <key>case_data_extractor</key>
+                <class>org.rapidprom.operators.analysis.CaseDataExtractorOperator</class>
+            </operator>
         </group>
         <group key="conformance">
         	 <operator>
@@ -60,7 +64,7 @@
             </operator>
             <operator>
                 <key>xlog_to_exampleset</key>
-                <class>org.rapidprom.operators.conversion.CaseDataExtractorOperator</class>
+                <class>org.rapidprom.operators.conversion.XLogToExampleSetConversionOperator</class>
             </operator>
             <operator>
                 <key>exampleset_to_xlog</key>

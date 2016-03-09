@@ -121,7 +121,7 @@ public class TransitionSystemMinerOperator
 		parameterTypes.add(parameter1);
 
 		ParameterTypeInt parameter10 = new ParameterTypeInt(PARAMETER_2_KEY,
-				PARAMETER_2_DESCR, 0, 100, 0);
+				PARAMETER_2_DESCR, 0, 100, 1);
 		parameterTypes.add(parameter10);
 
 		return parameterTypes;
