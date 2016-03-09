@@ -423,6 +423,13 @@
 		<help> </help>
         <key>generate_noisy_log</key>      
     </operator>
+    
+    <operator>
+	    <name>Case Data Extractor </name>
+		<synopsis> This extracts data from the traces contained in an event log, such as relative occurrence, etc... </synopsis>
+		<help> An Event log is required as input </help>		
+        <key>case_data_extractor</key>                
+    </operator>
 	
 	
 	
