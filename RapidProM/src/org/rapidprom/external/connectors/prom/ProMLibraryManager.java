@@ -284,12 +284,18 @@ public class ProMLibraryManager extends ProgressThread {
 		try {
 			IvyStandAlone.invokeIvy(args, Boot.Level.ALL);
 		} catch (IvyResolveException ire) {
-			Object[] options = { "OK" };
-			JOptionPane.showOptionDialog(null,
-					"Loading/Verifying the RapidProM extension failed. Please check your internet connection.",
-					"Warning", JOptionPane.PLAIN_MESSAGE,
-					JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-			System.exit(1);
+			try{
+				IvyStandAlone.invokeIvy(args, Boot.Level.ALL);
+			}
+			catch (Exception ire2) {
+				Object[] options = { "OK" };
+				JOptionPane.showOptionDialog(null,
+						"Loading/Verifying the RapidProM extension failed. Please check your internet connection and restart RapidMiner",
+						"Warning", JOptionPane.PLAIN_MESSAGE,
+						JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				System.exit(1);
+			} 
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

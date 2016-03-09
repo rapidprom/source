@@ -36,13 +36,13 @@ public class ParameterTypeXEventClassifierCategory
 					categories[i] = e.toString();
 					i++;
 				}
+				return new Pair<String[], XEventClassifier[]>(categories,
+						correspondingValues);
 			}
-			return new Pair<String[], XEventClassifier[]>(categories,
-					correspondingValues);
-		} else {
-			return new Pair<String[], XEventClassifier[]>(getCategories(),
-					getCorrespondingValues());
 		}
+		// restore defaults
+		return new Pair<String[], XEventClassifier[]>(
+				getDefaultValuesToString(), getDefaultValues());
 	}
 
 }

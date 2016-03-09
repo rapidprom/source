@@ -3,7 +3,6 @@ package org.rapidprom.operators.conversion;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.processmining.contexts.uitopia.UIPluginContext;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.models.graphbased.directed.bpmn.BPMNDiagram;
 import org.processmining.plugins.converters.PetriNetToBPMNConverterPlugin;
@@ -21,16 +20,16 @@ import com.rapidminer.tools.LogService;
 
 public class PetriNetToBpmnConversionOperator extends Operator {
 
-	private InputPort input = getInputPorts().createPort(
-			"model (ProM Petri Net)", PetriNetIOObject.class);
+	private InputPort input = getInputPorts()
+			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
 
 	private OutputPort output = getOutputPorts()
 			.createPort("model (ProM BPMN)");
 
 	public PetriNetToBpmnConversionOperator(OperatorDescription description) {
 		super(description);
-		getTransformer().addRule(
-				new GenerateNewMDRule(output, BPMNIOObject.class));
+		getTransformer()
+				.addRule(new GenerateNewMDRule(output, BPMNIOObject.class));
 	}
 
 	@Override
@@ -46,19 +45,18 @@ public class PetriNetToBpmnConversionOperator extends Operator {
 						PetriNetToBPMNConverterPlugin.class);
 
 		PetriNetToBPMNConverterPlugin converter = new PetriNetToBPMNConverterPlugin();
-		Object[] result = converter.convert((UIPluginContext) pluginContext,
+		Object[] result = converter.convert(pluginContext,
 				input.getData(PetriNetIOObject.class).getArtifact());
 		// BPMN2PetriNetConverter_Plugin converter = new
 		// BPMN2PetriNetConverter_Plugin();
 		// Object[] result = converter.convert(pluginContext,
 		// input.getData(PetriNetIOObject.class).getData()));
 
-		output.deliver(new BPMNIOObject((BPMNDiagram) result[0], pluginContext));
+		output.deliver(
+				new BPMNIOObject((BPMNDiagram) result[0], pluginContext));
 
-		logger.log(
-				Level.INFO,
-				"End: Petri Net to BPMN conversion ("
-						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
+		logger.log(Level.INFO, "End: Petri Net to BPMN conversion ("
+				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
 
 }

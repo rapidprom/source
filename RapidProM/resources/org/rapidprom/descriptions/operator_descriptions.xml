@@ -363,9 +363,15 @@
     </operator>
     <operator>
         <name>Event Stream Algorithm Analyzer (Projected Recall Precision, Accepting Petri Net)</name>
-        <synopsis>Calculates Model to Model similarity of each generated model of each connected algorithm at each point in time to a collection of reference models</synopsis>
-        <help />
+        <synopsis>Calculates Model to Model similarity of stream based discovery algorithms.</synopsis>
+        <help>Calculates model-to-model similarity of each generated model of each connected algorithm at each point in time w.r.t. a collection of reference models. The reported metrics are: recall and precision.</help>
         <key>event_stream_analysis_proj_rec_prec_apn</key>
+	</operator>
+	<operator>
+		<name>Event Stream Algorithm Analyzer (Alignments, Accepting Petri Net)</name>
+		<synopsis>Calculates alignments of stream based discovery algorithms.</synopsis>
+		<help>Calculates alignments of each generated model of each connected algorithm at each point in time w.r.t. a collection of reference event logs. The reported metrics are: replay-fitness, precision, and, generalization </help>
+		<key>event_stream_analysis_alignments_apn</key>
 	</operator>
 	<operator>
 		<name>Extract Static Event Stream </name>

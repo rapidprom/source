@@ -30,6 +30,10 @@
                 <key>mine_with_inductive_visual_miner</key>
                 <class>org.rapidprom.operators.analysis.InductiveVisualMinerOperator</class>
             </operator>
+             <operator>
+                <key>case_data_extractor</key>
+                <class>org.rapidprom.operators.analysis.CaseDataExtractorOperator</class>
+            </operator>
         </group>
         <group key="conformance">
         	 <operator>
@@ -185,6 +189,10 @@
                 <operator>
                     <key>event_stream_analysis_proj_rec_prec_apn</key>
                     <class>org.rapidprom.operators.streams.analysis.ProjRecPrecAPNStreamAnalyzerOperator</class>
+                </operator>
+                <operator>
+                    <key>event_stream_analysis_alignments_apn</key>
+                    <class>org.rapidprom.operators.streams.analysis.AlignmentAPNAnalyzerOperator</class>
                 </operator>
             </group>
             <group key="discovery">

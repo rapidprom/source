@@ -1,4 +1,4 @@
-package org.rapidprom.operators.conversion;
+package org.rapidprom.operators.analysis;
 
 import java.util.ArrayList;
 import java.util.HashMap;
