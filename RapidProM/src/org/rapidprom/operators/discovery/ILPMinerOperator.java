@@ -73,8 +73,15 @@ public class ILPMinerOperator extends AbstractRapidProMDiscoveryOperator {
 		Object[] pnAndMarking = HybridILPMinerPlugin.mine(
 				ProMPluginContextManager.instance().getContext(), log, params);
 		Petrinet pn = (Petrinet) pnAndMarking[0];
-		PetriNetIOObject petrinetIOObject = new PetriNetIOObject(pn, context);
-		petrinetIOObject.setInitialMarking((Marking) pnAndMarking[1]);
+		Marking finalMarking = null;
+		/**
+		 * If empiness after completion is enforced, make an empty final marking
+		 */
+		if(getConstraintTypes().contains(LPConstraintType.EMPTY_AFTER_COMPLETION))
+			finalMarking = new Marking();
+		
+		PetriNetIOObject petrinetIOObject = new PetriNetIOObject(pn,
+				(Marking) pnAndMarking[1], finalMarking, context);
 		outputPetrinet.deliver(petrinetIOObject);
 	}
 

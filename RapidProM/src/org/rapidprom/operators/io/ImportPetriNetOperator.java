@@ -46,8 +46,7 @@ public class ImportPetriNetOperator
 			e.printStackTrace();
 		}
 		PetriNetIOObject pnResult = new PetriNetIOObject((Petrinet) result[0],
-				ProMPluginContextManager.instance().getContext());
-		pnResult.setInitialMarking((Marking) result[1]);
+				(Marking) result[1], null, context);
 		return pnResult;
 	}
 }

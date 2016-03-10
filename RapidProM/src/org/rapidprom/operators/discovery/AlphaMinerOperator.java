@@ -21,11 +21,12 @@ import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.tools.LogService;
 
 /**
- * This operator implements different variants of the alpha miner algorithm
- * The "classic" variant is defined in http://dx.doi.org/10.1109/TKDE.2004.47
- * The "+" variant is defined in http://dx.doi.org/10.1007/978-3-540-30188-2_12
- * The "++" variant is defined in http://dx.doi.org/10.1007/s10618-007-0065-y
- * The "#" variant is defined in http://dx.doi.org/10.1016/j.datak.2010.06.001
+ * This operator implements different variants of the alpha miner algorithm The
+ * "classic" variant is defined in http://dx.doi.org/10.1109/TKDE.2004.47 The
+ * "+" variant is defined in http://dx.doi.org/10.1007/978-3-540-30188-2_12 The
+ * "++" variant is defined in http://dx.doi.org/10.1007/s10618-007-0065-y The
+ * "#" variant is defined in http://dx.doi.org/10.1016/j.datak.2010.06.001
+ * 
  * @author abolt
  *
  */
@@ -87,8 +88,7 @@ public class AlphaMinerOperator extends AbstractRapidProMDiscoveryOperator {
 		}
 
 		PetriNetIOObject petriNetIOObject = new PetriNetIOObject(
-				(Petrinet) result[0], pluginContext);
-		petriNetIOObject.setInitialMarking((Marking) result[1]);
+				(Petrinet) result[0], (Marking) result[1], null, pluginContext);
 
 		output.deliver(petriNetIOObject);
 

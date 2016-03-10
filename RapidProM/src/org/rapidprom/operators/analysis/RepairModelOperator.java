@@ -127,29 +127,26 @@ public class RepairModelOperator extends AbstractRapidProMDiscoveryOperator {
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(Uma_RepairModel_Plugin.class);
 
-		XLogIOObject xLog = new XLogIOObject(getXLog(),pluginContext);
+		XLogIOObject xLog = new XLogIOObject(getXLog(), pluginContext);
 
 		PetriNetIOObject petriNet = inputPetrinet
 				.getData(PetriNetIOObject.class);
 
-		List<Place> endPlaces = getEndPlaces(petriNet.getArtifact());
-		Marking finalMarking = new Marking();
-		for (Place place : endPlaces) {
-			finalMarking.add(place);
-		}
-
 		Object[] result = null;
 		try {
-			result = repairer.repairModel_buildT2Econnection(pluginContext, xLog.getArtifact(),
-					petriNet.getArtifact(), petriNet.getInitialMarking(),
-					finalMarking, getConfiguration(), getXEventClassifier());
+			if (!petriNet.hasFinalMarking())
+				petriNet.setFinalMarking(
+						getFinalMarking(petriNet.getArtifact()));
+			result = repairer.repairModel_buildT2Econnection(pluginContext,
+					xLog.getArtifact(), petriNet.getArtifact(),
+					petriNet.getInitialMarking(), petriNet.getFinalMarking(),
+					getConfiguration(), getXEventClassifier());
 		} catch (ObjectNotFoundException e) {
 			e.printStackTrace();
 		}
 
 		PetriNetIOObject output = new PetriNetIOObject((Petrinet) result[0],
-				pluginContext);
-		output.setInitialMarking((Marking) result[1]);
+				(Marking) result[1], null, pluginContext);
 
 		outputPetrinet.deliver(output);
 
@@ -222,16 +219,18 @@ public class RepairModelOperator extends AbstractRapidProMDiscoveryOperator {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private List<Place> getEndPlaces(Petrinet net) {
+	public static Marking getFinalMarking(Petrinet pn) {
 		List<Place> places = new ArrayList<Place>();
-		Iterator<Place> placesIt = net.getPlaces().iterator();
+		Iterator<Place> placesIt = pn.getPlaces().iterator();
 		while (placesIt.hasNext()) {
 			Place nextPlace = placesIt.next();
-			Collection outEdges = net.getOutEdges(nextPlace);
-			if (outEdges.isEmpty()) {
+			Collection inEdges = pn.getOutEdges(nextPlace);
+			if (inEdges.isEmpty()) {
 				places.add(nextPlace);
 			}
 		}
-		return places;
+		Marking m = new Marking();
+		m.addAll(places);
+		return m;
 	}
 }

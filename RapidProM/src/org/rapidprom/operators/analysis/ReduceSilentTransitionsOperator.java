@@ -20,10 +20,10 @@ import com.rapidminer.tools.LogService;
 
 public class ReduceSilentTransitionsOperator extends Operator {
 
-	private InputPort inputPetrinet = getInputPorts().createPort(
-			"model (ProM Petri Net)", PetriNetIOObject.class);
-	private OutputPort outputPetrinet = getOutputPorts().createPort(
-			"model (ProM Petri Net)");
+	private InputPort inputPetrinet = getInputPorts()
+			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
+	private OutputPort outputPetrinet = getOutputPorts()
+			.createPort("model (ProM Petri Net)");
 
 	public ReduceSilentTransitionsOperator(OperatorDescription description) {
 		super(description);
@@ -41,24 +41,19 @@ public class ReduceSilentTransitionsOperator extends Operator {
 		Murata reducer = new Murata();
 		Object[] result = null;
 		try {
-			result = reducer
-					.run(pluginContext,
-							inputPetrinet.getData(PetriNetIOObject.class)
-									.getArtifact(),
-							inputPetrinet.getData(PetriNetIOObject.class)
-									.getInitialMarking());
+			result = reducer.run(pluginContext,
+					inputPetrinet.getData(PetriNetIOObject.class).getArtifact(),
+					inputPetrinet.getData(PetriNetIOObject.class)
+							.getInitialMarking());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		PetriNetIOObject pn = new PetriNetIOObject((Petrinet) result[0],
-				pluginContext);
-		pn.setInitialMarking((Marking) result[1]);
+				(Marking) result[1], null, pluginContext);
 		outputPetrinet.deliver(pn);
 
-		logger.log(
-				Level.INFO,
-				"End: reduce silent transitions ("
-						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
+		logger.log(Level.INFO, "End: reduce silent transitions ("
+				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 
 	}
 

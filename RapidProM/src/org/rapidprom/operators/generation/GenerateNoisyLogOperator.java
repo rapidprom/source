@@ -68,24 +68,27 @@ public class GenerateNoisyLogOperator extends Operator {
 		PetriNetIOObject petriNet = inputNet.getData(PetriNetIOObject.class);
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getContext();
-		Marking finalMarking = getFinalMarking(petriNet.getArtifact());
 
 		GenerateNoisyLog generator = new GenerateNoisyLog();
 		XLog aux = null;
 		try {
+			if (!petriNet.hasFinalMarking())
+				petriNet.setFinalMarking(
+						getFinalMarking(petriNet.getArtifact()));
 			aux = generator.addNoise(pluginContext, log.getArtifact(),
 					petriNet.getArtifact(), petriNet.getInitialMarking(),
-					finalMarking, getParameterAsDouble(PARAMETER_2_KEY),
+					petriNet.getFinalMarking(),
+					getParameterAsDouble(PARAMETER_2_KEY),
 					getParameterAsDouble(PARAMETER_3_KEY),
 					getParameterAsDouble(PARAMETER_4_KEY),
 					getParameterAsInt(PARAMETER_5_KEY));
 		} catch (ObjectNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		XLogIOObject result = new XLogIOObject(aux,pluginContext);
+
+		XLogIOObject result = new XLogIOObject(aux, pluginContext);
 		result.setVisualizationType(log.getVisualizationType());
-		
+
 		output.deliver(result);
 		logger.log(Level.INFO, "End: generating noisy event log ("
 				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
