@@ -103,8 +103,7 @@ public class CreateIvyPrePack {
 			// RapidProM for the first time
 		} else if (!target.getParent().equals(promLibGitFolder.getPath())) {
 			String ext = FilenameUtils.getExtension(src.getPath());
-			if (!ext.equals("jar") && !ext.equals("properties")
-					&& !ext.equals("zip") && !ext.equals("dll")) {
+			if (!ext.equals("jar") && 	!ext.equals("zip") && !ext.equals("dll") && !ext.equals("exe")) {
 				InputStream in = new FileInputStream(src);
 				OutputStream out = new FileOutputStream(target);
 				byte[] buffer = new byte[1024];
