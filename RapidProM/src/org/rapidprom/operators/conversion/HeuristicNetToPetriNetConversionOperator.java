@@ -47,8 +47,7 @@ public class HeuristicNetToPetriNetConversionOperator extends Operator {
 				input.getData(HeuristicsNetIOObject.class).getArtifact());
 
 		PetriNetIOObject finalPetriNet = new PetriNetIOObject(
-				(Petrinet) result[0], pluginContext);
-		finalPetriNet.setInitialMarking((Marking) result[1]);
+				(Petrinet) result[0], (Marking) result[1], null, pluginContext);
 		output.deliver(finalPetriNet);
 
 		logger.log(Level.INFO, "End: heuristics net to petri net conversion ("

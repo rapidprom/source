@@ -32,12 +32,12 @@ public class ParameterTypeExampleSetAttributesDynamicCategory
 					categories[i] = amd.getName();
 					i++;
 				}
+				return new Pair<String[], String[]>(categories, categories);
 			}
-			return new Pair<String[], String[]>(categories, categories);
-		} else {
-			return new Pair<String[], String[]>(getCategories(),
-					getCorrespondingValues());
 		}
+		// restore default
+		return new Pair<String[], String[]>(getDefaultValuesToString(),
+				getDefaultValues());
 	}
 
 }

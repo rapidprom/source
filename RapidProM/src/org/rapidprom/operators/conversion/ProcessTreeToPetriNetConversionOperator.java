@@ -20,16 +20,16 @@ import com.rapidminer.tools.LogService;
 
 public class ProcessTreeToPetriNetConversionOperator extends Operator {
 
-	private InputPort input = getInputPorts().createPort(
-			"model (ProM ProcessTree)", ProcessTreeIOObject.class);
-	private OutputPort output = getOutputPorts().createPort(
-			"model (ProM Petri Net)");
+	private InputPort input = getInputPorts()
+			.createPort("model (ProM ProcessTree)", ProcessTreeIOObject.class);
+	private OutputPort output = getOutputPorts()
+			.createPort("model (ProM Petri Net)");
 
 	public ProcessTreeToPetriNetConversionOperator(
 			OperatorDescription description) {
 		super(description);
-		getTransformer().addRule(
-				new GenerateNewMDRule(output, PetriNetIOObject.class));
+		getTransformer()
+				.addRule(new GenerateNewMDRule(output, PetriNetIOObject.class));
 	}
 
 	public void doWork() throws OperatorException {
@@ -42,8 +42,8 @@ public class ProcessTreeToPetriNetConversionOperator extends Operator {
 
 		PetrinetWithMarkings result = null;
 		try {
-			result = ProcessTree2Petrinet.convert(input.getData(
-					ProcessTreeIOObject.class).getArtifact());
+			result = ProcessTree2Petrinet.convert(
+					input.getData(ProcessTreeIOObject.class).getArtifact());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new OperatorException(
@@ -51,8 +51,7 @@ public class ProcessTreeToPetriNetConversionOperator extends Operator {
 		}
 
 		PetriNetIOObject petriNet = new PetriNetIOObject(result.petrinet,
-				pluginContext);
-		petriNet.setInitialMarking(result.initialMarking);
+				result.initialMarking, result.finalMarking, pluginContext);
 
 		output.deliver(petriNet);
 

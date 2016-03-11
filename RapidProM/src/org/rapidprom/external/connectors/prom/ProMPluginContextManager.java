@@ -39,7 +39,7 @@ import com.rapidminer.gui.tools.ProgressThread;
  *
  */
 public class ProMPluginContextManager extends ProgressThread {
-
+	
 	private static ProMPluginContextManager instance = null;
 
 	private PluginContext context;

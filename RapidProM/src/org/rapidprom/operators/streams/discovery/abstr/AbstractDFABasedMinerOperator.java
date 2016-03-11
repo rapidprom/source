@@ -1,5 +1,6 @@
 package org.rapidprom.operators.streams.discovery.abstr;
 
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,17 +57,35 @@ public abstract class AbstractDFABasedMinerOperator<D extends XSDataPacket<?, ?>
 
 	protected static final String PARAMETER_KEY_CASE_ACTIVITY_STORE = "case_activity_store";
 	protected static final String PARAMETER_DESC_CASE_ACTIVITY_STORE = "Defines what stream-based data store to use for capturing CASE X ACTIVITY information.";
-	protected static final DataStructureType[] PARAMETER_OPTIONS_CASE_ACTIVITY_STORE = StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
-			.toArray(
-					new DataStructureType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
-							.size()]);
+	// temporarily disable this functionality for the rapidprom 3.0 release.
+	// protected static final DataStructureType[]
+	// PARAMETER_OPTIONS_CASE_ACTIVITY_STORE =
+	// StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
+	// .toArray(
+	// new
+	// DataStructureType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
+	// .size()]);
+
+	protected static final DataStructureType[] PARAMETER_OPTIONS_CASE_ACTIVITY_STORE = EnumSet
+			.of(DataStructureType.LOSSY_BUCKET)
+			.toArray(new DataStructureType[EnumSet
+					.of(DataStructureType.LOSSY_BUCKET).size()]);
 
 	protected static final String PARAMETER_KEY_ACTIVITY_ACTIVITY_STORE = "activity_activity_store";
 	protected static final String PARAMETER_DESC_ACTIVITY_ACTIVITY_STORE = "Defines what stream-based data store to use for capturing ACITIVTY X ACTIVITY information.";
-	protected static final DataStructureType[] PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE = StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
-			.toArray(
-					new DataStructureType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
-							.size()]);
+
+	protected static final DataStructureType[] PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE = EnumSet
+			.of(DataStructureType.LOSSY_BUCKET)
+			.toArray(new DataStructureType[EnumSet
+					.of(DataStructureType.LOSSY_BUCKET).size()]);
+
+	// protected static final DataStructureType[]
+	// PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE =
+	// StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
+	// .toArray(
+	// new
+	// DataStructureType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
+	// .size()]);
 
 	public AbstractDFABasedMinerOperator(OperatorDescription description) {
 		super(description);
