@@ -23,7 +23,9 @@ org.rapidprom.operators.ports.metadata
 org.rapidprom.operators.streams.analysis
 org.rapidprom.operators.streams.discovery
 org.rapidprom.operators.streams.discovery.abstr
+org.rapidprom.operators.streams.extract
 org.rapidprom.operators.streams.generators
+org.rapidprom.operators.streams.util
 org.rapidprom.parameter
 org.rapidprom.properties
 org.rapidprom.util
