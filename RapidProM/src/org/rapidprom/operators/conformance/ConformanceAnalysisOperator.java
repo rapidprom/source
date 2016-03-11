@@ -416,9 +416,10 @@ public class ConformanceAnalysisOperator
 
 			PNRepResult repResult = null;
 			try {
+				if (!pNet.hasFinalMarking())
+					pNet.setFinalMarking(getFinalMarking(pNet.getArtifact()));
 				repResult = getAlignment(pNet.getArtifact(), xLog.getArtifact(),
-						pNet.getInitialMarking(),
-						getFinalMarking(pNet.getArtifact()));
+						pNet.getInitialMarking(), pNet.getFinalMarking());
 			} catch (ObjectNotFoundException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();

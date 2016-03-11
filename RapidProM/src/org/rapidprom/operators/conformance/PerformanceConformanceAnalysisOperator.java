@@ -156,7 +156,9 @@ public class PerformanceConformanceAnalysisOperator
 		try {
 			parameter.setGUIMode(false);
 			parameter.setInitMarking(pNet.getInitialMarking());
-			parameter.setFinalMarkings(getFinalMarking(pNet.getArtifact()));
+			if(!pNet.hasFinalMarking())
+				pNet.setFinalMarking(getFinalMarking(pNet.getArtifact()));
+			parameter.setFinalMarkings(pNet.getFinalMarkingAsArray());
 			parameter.setMaxNumOfStates(
 					getParameterAsInt(PARAMETER_1_KEY) * 1000);
 			TransClasses tc = new TransClasses(pNet.getArtifact());
@@ -222,7 +224,7 @@ public class PerformanceConformanceAnalysisOperator
 	}
 
 	@SuppressWarnings("rawtypes")
-	public static Marking[] getFinalMarking(Petrinet pn) {
+	public static Marking getFinalMarking(Petrinet pn) {
 		List<Place> places = new ArrayList<Place>();
 		Iterator<Place> placesIt = pn.getPlaces().iterator();
 		while (placesIt.hasNext()) {
@@ -232,12 +234,8 @@ public class PerformanceConformanceAnalysisOperator
 				places.add(nextPlace);
 			}
 		}
-		List<Marking> finalMarking = new ArrayList<Marking>();
-		for (Place place : places) {
-			Marking m = new Marking();
-			m.add(place);
-			finalMarking.add(m);
-		}
-		return finalMarking.toArray(new Marking[finalMarking.size()]);
+		Marking m = new Marking();
+		m.addAll(places);
+		return m;
 	}
 }
