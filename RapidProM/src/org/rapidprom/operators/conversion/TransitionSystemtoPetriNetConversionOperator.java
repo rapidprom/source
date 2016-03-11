@@ -23,14 +23,14 @@ public class TransitionSystemtoPetriNetConversionOperator extends Operator {
 
 	private InputPort input = getInputPorts().createPort(
 			"model (ProM Transition System)", TransitionSystemIOObject.class);
-	private OutputPort output = getOutputPorts().createPort(
-			"model (ProM Petri Net)");
+	private OutputPort output = getOutputPorts()
+			.createPort("model (ProM Petri Net)");
 
 	public TransitionSystemtoPetriNetConversionOperator(
 			OperatorDescription description) {
 		super(description);
-		getTransformer().addRule(
-				new GenerateNewMDRule(output, PetriNetIOObject.class));
+		getTransformer()
+				.addRule(new GenerateNewMDRule(output, PetriNetIOObject.class));
 	}
 
 	public void doWork() throws OperatorException {
@@ -46,10 +46,8 @@ public class TransitionSystemtoPetriNetConversionOperator extends Operator {
 
 		Object[] result;
 		try {
-			result = converter
-					.convertToPetrinet(pluginContext,
-							input.getData(TransitionSystemIOObject.class)
-									.getArtifact());
+			result = converter.convertToPetrinet(pluginContext, input
+					.getData(TransitionSystemIOObject.class).getArtifact());
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new OperatorException(
@@ -57,14 +55,13 @@ public class TransitionSystemtoPetriNetConversionOperator extends Operator {
 		}
 
 		PetriNetIOObject petriNet = new PetriNetIOObject((Petrinet) result[0],
+				(Marking) result[1], null,
 				input.getData(TransitionSystemIOObject.class)
 						.getPluginContext());
-		petriNet.setInitialMarking((Marking) result[1]);
 
 		output.deliver(petriNet);
 
-		logger.log(
-				Level.INFO,
+		logger.log(Level.INFO,
 				"End: transition system to petri net conversion ("
 						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
