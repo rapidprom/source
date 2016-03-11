@@ -33,7 +33,6 @@ import org.rapidprom.RapidProMInitializer;
 import org.rapidprom.external.connectors.ivy.IvyResolveException;
 import org.rapidprom.external.connectors.ivy.IvyStandAlone;
 import org.rapidprom.properties.RapidProMProperties;
-import org.rapidprom.properties.RapidProMProperties.Deployment;
 import org.rapidprom.util.OSUtils;
 
 import com.rapidminer.gui.tools.ProgressThread;
@@ -134,17 +133,19 @@ public class ProMLibraryManager extends ProgressThread {
 		ExecutorService service = Executors.newSingleThreadExecutor();
 		getProgressListener().setTotal(0);
 		if (!isReadyForIvy()) {
-			JOptionPane.showMessageDialog(null,"RapidProM is running for the first time, and needs to download several libraries. This may take a while. Please be patient." );
+			JOptionPane.showMessageDialog(null,
+					"RapidProM is running for the first time, and needs to download several libraries. This may take a while. Please be patient.");
 			getProgressListener()
 					.setMessage("Downloading libraries, please be patient...");
 			packageDir = createPackageFolder();
 			Runnable progressTracker = new IvyInstallationProgressionTracker(
 					getProgressListener(), packageDir);
 			service.execute(progressTracker);
-			if (RapidProMProperties.instance().getDeployment()
-					.equals(Deployment.LIVE)) {
-				deployPrepack(packageDir);
-			}
+			// disable prepack (prom config may still indicate "live"
+			// if (RapidProMProperties.instance().getDeployment()
+			// .equals(Deployment.LIVE)) {
+			// deployPrepack(packageDir);
+			// }
 			ivyFile = unPackIvyFile(packageDir);
 			ivySettingsFile = unPackIvySettingsFile(packageDir);
 		} else {
@@ -167,6 +168,7 @@ public class ProMLibraryManager extends ProgressThread {
 		getProgressListener().complete();
 	}
 
+	@SuppressWarnings("unused")
 	private void deployPrepack(File rapidProMPackageDirectory) {
 		try {
 			File prepack = downloadPrepackedIvyFolders(
@@ -273,7 +275,7 @@ public class ProMLibraryManager extends ProgressThread {
 	}
 
 	protected void runIvy() {
-		String[] args = new String[7];
+		String[] args = new String[8];
 		args[0] = "-settings";
 		args[1] = ivySettingsFile.getAbsolutePath();
 		args[2] = "-ivy";
@@ -282,21 +284,23 @@ public class ProMLibraryManager extends ProgressThread {
 		args[5] = RapidProMProperties.instance()
 				.getRapidProMPackagesLocationString();
 		args[6] = "-m2compatible";
+		args[7] = "-verbose";
 		try {
 			IvyStandAlone.invokeIvy(args, Boot.Level.ALL);
 		} catch (IvyResolveException ire) {
-			try{
+			ire.printStackTrace();
+			try {
 				IvyStandAlone.invokeIvy(args, Boot.Level.ALL);
-			}
-			catch (Exception ire2) {
+			} catch (Exception ire2) {
 				Object[] options = { "OK" };
 				JOptionPane.showOptionDialog(null,
 						"Loading/Verifying the RapidProM extension failed. Please check your internet connection and restart RapidMiner",
 						"Warning", JOptionPane.PLAIN_MESSAGE,
-						JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+						JOptionPane.QUESTION_MESSAGE, null, options,
+						options[0]);
 				System.exit(1);
-			} 
-			
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

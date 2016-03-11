@@ -16,7 +16,6 @@ import org.processmining.stream.model.datastructure.DSParameter;
 import org.processmining.stream.model.datastructure.DSParameterDefinition;
 import org.processmining.stream.model.datastructure.DSParameterFactory;
 import org.processmining.stream.model.datastructure.DataStructureType;
-import org.processmining.streaminductiveminer.utils.StreamInductiveMinerUtils;
 import org.rapidprom.ioobjects.streams.XSReaderIOObject;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
 import org.rapidprom.util.ObjectUtils;
