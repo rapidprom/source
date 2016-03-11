@@ -284,7 +284,7 @@ public class ProMLibraryManager extends ProgressThread {
 		args[5] = RapidProMProperties.instance()
 				.getRapidProMPackagesLocationString();
 		args[6] = "-m2compatible";
-		args[7] = "-verbose";
+		args[7] = "-error";
 		try {
 			IvyStandAlone.invokeIvy(args, Boot.Level.ALL);
 		} catch (IvyResolveException ire) {
