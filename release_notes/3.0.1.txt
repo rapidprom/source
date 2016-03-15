@@ -1,0 +1,19 @@
+Release Notes RapidProM 3.0.1
+==========
+
+Bug Fixes
+1. Fixed output to file bug in Stream/Analyzer operators (only occured @ repeated experiments)
+    -> git commit:
+==========
+
+New Functionality:
+1. ...
+==========
+
+Removed Functionality:
+1. ...
+==========
+
+Additional Notes:
+
+
