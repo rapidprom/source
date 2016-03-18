@@ -45,6 +45,7 @@
         <dependency org="org.rapidprom" name="Uma" rev="6.5.46" rapidprom:release="3.0.1" />
         <dependency org="org.rapidprom" name="Woflan" rev="6.5.33" rapidprom:release="3.0.1" />
         <dependency org="org.rapidprom" name="XESLite" rev="6.5.168" rapidprom:release="3.0.1" />
+        <dependency org="org.rapidprom" name="PTAndLogGenerator" rev="6.5.41" rapidprom:release="3.0.1" />
         <exclude org="*" ext="*" type="source"/>
         <exclude org="*" ext="*" type="javadoc"/>
     </dependencies>
