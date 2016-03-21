@@ -334,6 +334,8 @@ public class ConformanceAnalysisOperator
 		ExampleSet es3 = null;
 		MemoryExampleTable table3 = null;
 		List<Attribute> attributes3 = new LinkedList<Attribute>();
+		attributes3.add(AttributeFactory.createAttribute(this.TRACEINDEX,
+				Ontology.STRING));
 		attributes3.add(AttributeFactory.createAttribute(this.TRACEIDENTIFIER,
 				Ontology.STRING));
 		attributes3.add(AttributeFactory
@@ -352,16 +354,16 @@ public class ConformanceAnalysisOperator
 			SyncReplayResult next = iterator2.next();
 			DataRowFactory factory = new DataRowFactory(
 					DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
-			Object[] vals = new Object[6];
-			vals[1] = Double
-					.toString(next.getInfo().get(PNRepResult.TRACEFITNESS));
+			Object[] vals = new Object[7];
 			vals[2] = Double
-					.toString(next.getInfo().get(PNRepResult.MOVELOGFITNESS));
+					.toString(next.getInfo().get(PNRepResult.TRACEFITNESS));
 			vals[3] = Double
-					.toString(next.getInfo().get(PNRepResult.MOVEMODELFITNESS));
+					.toString(next.getInfo().get(PNRepResult.MOVELOGFITNESS));
 			vals[4] = Double
+					.toString(next.getInfo().get(PNRepResult.MOVEMODELFITNESS));
+			vals[5] = Double
 					.toString(next.getInfo().get(PNRepResult.RAWFITNESSCOST));
-			vals[5] = Double.toString(
+			vals[6] = Double.toString(
 					next.getInfo().get(PNRepResult.NUMSTATEGENERATED));
 			// convert the list to array
 			Attribute[] attribArray = new Attribute[attributes3.size()];
@@ -374,7 +376,8 @@ public class ConformanceAnalysisOperator
 				// get the right trace
 				XTrace xTrace = getXLog().get(s);
 				String name = XConceptExtension.instance().extractName(xTrace);
-				vals[0] = name;
+				vals[0] = s;
+				vals[1] = name;
 				DataRow dataRow = factory.create(vals, attribArray);
 				table3.addDataRow(dataRow);
 			}
