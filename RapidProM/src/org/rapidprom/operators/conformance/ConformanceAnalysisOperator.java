@@ -376,7 +376,7 @@ public class ConformanceAnalysisOperator
 				// get the right trace
 				XTrace xTrace = getXLog().get(s);
 				String name = XConceptExtension.instance().extractName(xTrace);
-				vals[0] = s;
+				vals[0] = s.toString();
 				vals[1] = name;
 				DataRow dataRow = factory.create(vals, attribArray);
 				table3.addDataRow(dataRow);
