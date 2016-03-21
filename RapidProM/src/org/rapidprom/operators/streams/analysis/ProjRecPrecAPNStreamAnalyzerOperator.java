@@ -38,21 +38,6 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends
 	private final InputPortExtender referenceModelsPort = new InputPortExtender(
 			"accepting petri nets", getInputPorts(), null, 1);
 
-	@Deprecated
-	private static final String PARAMETER_KEY_ANALYSIS_SCHEME = "analysis_scheme";
-	@Deprecated
-	private static final String PARAMETER_DESC_ANALYSIS_SCHEME = "Determine the analysis scheme of the analyzer.";
-	@Deprecated
-	private static final String[] PARAMETER_OPTIONS_ANALYSIS_SCHEME = getAnalysisSchemesString();
-	@SuppressWarnings("unused")
-	@Deprecated
-	private static final AnalysisScheme[] PARAMETER_REFERENCE_ANALYSIS_SCHEME = getAnalysisSchemes();
-
-	@Deprecated
-	private static final String PARAMETER_KEY_INTERVAL = "interval";
-	@Deprecated
-	private static final String PARAMETER_DESC_INTERVAL = "Determines at what points in time the analyser should work.";
-
 	private final static String PARAMETER_KEY_MAX_STATE_SPACE = "max_state_space";
 	private final static String PARAMETER_DESC_MAX_STATE_SPACE = "Determine the maximal size of the state space of the underlying automaton.";
 	private final static int PARAMETER_DEFAULT_MAX_STATE_SPACE = 2000;
@@ -129,21 +114,6 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends
 		return params;
 	}
 
-	@SuppressWarnings("unused")
-	@Deprecated
-	private ParameterType createIntervalParameterType() {
-		return new ParameterTypeInt(PARAMETER_KEY_INTERVAL,
-				PARAMETER_DESC_INTERVAL, 0, Integer.MAX_VALUE, 50);
-	}
-
-	@SuppressWarnings("unused")
-	@Deprecated
-	private ParameterType createAnalysisSchemeParameterType() {
-		return new ParameterTypeCategory(PARAMETER_KEY_ANALYSIS_SCHEME,
-				PARAMETER_DESC_ANALYSIS_SCHEME,
-				PARAMETER_OPTIONS_ANALYSIS_SCHEME, 0);
-	}
-
 	private ParameterTypeInt createMaxStateSpaceParameterType() {
 		return new ParameterTypeInt(PARAMETER_KEY_MAX_STATE_SPACE,
 				PARAMETER_DESC_MAX_STATE_SPACE, 1, Integer.MAX_VALUE,
@@ -156,20 +126,9 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends
 				PARAMETER_DEFAULT_PROJECTION_SIZE, true);
 	}
 
-	@Deprecated
-	private static AnalysisScheme[] getAnalysisSchemes() {
-		return EnumSet.allOf(AnalysisScheme.class).toArray(
-				new AnalysisScheme[EnumSet.allOf(AnalysisScheme.class).size()]);
-	}
-
-	@Deprecated
-	private static String[] getAnalysisSchemesString() {
-		AnalysisScheme[] schemes = getAnalysisSchemes();
-		String[] res = new String[schemes.length];
-		for (int i = 0; i < getAnalysisSchemes().length; i++) {
-			res[i] = schemes[i].toString();
-		}
-		return res;
+	@Override
+	protected ProjRecPrecAnalyzerParametersImpl renewParameters() {
+		return new ProjRecPrecAnalyzerParametersImpl();
 	}
 
 }

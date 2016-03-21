@@ -49,10 +49,14 @@ public abstract class AbstractEventStreamBasedDiscoveryAlgorithmAnalyzer<P exten
 	private final InputPortExtender algorithmsPort = new InputPortExtender(
 			"algorithms", getInputPorts(), null, 1);
 
+	private P analyzerParameters;
+
+	public void setAnalyzerParameters(P analyzerParameters) {
+		this.analyzerParameters = analyzerParameters;
+	}
+
 	private final OutputPort analyzerPort = getOutputPorts()
 			.createPort("analyzer");
-
-	private final P parameters;
 
 	private final InputPort streamPort = getInputPorts()
 			.createPort("event stream", XSEventStreamIOObject.class);
@@ -63,7 +67,7 @@ public abstract class AbstractEventStreamBasedDiscoveryAlgorithmAnalyzer<P exten
 		getAlgorithmsPort().start();
 		getTransformer().addRule(new GenerateNewMDRule(getAnalyzerPort(),
 				XSStreamAnalyzerIOObject.class));
-		this.parameters = parameters;
+		this.analyzerParameters = parameters;
 	}
 
 	private ParameterType createDirectoryChooserParameterType() {
@@ -86,15 +90,15 @@ public abstract class AbstractEventStreamBasedDiscoveryAlgorithmAnalyzer<P exten
 				PARAMETER_DESC_WRITE_TO_FILE, true);
 	}
 
-	public P getAlgorithmParameters() {
-		return parameters;
-	}
-
 	/**
 	 * @return the algorithmsPort
 	 */
 	public InputPortExtender getAlgorithmsPort() {
 		return algorithmsPort;
+	}
+
+	public P getAnalyzerParameters() {
+		return analyzerParameters;
 	}
 
 	/**
@@ -143,7 +147,8 @@ public abstract class AbstractEventStreamBasedDiscoveryAlgorithmAnalyzer<P exten
 	}
 
 	protected P parseParameters() throws UserError, IOException {
-		getAlgorithmParameters()
+		setAnalyzerParameters(renewParameters());
+		getAnalyzerParameters()
 				.setEndPoint(getParameterAsInt(PARAMETER_KEY_END_POINT));
 		if (getParameterAsBoolean(PARAMETER_KEY_WRITE_TO_FILE)) {
 			File target = IOUtils.prepareTargetFile(
@@ -154,16 +159,24 @@ public abstract class AbstractEventStreamBasedDiscoveryAlgorithmAnalyzer<P exten
 				target.delete();
 			}
 			target.createNewFile();
-			getAlgorithmParameters().setMetricsFile(target);
+			getAnalyzerParameters().setMetricsFile(target);
 		}
 		if (getParameterAsBoolean(PARAMETER_KEY_STORE_MODEL_SEQUENCE)) {
 			File dir = getParameterAsFile(PARAMETER_KEY_STORE_MODEL_DIR);
 			assert (dir.exists() && dir.isDirectory());
-			getAlgorithmParameters().setStoreModelSequence(true);
-			getAlgorithmParameters().setModelSequenceDirectory(dir);
+			getAnalyzerParameters().setStoreModelSequence(true);
+			getAnalyzerParameters().setModelSequenceDirectory(dir);
 		}
-		getAlgorithmParameters().setVerbose(true);
-		return getAlgorithmParameters();
+		getAnalyzerParameters().setVerbose(true);
+		return getAnalyzerParameters();
 	}
+
+	/**
+	 * The parameters have to be renewed in a repeated experimental setting such
+	 * that writing to file succeeds.
+	 * 
+	 * @return fresh instance of P
+	 */
+	protected abstract P renewParameters();
 
 }

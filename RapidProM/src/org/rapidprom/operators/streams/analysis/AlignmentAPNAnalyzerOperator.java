@@ -128,4 +128,9 @@ public class AlignmentAPNAnalyzerOperator extends
 				PARAMETER_DEFAULT_TIMEOUT, true);
 	}
 
+	@Override
+	protected AlignmentAnalyzerParametersImpl renewParameters() {
+		return new AlignmentAnalyzerParametersImpl();
+	}
+
 }
