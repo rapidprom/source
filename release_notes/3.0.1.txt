@@ -3,13 +3,20 @@ Release Notes RapidProM 3.0.1
 
 Bug Fixes
 1. Fixed output to file bug in Stream/Analyzer operators (only occured @ repeated experiments)
+    -> commit: 5a4f833c1871e56416b6002475d0db69bca0c8be
 2. Fixed Log to table conversion: date attributes are also handled at a trace level    
-
+    -> commit: cec8de1d7223b813f9a71d373e7b122edf21730f 
 
 ==========
 
 New Functionality:
 1. Conformance checker: added extra column (trace id) to the trace-by trace alignments 
+    -> commit: ffd17cdf217e0ff1868f4f37fd8716e0ddf17b9a
+2. Stream Framework Update:
+    Threads are now stopped id streaming is stopped (i.e. reduce # threads in looped experiments).
+    Add a "linear fragmentation scheme"-based analysis that allows to skip some events on an event streaming
+    -> commit: 3320436183a4b5dc45839d0ef8cb597fb9d6c90a 
+    
 
 ==========
 
