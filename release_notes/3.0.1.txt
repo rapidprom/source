@@ -3,11 +3,14 @@ Release Notes RapidProM 3.0.1
 
 Bug Fixes
 1. Fixed output to file bug in Stream/Analyzer operators (only occured @ repeated experiments)
-    -> git commit:
+2. Fixed Log to table conversion: date attributes are also handled at a trace level    
+
+
 ==========
 
 New Functionality:
-1. ...
+1. Conformance checker: added extra column (trace id) to the trace-by trace alignments 
+
 ==========
 
 Removed Functionality:
