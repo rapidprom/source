@@ -35,13 +35,13 @@ public class StopXSRunnableOperator extends Operator {
 		for (InputPort i : artifactsPort.getManagedPorts()) {
 			try {
 				((XSRunnable) i.getData(XSRunnableIOObject.class).getArtifact())
-						.stop();
+						.stopXSRunnable();
 			} catch (UserError e) {
 			}
 		}
 		XSRunnable runnable = (XSAuthor<?>) runnableInput
 				.getData(XSAuthorIOObject.class).getArtifact();
-		runnable.stop();
+		runnable.stopXSRunnable();
 		runnableOutput.deliver(runnableInput.getData(XSAuthorIOObject.class));
 	}
 

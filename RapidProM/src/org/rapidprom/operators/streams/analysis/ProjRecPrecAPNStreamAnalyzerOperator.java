@@ -2,8 +2,8 @@ package org.rapidprom.operators.streams.analysis;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
+import java.util.Map;
 
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNetArray;
@@ -13,9 +13,9 @@ import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.eventstream.readers.acceptingpetrinet.XSEventStreamToAcceptingPetriNetReader;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.projectedrecallandprecision.framework.CompareParameters;
+import org.processmining.stream.core.interfaces.XSReader;
 import org.processmining.streamanalysis.core.interfaces.XSStreamAnalyzer;
 import org.processmining.streamanalysis.parameters.ProjRecPrecAnalyzerParametersImpl;
-import org.processmining.streamanalysis.parameters.XSEventStreamAnalyzerParameters.AnalysisScheme;
 import org.processmining.streamanalysis.plugins.ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.AcceptingPetriNetIOObject;
@@ -29,7 +29,6 @@ import com.rapidminer.operator.UserError;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.InputPortExtender;
 import com.rapidminer.parameter.ParameterType;
-import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.parameter.ParameterTypeInt;
 
 public class ProjRecPrecAPNStreamAnalyzerOperator extends
@@ -84,13 +83,13 @@ public class ProjRecPrecAPNStreamAnalyzerOperator extends
 			} catch (UserError e) {
 			}
 		}
-		XSStreamAnalyzer<XSEvent, List<List<Double>>, AcceptingPetriNet> analyzer = ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin
+		XSStreamAnalyzer<XSEvent, Map<XSReader<XSEvent, AcceptingPetriNet>, Map<Long, Iterable<Iterable<Double>>>>, AcceptingPetriNet> analyzer = ProjRecPrecAutomataXSEventStreamAPN2APNAnalyzerPlugin
 				.run(context, stream, arr, params,
 						algos.toArray(
 								new XSEventStreamToAcceptingPetriNetReader[algos
 										.size()]));
 		getAnalyzerPort().deliver(
-				new XSStreamAnalyzerIOObject<XSEvent, List<List<Double>>, AcceptingPetriNet>(
+				new XSStreamAnalyzerIOObject<XSEvent, Map<XSReader<XSEvent, AcceptingPetriNet>, Map<Long, Iterable<Iterable<Double>>>>, AcceptingPetriNet>(
 						analyzer, context));
 	}
 

@@ -3,6 +3,7 @@ package org.rapidprom.operators.streams.analysis;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.deckfour.xes.classification.XEventClassifier;
 import org.processmining.acceptingpetrinet.models.AcceptingPetriNet;
@@ -10,6 +11,7 @@ import org.processmining.eventstream.core.interfaces.XSEvent;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
 import org.processmining.eventstream.readers.acceptingpetrinet.XSEventStreamToAcceptingPetriNetReader;
 import org.processmining.framework.plugin.PluginContext;
+import org.processmining.stream.core.interfaces.XSReader;
 import org.processmining.streamanalysis.core.interfaces.XSStreamAnalyzer;
 import org.processmining.streamanalysis.parameters.AlignmentAnalyzerParametersImpl;
 import org.processmining.streamanalysis.plugins.AlignmentAPNAnalyzerPlugin;
@@ -79,13 +81,13 @@ public class AlignmentAPNAnalyzerOperator extends
 			} catch (UserError e) {
 			}
 		}
-		XSStreamAnalyzer<XSEvent, List<List<Double>>, AcceptingPetriNet> analyzer = AlignmentAPNAnalyzerPlugin
+		XSStreamAnalyzer<XSEvent, Map<XSReader<XSEvent, AcceptingPetriNet>, Map<Long, Iterable<Iterable<Double>>>>, AcceptingPetriNet> analyzer = AlignmentAPNAnalyzerPlugin
 				.run(context, stream, arr, params,
 						algos.toArray(
 								new XSEventStreamToAcceptingPetriNetReader[algos
 										.size()]));
 		getAnalyzerPort().deliver(
-				new XSStreamAnalyzerIOObject<XSEvent, List<List<Double>>, AcceptingPetriNet>(
+				new XSStreamAnalyzerIOObject<XSEvent, Map<XSReader<XSEvent, AcceptingPetriNet>, Map<Long, Iterable<Iterable<Double>>>>, AcceptingPetriNet>(
 						analyzer, context));
 	}
 
