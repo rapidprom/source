@@ -61,6 +61,13 @@ public class XLogUtils {
 						// something wrong, basically should not happen
 						throw new Exception("type is different!");
 					}
+					if (timeIsSeconds && type.equals(AttributeTypes.DATE)) {
+						XAttributeTimestamp ts = (XAttributeTimestamp) value;
+						valuesTrace[integer] = Long.toString(ts.getValue().getTime());
+					}
+					else {
+						valuesTrace[integer] = stringFromAttribute;
+					}
 				}
 			}
 			// now for event attributes
@@ -81,13 +88,6 @@ public class XLogUtils {
 					if (integer!=null) {
 						// check if is time
 						AttributeTypes type = getType(value);
-						if (timeIsSeconds && type.equals(AttributeTypes.DATE)) {
-							XAttributeTimestamp ts = (XAttributeTimestamp) value;
-							valuesEvent[integer] = Long.toString(ts.getValue().getTime());
-						}
-						else {
-							valuesEvent[integer] = stringFromAttribute;
-						}
 						// try to find type
 						if (columnTypesArray[integer] == null) {
 							columnTypesArray[integer] = type;
@@ -95,6 +95,14 @@ public class XLogUtils {
 						else if (!columnTypesArray[integer].equals(type)) {
 							// something wrong, basically should not happen
 							throw new Exception("type is different!");
+						}
+						
+						if (timeIsSeconds && type.equals(AttributeTypes.DATE)) {
+							XAttributeTimestamp ts = (XAttributeTimestamp) value;
+							valuesEvent[integer] = Long.toString(ts.getValue().getTime());
+						}
+						else {
+							valuesEvent[integer] = stringFromAttribute;
 						}
 					}
 				}

@@ -134,7 +134,7 @@ public class ProMLibraryManager extends ProgressThread {
 		getProgressListener().setTotal(0);
 		if (!isReadyForIvy()) {
 			JOptionPane.showMessageDialog(null,
-					"RapidProM is running for the first time, and needs to download several libraries. This may take a while. Please be patient.");
+					"RapidProM is running for the first time, and needs to download several libraries. This may take a while (~ 10 minutes). Please be patient.");
 			getProgressListener()
 					.setMessage("Downloading libraries, please be patient...");
 			packageDir = createPackageFolder();

@@ -35,10 +35,6 @@ import com.rapidminer.tools.math.container.Range;
 
 public class XLogToExampleSetConversionOperator extends Operator {
 	
-	private final String CONCEPT_NAME_TRACE = "T:concept:name";
-	private final String CONCEPT_NAME_EVENT = "E:concept:name";
-	private final String TIME_TIMESTAMP_EVENT = "E:time:timestamp";
-	
 	/** defining the ports */
 	private InputPort inputLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
 	private OutputPort output = getOutputPorts().createPort("example set (Data Table)");
@@ -51,22 +47,6 @@ public class XLogToExampleSetConversionOperator extends Operator {
 	 */
 	public XLogToExampleSetConversionOperator(OperatorDescription description) {
 		super(description);
-		
-		/** Adding a rule for the output */
-		this.metaData = new ExampleSetMetaData();
-		AttributeMetaData amd1 = new AttributeMetaData(CONCEPT_NAME_TRACE, Ontology.STRING);
-		amd1.setRole(AttributeColumn.REGULAR);
-		amd1.setNumberOfMissingValues(new MDInteger(0));
-		metaData.addAttribute(amd1);
-		AttributeMetaData amd2 = new AttributeMetaData(CONCEPT_NAME_EVENT, Ontology.STRING);
-		amd2.setRole(AttributeColumn.REGULAR);
-		amd2.setNumberOfMissingValues(new MDInteger(0));
-		metaData.addAttribute(amd2);
-		AttributeMetaData amd3 = new AttributeMetaData(TIME_TIMESTAMP_EVENT, Ontology.DATE_TIME);
-		amd3.setRole(AttributeColumn.REGULAR);
-		amd3.setNumberOfMissingValues(new MDInteger(0));
-		metaData.addAttribute(amd3);
-		getTransformer().addRule( new GenerateNewMDRule(output, this.metaData));
 		
 	}
 	
@@ -123,6 +103,12 @@ public class XLogToExampleSetConversionOperator extends Operator {
 				amd.setRole(AttributeColumn.REGULAR);
 				amd.setNumberOfMissingValues(new MDInteger(0));
 			}
+//			else if (columnType.equals(AttributeTypes.DATE)) { //treat dates as string for now
+//				attributes.add(AttributeFactory.createAttribute(columnName, Ontology.NOMINAL));
+//				amd = new AttributeMetaData(columnName, Ontology.NOMINAL);
+//				amd.setRole(AttributeColumn.REGULAR);
+//				amd.setNumberOfMissingValues(new MDInteger(0));
+//			}
 			else if (columnType.equals(AttributeTypes.DATE)) {
 				attributes.add(AttributeFactory.createAttribute(columnName, Ontology.DATE_TIME));
 				amd = new AttributeMetaData(columnName, Ontology.DATE_TIME);
