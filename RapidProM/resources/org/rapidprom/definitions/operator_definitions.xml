@@ -252,5 +252,15 @@
                 </operator>
             </group>
         </group>
+         <group key="videolectures">
+            <operator>
+                <key>sequence_painter</key>
+                <class>org.rapidprom.operators.experimental.SequencePainterTask</class>
+            </operator>
+            <operator>
+                <key>fitness_calculator</key>
+                <class>org.rapidprom.operators.experimental.FitnessCalculatorOperator</class>
+            </operator>   
+        </group> 
     </group>
 </operators>

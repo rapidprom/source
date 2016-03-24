@@ -1,135 +1,134 @@
 package org.rapidprom.operators.experimental;
-//package com.rapidminer.operator.miningplugins;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import org.deckfour.xes.model.XLog;
-//import org.processmining.framework.plugin.PluginContext;
-//import org.processmining.models.graphbased.directed.petrinet.Petrinet;
-//import org.processmining.models.semantics.petrinet.Marking;
-//import org.processmining.plugins.graphviz.visualisation.DotPanel;
-//import org.processmining.processcomparator.parameters.SequencePainterParameters;
-//import org.rapidprom.prom.CallProm;
-//
-//import com.rapidminer.ioobjects.DotPanelIOObject;
-//import com.rapidminer.ioobjects.ProMContextIOObject;
-//import com.rapidminer.ioobjects.XLogIOObject;
-//import com.rapidminer.operator.Operator;
-//import com.rapidminer.operator.OperatorDescription;
-//import com.rapidminer.operator.OperatorException;
-//import com.rapidminer.operator.ports.InputPort;
-//import com.rapidminer.operator.ports.OutputPort;
-//import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
-//import com.rapidminer.parameter.ParameterType;
-//import com.rapidminer.parameter.ParameterTypeCategory;
-//import com.rapidminer.parameter.ParameterTypeDouble;
-//import com.rapidminer.parameter.ParameterTypeInt;
-//import com.rapidminer.parameters.Parameter;
-//import com.rapidminer.parameters.ParameterCategory;
-//import com.rapidminer.parameters.ParameterDouble;
-//import com.rapidminer.parameters.ParameterInteger;
-//import com.rapidminer.tools.LogService;
-//import com.rapidminer.util.ProMIOObjectList;
-//import com.rapidminer.util.Utilities;
-//
-//public class SequencePainterTask extends Operator{
-//	
-//	private InputPort inputContext = getInputPorts().createPort("context (ProM Context)", ProMContextIOObject.class);
-//	private InputPort inputLog = getInputPorts().createPort("event log (ProM Event Log)", XLogIOObject.class);
-//	private OutputPort output = getOutputPorts().createPort("model (DotPanel)");
-//	
-//	private List<Parameter> parameters;
-//	public SequencePainterTask(OperatorDescription description) {
-//		super(description);
-//
-//		getTransformer().addRule( new GenerateNewMDRule(output, DotPanelIOObject.class));
-//	}
-//	
-//
-//	@Override
-//	public void doWork() throws OperatorException {
-//		// get ProMContext
-//		LogService logService = LogService.getGlobal();
-//		logService.log("start do work Sequential Process Painter", LogService.NOTE);
-//		ProMContextIOObject context = inputContext.getData(ProMContextIOObject.class);
-//		PluginContext pluginContext = context.getPluginContext();
-//		// get the log
-//		XLogIOObject log = inputLog.getData(XLogIOObject.class);
-//		XLog promLog = log.getData();
-//		CallProm tp = new CallProm();
-//		
-//		
-//		List<Object> pars = new ArrayList<Object>();
-//		pars.add(promLog);
-//		
-//		SequencePainterParameters seqpar = (SequencePainterParameters) getConfiguration(parameters);
-//		pars.add(seqpar);
-//		
-//		Object[] runPlugin = tp.runPlugin(pluginContext, "XX", "Sequential Process Painter", pars);
-//		
-//		DotPanelIOObject result = new DotPanelIOObject((DotPanel) runPlugin[0]);
-//		result.setPluginContext(pluginContext);
-//		// add to list so that afterwards it can be cleared if needed
-//		
-//		ProMIOObjectList instance = ProMIOObjectList.getInstance();
-//		instance.addToList(result);
-//		
-//		
-//		output.deliver(result);
-//	
-//		logService.log("end do work Sequential Process Painter", LogService.NOTE);
-//
-//	}
-//	
-//	public List<ParameterType> getParameterTypes() {
-//		Utilities.loadRequiredClasses();
-//		
-//		this.parameters = new ArrayList<Parameter>();
-//		List<ParameterType> parameterTypes = super.getParameterTypes();
-//		
-//		ParameterInteger parameter_charsRemoved = new ParameterInteger(8, 0, Integer.MAX_VALUE, 1, null, "Chars removed from activity name", "number of characters that are removed from the beggining of each activity name");
-//		ParameterTypeInt parameterType_0 = new ParameterTypeInt(parameter_charsRemoved.getNameParameter(), parameter_charsRemoved.getDescriptionParameter(), parameter_charsRemoved.getMin(), parameter_charsRemoved.getMax(), parameter_charsRemoved.getDefaultValueParameter());
-//		parameterTypes.add(parameterType_0);
-//		parameters.add(parameter_charsRemoved);
-//		
-//		ParameterInteger parameter_activititesPerColumn = new ParameterInteger(10, 0, Integer.MAX_VALUE, 1, null, "Number of activities per column", "defines how many activities are fitted in a column before adding a new column");
-//		ParameterTypeInt parameterType_1 = new ParameterTypeInt(parameter_activititesPerColumn.getNameParameter(), parameter_activititesPerColumn.getDescriptionParameter(), parameter_activititesPerColumn.getMin(), parameter_activititesPerColumn.getMax(), parameter_activititesPerColumn.getDefaultValueParameter());
-//		parameterTypes.add(parameterType_1);
-//		parameters.add(parameter_activititesPerColumn);
-//		
-//		ParameterInteger parameter_numberOfDeviations = new ParameterInteger(10, 0, Integer.MAX_VALUE, 1, null, "Number of deviations", "defines the number of deviations that are shown in the model using different colors (max 13)");
-//		ParameterTypeInt parameterType_2 = new ParameterTypeInt(parameter_numberOfDeviations.getNameParameter(), parameter_numberOfDeviations.getDescriptionParameter(), parameter_numberOfDeviations.getMin(), parameter_numberOfDeviations.getMax(), parameter_numberOfDeviations.getDefaultValueParameter());
-//		parameterTypes.add(parameterType_2);
-//		parameters.add(parameter_numberOfDeviations);
-//		
-//		ParameterDouble parameter_Threshold = new ParameterDouble(0.05, 0, 1, 0.01, null, "Min Threshold for deviations", "Min Threshold for deviations");
-//		ParameterTypeDouble parameterType_3 = new ParameterTypeDouble(parameter_Threshold.getNameParameter(), parameter_Threshold.getDescriptionParameter(), parameter_Threshold.getMin(), parameter_Threshold.getMax());
-//		parameterTypes.add(parameterType_3);
-//		parameters.add(parameter_Threshold);
-//		
-//		return parameterTypes;
-//	}
-//	
-//	private Object getConfiguration (List<Parameter> pars)
-//	{
-//		try
-//		{
-//		
-//		int charsRemoved = getParameterAsInt(pars.get(0).getNameParameter());
-//		int activitiesPerColumn = getParameterAsInt(pars.get(1).getNameParameter());
-//		int numberOfDeviations = getParameterAsInt(pars.get(2).getNameParameter());
-//		
-//		double threshold = getParameterAsDouble(pars.get(3).getNameParameter());
-//		
-//		return new SequencePainterParameters(charsRemoved, activitiesPerColumn, numberOfDeviations, threshold);
-//		
-//		}
-//		catch(Exception e)
-//		{
-//			e.printStackTrace();
-//		}
-//		return null;
-//		
-//	}
-//}
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.deckfour.xes.model.XLog;
+import org.processmining.framework.plugin.PluginContext;
+import org.processmining.plugins.graphviz.visualisation.DotPanel;
+import org.processmining.videolectureanalysis.parameters.SequencePainterParameters;
+import org.processmining.videolectureanalysis.plugins.SequenceFrequencyMiner_WithDeviations;
+import org.processmining.videolectureanalysis.plugins.SequencePerformanceMiner_DF;
+import org.processmining.videolectureanalysis.plugins.SequencePerformanceMiner_WithDeviations;
+import org.processmining.videolectureanalysis.plugins.abstr.AbstractSequenceMiner;
+import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
+import org.rapidprom.ioobjects.DotPanelIOObject;
+import org.rapidprom.ioobjects.XLogIOObject;
+
+import com.rapidminer.operator.Operator;
+import com.rapidminer.operator.OperatorDescription;
+import com.rapidminer.operator.OperatorException;
+import com.rapidminer.operator.ports.InputPort;
+import com.rapidminer.operator.ports.OutputPort;
+import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeCategory;
+import com.rapidminer.parameter.ParameterTypeDouble;
+import com.rapidminer.parameter.ParameterTypeInt;
+import com.rapidminer.parameter.ParameterTypeString;
+import com.rapidminer.tools.LogService;
+
+public class SequencePainterTask extends Operator {
+
+	private InputPort inputLog = getInputPorts()
+			.createPort("event log (ProM Event Log)", XLogIOObject.class);
+	private OutputPort output = getOutputPorts().createPort("model (DotPanel)");
+
+	public static final String PARAMETER_1 = "Variation (Directly Follows)",
+			PARAMETER_2 = "Characters removed",
+			PARAMETER_3 = "Activities per column",
+			PARAMETER_4 = "Max deviations", PARAMETER_5 = "Frequency threshold",
+			PARAMETER_6 = "Start date (yyyy-mm-dd)";
+
+	public static final String OPTION_1 = "Frequencies + Deviations",
+			OPTION_2 = "Performance", OPTION_3 = "Performance + Deviations";
+
+	public SequencePainterTask(OperatorDescription description) {
+		super(description);
+		getTransformer()
+				.addRule(new GenerateNewMDRule(output, DotPanelIOObject.class));
+	}
+
+	@Override
+	public void doWork() throws OperatorException {
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "Start: sequence miner");
+		long time = System.currentTimeMillis();
+
+		PluginContext pluginContext = ProMPluginContextManager.instance()
+				.getContext();
+		XLog log = FitnessCalculatorOperator.cloneXLog(inputLog.getData(XLogIOObject.class).getArtifact());
+
+		AbstractSequenceMiner miner = null;
+		switch (getParameterAsString(PARAMETER_1)) {
+		case OPTION_1:
+			miner = new SequenceFrequencyMiner_WithDeviations();
+			break;
+		case OPTION_2:
+			miner = new SequencePerformanceMiner_DF();
+			break;
+		case OPTION_3:
+			miner = new SequencePerformanceMiner_WithDeviations();
+			break;
+		}
+
+		DotPanel result = miner.run(log, getParameterObject());
+		output.deliver(new DotPanelIOObject(result, pluginContext));
+
+		logger.log(Level.INFO, "End: sequence miner ("
+				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
+	}
+
+	public List<ParameterType> getParameterTypes() {
+
+		List<ParameterType> parameterTypes = super.getParameterTypes();
+
+		ParameterTypeCategory parameter1 = new ParameterTypeCategory(
+				PARAMETER_1, PARAMETER_1,
+				new String[] { OPTION_1, OPTION_2, OPTION_3 }, 0);
+		parameterTypes.add(parameter1);
+
+		ParameterTypeInt parameter2 = new ParameterTypeInt(PARAMETER_2,
+				PARAMETER_2, 0, 100, 8);
+		parameterTypes.add(parameter2);
+
+		ParameterTypeInt parameter3 = new ParameterTypeInt(PARAMETER_3,
+				PARAMETER_3, 0, 100, 10);
+		parameterTypes.add(parameter3);
+
+		ParameterTypeInt parameter4 = new ParameterTypeInt(PARAMETER_4,
+				PARAMETER_4, 0, 100, 10);
+		parameterTypes.add(parameter4);
+
+		ParameterTypeDouble parameter5 = new ParameterTypeDouble(PARAMETER_5,
+				PARAMETER_5, 0, 1, 0.05);
+		parameterTypes.add(parameter5);
+
+		ParameterTypeString parameter6 = new ParameterTypeString(PARAMETER_6,
+				PARAMETER_6, "2015-08-31");
+		parameterTypes.add(parameter6);
+
+		return parameterTypes;
+	}
+
+	private SequencePainterParameters getParameterObject()
+			throws OperatorException {
+
+		switch (getParameterAsString(PARAMETER_1)) {
+		case OPTION_2:
+			return new SequencePainterParameters(getParameterAsInt(PARAMETER_2),
+					getParameterAsInt(PARAMETER_3), 0,
+					getParameterAsDouble(PARAMETER_5),
+					getParameterAsString(PARAMETER_6));
+		default:
+			return new SequencePainterParameters(getParameterAsInt(PARAMETER_2),
+					getParameterAsInt(PARAMETER_3),
+					getParameterAsInt(PARAMETER_4),
+					getParameterAsDouble(PARAMETER_5),
+					getParameterAsString(PARAMETER_6));
+		}
+
+	}
+
+}

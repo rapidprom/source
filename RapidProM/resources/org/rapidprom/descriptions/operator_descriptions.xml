@@ -404,5 +404,18 @@
 		<help> An Event log is required as input </help>		
         <key>case_data_extractor</key>                
     </operator>
+    
+     <operator>
+        <name>Sequence Miner </name>
+		<synopsis> This operator mines a sequential model and may project deviations (Used for video lecture analysis)</synopsis>
+		<help> An Event log is required as input </help>
+        <key>sequence_painter</key>                
+     </operator>
+     <operator>
+        <name>Fitness Calculator</name>
+		<synopsis> This operator calculates, for each student, the DF fitness with respect to the natural ordering of videolectures (Used for video lecture analysis)</synopsis>
+		<help> An Event log is required as input </help>
+        <key>fitness_calculator</key>
+     </operator>   
 	
 </operatorHelp>
