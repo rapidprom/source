@@ -33,7 +33,6 @@ import org.rapidprom.RapidProMInitializer;
 import org.rapidprom.external.connectors.ivy.IvyResolveException;
 import org.rapidprom.external.connectors.ivy.IvyStandAlone;
 import org.rapidprom.properties.RapidProMProperties;
-import org.rapidprom.properties.RapidProMProperties.Deployment;
 import org.rapidprom.util.OSUtils;
 
 import com.rapidminer.gui.tools.ProgressThread;
@@ -134,6 +133,8 @@ public class ProMLibraryManager extends ProgressThread {
 		ExecutorService service = Executors.newSingleThreadExecutor();
 		getProgressListener().setTotal(0);
 		if (!isReadyForIvy()) {
+			JOptionPane.showMessageDialog(null,
+					"RapidProM is running for the first time, and needs to download several libraries. This may take a while (~ 10 minutes). Please be patient.");
 			getProgressListener()
 					.setMessage("Downloading libraries, please be patient...");
 			packageDir = createPackageFolder();

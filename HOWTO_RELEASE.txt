@@ -19,16 +19,17 @@ Steps in order to release a "new version" of RapidProM
 13.) Remove the .RapidProM-X.Y.Z folder 
 14.) Build & Run RapidProM
     Verify that RapidProM runs stable
-15.) Tag the master's current head state.
-16.) Upload the .jar file to the market place
+15.) Push commits to the repository
+16.) Tag the master's current head state.
+17.) Upload the .jar file to the market place
 
  === Updating versioning information ===
-17.) Checkout integration
-18.) Update the libraries by running:
+18.) Checkout integration
+19.) Update the libraries by running:
     management/org.rapidprom.management.IvyRapidProMReleaseUpdate
-19.) Commit the libraries to git.
-20.) Update the version information in ivy.xml
-21.) Update the version information build.properties
+20.) Commit the libraries to git.
+21.) Update the version information in ivy.xml
+22.) Update the version information build.properties
  
  
  
