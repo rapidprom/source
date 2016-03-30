@@ -64,6 +64,7 @@
         class="org.rapidprom.ioobjects.XLogIOObject"
         reportable="true">
         <renderer>org.rapidprom.ioobjectrenderers.XLogIOObjectRenderer</renderer>
+        <renderer>org.rapidprom.ioobjectrenderers.DottedChartVisualizer</renderer>
     </ioobject>
     
     <ioobject
