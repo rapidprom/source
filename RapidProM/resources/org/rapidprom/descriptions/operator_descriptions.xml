@@ -438,6 +438,12 @@
 		<help> An Event log is required as input </help>
         <key>log_cross_validation</key>
     </operator>
+    <operator>
+        <name>Split Log</name>
+		<synopsis> This operator splits an event log in two sublogs according to the split ratio </synopsis>
+		<help> An Event log is required as input </help>
+        <key>log_split</key>                    
+    </operator>
 	
 	
 </operatorHelp>

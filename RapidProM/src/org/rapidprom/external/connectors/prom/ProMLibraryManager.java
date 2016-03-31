@@ -33,6 +33,7 @@ import org.rapidprom.RapidProMInitializer;
 import org.rapidprom.external.connectors.ivy.IvyResolveException;
 import org.rapidprom.external.connectors.ivy.IvyStandAlone;
 import org.rapidprom.properties.RapidProMProperties;
+import org.rapidprom.properties.RapidProMProperties.Deployment;
 import org.rapidprom.util.OSUtils;
 
 import com.rapidminer.gui.tools.ProgressThread;

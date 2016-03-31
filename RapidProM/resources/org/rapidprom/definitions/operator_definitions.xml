@@ -274,6 +274,10 @@
                     <key>log_cross_validation</key>
                     <class>org.rapidprom.operators.validation.XLogKFoldCrossValidationOperator</class>
                 </operator>
+                <operator>
+                    <key>log_split</key>
+                    <class>org.rapidprom.operators.logmanipulation.SplitXLogOperator</class>
+                </operator>
             </group>
     </group>
 </operators>
