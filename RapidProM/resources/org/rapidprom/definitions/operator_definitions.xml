@@ -270,6 +270,10 @@
                     <key>generate_noisy_log</key>
                     <class>org.rapidprom.operators.generation.GenerateNoisyLogOperator</class>
                 </operator>
+                <operator>
+                    <key>log_cross_validation</key>
+                    <class>org.rapidprom.operators.validation.XLogKFoldCrossValidationOperator</class>
+                </operator>
             </group>
     </group>
 </operators>

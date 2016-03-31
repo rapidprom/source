@@ -432,5 +432,12 @@
     </operator>
 	
 	
+	<operator>
+	    <name>Log Cross Validation </name>
+		<synopsis> This operator splits an event log and does k-fold cross validation </synopsis>
+		<help> An Event log is required as input </help>
+        <key>log_cross_validation</key>
+    </operator>
+	
 	
 </operatorHelp>
