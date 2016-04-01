@@ -9,7 +9,6 @@
 	<classpathentry kind="lib" path="lib/jargs.jar"/>
 	<classpathentry kind="lib" path="lib/rmx_parallel-5.3.0.jar"/>
 	<classpathentry kind="lib" path="lib"/>
-	<classpathentry kind="lib" path="lib/prom_stdlib/PyTreeNew.jar"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=RapidProM&amp;ivyXmlPath=ivy.xml&amp;confs=*&amp;ivySettingsPath=ivysettings.xml&amp;loadSettingsOnDemand=false&amp;ivyUserDir=&amp;propertyFiles="/>
 	<classpathentry kind="lib" path="lib/prom_stdlib/axis.jar"/>
 	<classpathentry kind="lib" path="lib/prom_stdlib/collections-generic-4.01.jar"/>
