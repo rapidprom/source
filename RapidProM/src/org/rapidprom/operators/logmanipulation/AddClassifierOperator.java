@@ -17,6 +17,7 @@ import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
+import com.rapidminer.operator.ports.metadata.MetaData;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeCategory;
 
@@ -43,8 +44,11 @@ public class AddClassifierOperator extends Operator {
 		XLogIOObject logObject = inputXLog.getData(XLogIOObject.class);
 
 		XLog newLog = (XLog) logObject.getArtifact().clone();
-		XLogIOObjectMetaData md = (XLogIOObjectMetaData) inputXLog
-				.getMetaData();
+		XLogIOObjectMetaData mdC = null;
+		MetaData md = inputXLog.getMetaData();
+
+		if (md != null && md instanceof XLogIOObjectMetaData)
+			mdC = (XLogIOObjectMetaData) md;
 
 		switch (getParameterAsString(PARAMETER_1_KEY)) {
 		case NONE:
@@ -70,10 +74,11 @@ public class AddClassifierOperator extends Operator {
 				ProMPluginContextManager.instance().getContext());
 		result.setVisualizationType(XLogIOObjectVisualizationType.DEFAULT);
 
-		md.getXEventClassifiers().clear();
-		md.getXEventClassifiers().addAll(newLog.getClassifiers());
-
-		outputEventLog.deliverMD(md);
+		if (mdC != null) {
+			mdC.getXEventClassifiers().clear();
+			mdC.getXEventClassifiers().addAll(newLog.getClassifiers());
+			outputEventLog.deliverMD(md);
+		}
 
 		outputEventLog.deliver(result);
 	}
