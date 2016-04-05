@@ -14,7 +14,6 @@ import com.rapidminer.operator.IOObject;
 import com.rapidminer.operator.OperatorChain;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
-import com.rapidminer.operator.ValueDouble;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.PortPairExtender;
@@ -37,14 +36,12 @@ public class XLogKFoldCrossValidationOperator extends OperatorChain {
 
 	private int number;
 
-	private int iteration;
-
 	private final InputPort inputXLog = getInputPorts().createPort("event log",
 			XLogIOObject.class);
 
-	private final OutputPort trainingProcessExampleSource = getSubprocess(0)
+	private final OutputPort trainingProcessSource = getSubprocess(0)
 			.getInnerSources().createPort("training");
-	private final InputPort trainingProcessModelSink = getSubprocess(0)
+	private final InputPort trainingProcessSink = getSubprocess(0)
 			.getInnerSinks().createPort("model");
 
 	// training -> testing
@@ -53,34 +50,34 @@ public class XLogKFoldCrossValidationOperator extends OperatorChain {
 			getSubprocess(1).getInnerSources());
 
 	// testing
-	private final OutputPort applyProcessModelSource = getSubprocess(1)
+	private final OutputPort testProcessModelSource = getSubprocess(1)
 			.getInnerSources().createPort("model");
-	private final OutputPort applyProcessExampleSource = getSubprocess(1)
+	private final OutputPort testProcessSource = getSubprocess(1)
 			.getInnerSources().createPort("test");
-	private final InputPort applyProcessExampleInnerSink = getSubprocess(1)
+	private final InputPort testProcessSink = getSubprocess(1)
 			.getInnerSinks().createPort("final data");
 
 	// output
-	private final OutputPort exampleSetOutput = getOutputPorts()
+	private final OutputPort output = getOutputPorts()
 			.createPort("result data");
 
 	public XLogKFoldCrossValidationOperator(OperatorDescription description) {
 		super(description, "Training", "Test");
 
 		throughExtender.start();
-		
-		getTransformer().addRule(
-				new GenerateNewMDRule(trainingProcessExampleSource, XLogIOObject.class));
-		getTransformer().addRule(
-				new GenerateNewMDRule(applyProcessExampleSource, XLogIOObject.class));
+
+		getTransformer().addRule(new GenerateNewMDRule(
+				trainingProcessSource, XLogIOObject.class));
+		getTransformer().addRule(new GenerateNewMDRule(
+				testProcessSource, XLogIOObject.class));
 
 		getTransformer().addRule(new SubprocessTransformRule(getSubprocess(0)));
-		getTransformer().addRule(new PassThroughRule(trainingProcessModelSink,
-				applyProcessModelSource, false));
+		getTransformer().addRule(new PassThroughRule(trainingProcessSink,
+				testProcessModelSource, false));
 		getTransformer().addRule(throughExtender.makePassThroughRule());
 		getTransformer().addRule(new SubprocessTransformRule(getSubprocess(1)));
-		getTransformer().addPassThroughRule(applyProcessExampleInnerSink,
-				exampleSetOutput);
+		getTransformer().addPassThroughRule(testProcessSink,
+				output);
 	}
 
 	@Override
@@ -93,18 +90,6 @@ public class XLogKFoldCrossValidationOperator extends OperatorChain {
 				.getContext();
 
 		for (int i = 0; i < number; i++) {
-			XLog[] logs = getSubLogs(original, i, number);
-			trainingProcessExampleSource
-					.deliver(new XLogIOObject(logs[0], pluginContext));
-			getSubprocess(0).execute();
-
-			applyProcessExampleSource
-					.deliver(new XLogIOObject(logs[1], pluginContext));
-			throughExtender.passDataThrough();
-
-			applyProcessModelSource
-					.deliver(trainingProcessModelSink.getData(IOObject.class));
-			getSubprocess(1).execute();
 
 			if (isParameterSet(PARAMETER_ITERATION_MACRO)) {
 				getProcess().getMacroHandler().addMacro(
@@ -112,10 +97,24 @@ public class XLogKFoldCrossValidationOperator extends OperatorChain {
 						Integer.toString(i));
 			}
 
+			XLog[] logs = getSubLogs(original, i, number);
+			trainingProcessSource
+					.deliver(new XLogIOObject(logs[0], pluginContext));
+			getSubprocess(0).execute();
+
+			testProcessSource
+					.deliver(new XLogIOObject(logs[1], pluginContext));
+			throughExtender.passDataThrough();
+
+			testProcessModelSource
+					.deliver(trainingProcessSink.getData(IOObject.class));
+			getSubprocess(1).execute();
+
 			inApplyLoop();
 		}
 
-		exampleSetOutput.deliver(applyProcessExampleInnerSink.getData(IOObject.class));
+		output
+				.deliver(testProcessSink.getData(IOObject.class));
 	}
 
 	@Override

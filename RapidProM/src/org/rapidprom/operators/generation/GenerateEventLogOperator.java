@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
-import org.processmining.ptandloggenerator.algorithms.LogFactory;
-import org.processmining.ptandloggenerator.algorithms.LogGenerator;
-import org.processmining.ptandloggenerator.parameters.LogParameters;
+import org.processmining.ptandloggenerator.models.NewickTree;
+import org.processmining.ptandloggenerator.plugins.GenerateLog;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.XLogIOObject;
 import org.rapidprom.ioobjects.experimental.NewickTreeIOObject;
@@ -32,8 +32,6 @@ public class GenerateEventLogOperator extends Operator {
 			NewickTreeIOObject.class);
 
 	private OutputPort output = getOutputPorts().createPort("event log");
-	
-	public static LogFactory factory = null;
 
 	public GenerateEventLogOperator(OperatorDescription description) {
 		super(description);
@@ -48,16 +46,14 @@ public class GenerateEventLogOperator extends Operator {
 
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getContext();
-		LogParameters parameters = new LogParameters(
-				getParameterAsInt(PARAMETER_1_KEY));
-		if(factory == null)
-			factory = new LogFactory();
-		LogGenerator generator = new LogGenerator(
-				input.getData(NewickTreeIOObject.class).getArtifact(),
-				parameters, factory);
 
-		output.deliver(new XLogIOObject(
-				generator.getResultingTraces().getXLog(), pluginContext));
+		NewickTree tree = input.getData(NewickTreeIOObject.class).getArtifact();
+
+		GenerateLog generator = new GenerateLog();
+		XLog result = generator.run(pluginContext, tree,
+				getParameterAsInt(PARAMETER_1_KEY));
+
+		output.deliver(new XLogIOObject(result, pluginContext));
 
 		logger.log(Level.INFO, "End: generating event log from newick tree ("
 				+ (System.currentTimeMillis() - time) / 1000 + " sec)");

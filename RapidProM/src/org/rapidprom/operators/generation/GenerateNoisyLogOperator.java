@@ -86,7 +86,7 @@ public class GenerateNoisyLogOperator extends Operator {
 			e.printStackTrace();
 		}
 
-		XLogIOObject result = new XLogIOObject(aux, pluginContext);
+		XLogIOObject result = new XLogIOObject(aux, null);
 		result.setVisualizationType(log.getVisualizationType());
 
 		output.deliver(result);
