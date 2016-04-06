@@ -43,6 +43,8 @@ public class TimestampSortOperator extends Operator {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO, "Start: sort by timestamp");
 		long time = System.currentTimeMillis();
+		
+		MetaData md = inputLog.getMetaData();
 
 		XLogIOObject log = inputLog.getData(XLogIOObject.class);
 		XLog resultLog = ReSortLog.removeEdgePoints(log.getPluginContext(),
