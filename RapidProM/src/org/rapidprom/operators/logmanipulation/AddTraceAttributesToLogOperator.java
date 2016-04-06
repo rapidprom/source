@@ -27,6 +27,7 @@ import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.ExampleSetMetaData;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.operator.ports.metadata.MetaData;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
@@ -55,6 +56,7 @@ public class AddTraceAttributesToLogOperator extends Operator {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO, "Start: add trace attributes");
 		long time = System.currentTimeMillis();
+		MetaData md = inputLog.getMetaData();
 		
 		ExampleSet es = inputExampleSet.getData(ExampleSet.class);
 
@@ -80,12 +82,14 @@ public class AddTraceAttributesToLogOperator extends Operator {
 					logIO.getPluginContext());
 			xLogIOObject
 					.setVisualizationType(XLogIOObjectVisualizationType.EXAMPLE_SET);
+			outputLog.deliverMD(md);
 			outputLog.deliver(xLogIOObject);
 
 		} else {
 			// show warning
 			JOptionPane.showMessageDialog(null, "Case ID was not found",
 					"Case ID column not found", JOptionPane.ERROR_MESSAGE);
+			outputLog.deliverMD(md);
 			outputLog.deliver(null);
 		}
 		logger.log(Level.INFO,

@@ -43,34 +43,39 @@ import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.ExampleSetMetaData;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.tools.LogService;
 
 public class ExampleSetToXLogConversionOperator extends Operator {
 
-	private static final String DEFAULT_VALUE_OPTIONAL = "<ignore>";
+	private static final String DEFAULT_VALUE_OPTIONAL = "";
 	private static final String GLOBAL_INVALID = "__INVALID__";
 	private static final String PARAMETER_DEFAULT_EVENT_LIFECYCLE_TRANSITION = DEFAULT_VALUE_OPTIONAL;
 	private static final String PARAMETER_DEFAULT_EVENT_RESOURCE = DEFAULT_VALUE_OPTIONAL;
 	private static final String PARAMETER_DEFAULT_EVENT_RESOURCE_GROUP = DEFAULT_VALUE_OPTIONAL;
 	private static final String PARAMETER_DEFAULT_EVENT_RESOURCE_ROLE = DEFAULT_VALUE_OPTIONAL;
-	private static final String PARAMETER_DEFAULT_EVENT_TIMESTAMP = DEFAULT_VALUE_OPTIONAL;
+	private static final String PARAMETER_DEFAULT_EVENT_TIMESTAMP = "E:time:timestamp";
 	private static final String PARAMETER_DESC_EVENT_IDENTIFIER = "Please select an attribute of the example set to act as an event identifier";
-	private static final String PARAMETER_DESC_EVENT_LIFECYCLE_TRANSITION = "Please select an (optional) attribute of the example set to act as an event identifier";
+	private static final String PARAMETER_DESC_EVENT_LIFECYCLE_TRANSITION = "Please select an (optional) attribute of the example set to act as an event identifier.";
 	private static final String PARAMETER_DESC_EVENT_RESOURCE = "Please select an (optional) attribute of the example set that signifies the resource that executed the event";
 	private static final String PARAMETER_DESC_EVENT_RESOURCE_GROUP = "Please select an (optional) attribute of the example set that signifies the resource group of the resource that executed the event";
 	private static final String PARAMETER_DESC_EVENT_RESOURCE_ROLE = "Please select an (optional) attribute of the example set that signifies the role of the resource that executed the event";
 	private static final String PARAMETER_DESC_EVENT_TIMESTAMP = "Please select an (optional) attribute of the example set to act as an event timestamp";
-	//private static final String PARAMETER_DESC_REORDER_BY_TIMESTAMP = "If the example set contains timestamps, this option will reorder the events within traces based on their time-stamps";
+	// private static final String PARAMETER_DESC_REORDER_BY_TIMESTAMP = "If the
+	// example set contains timestamps, this option will reorder the events
+	// within traces based on their time-stamps";
 	private static final String PARAMETER_DESC_TRACE_IDENTIFIER = "Please select an attribute of the example set to act as a trace identifier";
-	//private static final boolean PARAMETER_KEY_DEFAULT_REORDER_BY_TIMESTAMP = false;
+	// private static final boolean PARAMETER_KEY_DEFAULT_REORDER_BY_TIMESTAMP =
+	// false;
 	private static final String PARAMETER_KEY_EVENT_IDENTIFIER = "event_identifier";
 	private static final String PARAMETER_KEY_EVENT_LIFECYCLE_TRANSITION = "event_lifecycle_transition";
 	private static final String PARAMETER_KEY_EVENT_RESOURCE = "event_resource";
 	private static final String PARAMETER_KEY_EVENT_RESOURCE_GROUP = "event_resource_role";
 	private static final String PARAMETER_KEY_EVENT_RESOURCE_ROLE = "event_resource_role";
 	private static final String PARAMETER_KEY_EVENT_TIMESTAMP = "event_time_stamp";
-	//private static final String PARAMETER_KEY_REORDER_BY_TIMESTAMP = "reorder_by_time_stamp";
+	// private static final String PARAMETER_KEY_REORDER_BY_TIMESTAMP =
+	// "reorder_by_time_stamp";
 	private static final String PARAMETER_KEY_TRACE_IDENTIFIER = "trace_identifier";
 
 	/** defining the ports */
@@ -100,9 +105,13 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 
 	private List<ParameterType> addEventIdentificationParameterType(
 			List<ParameterType> params) {
-		ParameterType eventIdentification = setupDynamicExampleSetBasedParameterType(
+		// ParameterType eventIdentification =
+		// setupDynamicExampleSetBasedParameterType(
+		// PARAMETER_KEY_EVENT_IDENTIFIER, PARAMETER_DESC_EVENT_IDENTIFIER,
+		// new String[] {}, -1, false, inputExampleSet);
+		ParameterTypeString eventIdentification = new ParameterTypeString(
 				PARAMETER_KEY_EVENT_IDENTIFIER, PARAMETER_DESC_EVENT_IDENTIFIER,
-				new String[] {}, -1, false, inputExampleSet);
+				"E:concept:name");
 		eventIdentification.setOptional(false);
 		params.add(eventIdentification);
 		return params;
@@ -169,11 +178,16 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 
 	private List<ParameterType> addLifecycleTransitionParameterTypes(
 			List<ParameterType> params) {
-		ParameterType lifecycleTransition = setupDynamicExampleSetBasedParameterType(
+		// ParameterType lifecycleTransition =
+		// setupDynamicExampleSetBasedParameterType(
+		// PARAMETER_KEY_EVENT_LIFECYCLE_TRANSITION,
+		// PARAMETER_DESC_EVENT_LIFECYCLE_TRANSITION,
+		// new String[] { PARAMETER_DEFAULT_EVENT_LIFECYCLE_TRANSITION },
+		// 0, true, inputExampleSet);
+		ParameterTypeString lifecycleTransition = new ParameterTypeString(
 				PARAMETER_KEY_EVENT_LIFECYCLE_TRANSITION,
 				PARAMETER_DESC_EVENT_LIFECYCLE_TRANSITION,
-				new String[] { PARAMETER_DEFAULT_EVENT_LIFECYCLE_TRANSITION },
-				0, true, inputExampleSet);
+				PARAMETER_DEFAULT_EVENT_LIFECYCLE_TRANSITION);
 		lifecycleTransition.setOptional(true);
 		params.add(lifecycleTransition);
 		return params;
@@ -181,11 +195,15 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 
 	private List<ParameterType> addResourceGroupParameterType(
 			List<ParameterType> params) {
-		ParameterType group = setupDynamicExampleSetBasedParameterType(
+		// ParameterType group = setupDynamicExampleSetBasedParameterType(
+		// PARAMETER_KEY_EVENT_RESOURCE_GROUP,
+		// PARAMETER_DESC_EVENT_RESOURCE_GROUP,
+		// new String[] { PARAMETER_DEFAULT_EVENT_RESOURCE_GROUP }, 0,
+		// true, inputExampleSet);
+		ParameterTypeString group = new ParameterTypeString(
 				PARAMETER_KEY_EVENT_RESOURCE_GROUP,
 				PARAMETER_DESC_EVENT_RESOURCE_GROUP,
-				new String[] { PARAMETER_DEFAULT_EVENT_RESOURCE_GROUP }, 0,
-				true, inputExampleSet);
+				PARAMETER_DEFAULT_EVENT_RESOURCE_GROUP);
 		group.setOptional(true);
 		params.add(group);
 		return params;
@@ -193,10 +211,13 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 
 	private List<ParameterType> addResourceParameterType(
 			List<ParameterType> params) {
-		ParameterType resource = setupDynamicExampleSetBasedParameterType(
+		// ParameterType resource = setupDynamicExampleSetBasedParameterType(
+		// PARAMETER_KEY_EVENT_RESOURCE, PARAMETER_DESC_EVENT_RESOURCE,
+		// new String[] { PARAMETER_DEFAULT_EVENT_RESOURCE }, 0, true,
+		// inputExampleSet);
+		ParameterTypeString resource = new ParameterTypeString(
 				PARAMETER_KEY_EVENT_RESOURCE, PARAMETER_DESC_EVENT_RESOURCE,
-				new String[] { PARAMETER_DEFAULT_EVENT_RESOURCE }, 0, true,
-				inputExampleSet);
+				PARAMETER_DEFAULT_EVENT_RESOURCE);
 		resource.setOptional(true);
 		params.add(resource);
 		return params;
@@ -204,11 +225,15 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 
 	private List<ParameterType> addResourceRoleParameterType(
 			List<ParameterType> params) {
-		ParameterType role = setupDynamicExampleSetBasedParameterType(
+		// ParameterType role = setupDynamicExampleSetBasedParameterType(
+		// PARAMETER_KEY_EVENT_RESOURCE_ROLE,
+		// PARAMETER_DESC_EVENT_RESOURCE_ROLE,
+		// new String[] { PARAMETER_DEFAULT_EVENT_RESOURCE_ROLE }, 0, true,
+		// inputExampleSet);
+		ParameterTypeString role = new ParameterTypeString(
 				PARAMETER_KEY_EVENT_RESOURCE_ROLE,
 				PARAMETER_DESC_EVENT_RESOURCE_ROLE,
-				new String[] { PARAMETER_DEFAULT_EVENT_RESOURCE_ROLE }, 0, true,
-				inputExampleSet);
+				PARAMETER_DEFAULT_EVENT_RESOURCE_ROLE);
 		role.setOptional(true);
 		params.add(role);
 		return params;
@@ -216,10 +241,14 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 
 	private List<ParameterType> addTimeStampParameterTypes(
 			List<ParameterType> params) {
-		ParameterType eventTimeStamp = setupDynamicExampleSetBasedParameterType(
+		// ParameterType eventTimeStamp =
+		// setupDynamicExampleSetBasedParameterType(
+		// PARAMETER_KEY_EVENT_TIMESTAMP, PARAMETER_DESC_EVENT_TIMESTAMP,
+		// new String[] { PARAMETER_DEFAULT_EVENT_TIMESTAMP }, 0, false,
+		// inputExampleSet);
+		ParameterTypeString eventTimeStamp = new ParameterTypeString(
 				PARAMETER_KEY_EVENT_TIMESTAMP, PARAMETER_DESC_EVENT_TIMESTAMP,
-				new String[] { PARAMETER_DEFAULT_EVENT_TIMESTAMP }, 0, false,
-				inputExampleSet);
+				PARAMETER_DEFAULT_EVENT_TIMESTAMP);
 		eventTimeStamp.setOptional(true);
 		params.add(eventTimeStamp);
 
@@ -239,9 +268,13 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 
 	private List<ParameterType> addTraceIdentificationParameterType(
 			List<ParameterType> params) {
-		ParameterType traceIdentification = setupDynamicExampleSetBasedParameterType(
+		// ParameterType traceIdentification =
+		// setupDynamicExampleSetBasedParameterType(
+		// PARAMETER_KEY_TRACE_IDENTIFIER, PARAMETER_DESC_TRACE_IDENTIFIER,
+		// new String[] {}, -1, false, inputExampleSet);
+		ParameterTypeString traceIdentification = new ParameterTypeString(
 				PARAMETER_KEY_TRACE_IDENTIFIER, PARAMETER_DESC_TRACE_IDENTIFIER,
-				new String[] {}, -1, false, inputExampleSet);
+				"T:concept:name");
 		traceIdentification.setOptional(false);
 		params.add(traceIdentification);
 		return params;
@@ -443,13 +476,21 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 	}
 
 	private String getDynamicParameterTypeValue(String key) {
+		// try {
+		// return ((ParameterTypeExampleSetAttributesDynamicCategory)
+		// getParameterType(
+		// key)).getValues()[getParameterAsInt(key)];
+		// } catch (UndefinedParameterError e) {
+		// e.printStackTrace();
+		// }
+		// return DEFAULT_VALUE_OPTIONAL;
+
 		try {
-			return ((ParameterTypeExampleSetAttributesDynamicCategory) getParameterType(
-					key)).getValues()[getParameterAsInt(key)];
+			return getParameterAsString(key);
 		} catch (UndefinedParameterError e) {
-			e.printStackTrace();
+			return DEFAULT_VALUE_OPTIONAL;
 		}
-		return DEFAULT_VALUE_OPTIONAL;
+
 	}
 
 	@Override

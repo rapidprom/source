@@ -28,6 +28,7 @@ import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.ExampleSetMetaData;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.operator.ports.metadata.MetaData;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.tools.LogService;
@@ -60,6 +61,8 @@ public class AddEventAttributesToLogOperator extends Operator {
 		logger.log(Level.INFO, "Start: add event attributes");
 		long time = System.currentTimeMillis();
 
+		MetaData md = inputLog.getMetaData();
+		
 		ExampleSet es = inputExampleSet.getData(ExampleSet.class);
 
 		XLogIOObject logIO = inputLog.getData(XLogIOObject.class);
@@ -86,6 +89,7 @@ public class AddEventAttributesToLogOperator extends Operator {
 					logIO.getPluginContext());
 			xLogIOObject
 					.setVisualizationType(XLogIOObjectVisualizationType.EXAMPLE_SET);
+			outputLog.deliverMD(md);
 			outputLog.deliver(xLogIOObject);
 
 		} else {
@@ -94,6 +98,7 @@ public class AddEventAttributesToLogOperator extends Operator {
 					"Case ID column or event ID column was not found",
 					"Case ID / Event ID column not found",
 					JOptionPane.ERROR_MESSAGE);
+			outputLog.deliverMD(md);			
 			outputLog.deliver(null);
 		}
 		logger.log(Level.INFO,
