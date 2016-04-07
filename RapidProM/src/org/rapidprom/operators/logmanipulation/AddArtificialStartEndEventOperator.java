@@ -27,6 +27,7 @@ import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.operator.ports.metadata.MetaData;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeBoolean;
 import com.rapidminer.tools.LogService;
@@ -55,12 +56,16 @@ public class AddArtificialStartEndEventOperator extends Operator {
 		logger.log(Level.INFO,
 				"Start: add artificial start and end event to all traces");
 		long time = System.currentTimeMillis();
+		
+		MetaData md = inputXLog.getMetaData();
 
 		XLogIOObject xLogIOObject = inputXLog.getData(XLogIOObject.class);
 		XLog logOriginal = xLogIOObject.getArtifact();
 		XLog logModified = filterLog(logOriginal);
 		XLogIOObject result = new XLogIOObject(logModified,
 				xLogIOObject.getPluginContext());
+		
+		outputEventLog.deliverMD(md);
 		outputEventLog.deliver(result);
 		logger.log(Level.INFO,
 				"End: add artificial start and end event to all traces ("

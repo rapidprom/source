@@ -33,6 +33,7 @@ import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.ExampleSetMetaData;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.operator.ports.metadata.MetaData;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeString;
 import com.rapidminer.parameter.UndefinedParameterError;
@@ -64,6 +65,7 @@ public class AddEventsToLogOperator extends Operator {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO, "Start: add event");
 		long time = System.currentTimeMillis();
+		MetaData md = inputLog.getMetaData();
 
 		ExampleSet es = inputExampleSet.getData(ExampleSet.class);
 
@@ -87,6 +89,7 @@ public class AddEventsToLogOperator extends Operator {
 					logIO.getPluginContext());
 			xLogIOObject
 					.setVisualizationType(XLogIOObjectVisualizationType.EXAMPLE_SET);
+			outputLog.deliverMD(md);
 			outputLog.deliver(xLogIOObject);
 			System.out.println("DUMPSECOND");
 			dumpSizeTraces(adaptedLog);

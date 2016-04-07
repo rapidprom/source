@@ -1,9 +1,12 @@
 package org.rapidprom.operators.logmanipulation;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.model.XEvent;
@@ -11,6 +14,7 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.rapidprom.ioobjectrenderers.XLogIOObjectVisualizationType;
 import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.operators.ports.metadata.XLogIOObjectMetaData;
 
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
@@ -18,6 +22,7 @@ import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.operator.ports.metadata.MetaData;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeBoolean;
 import com.rapidminer.tools.LogService;
@@ -44,6 +49,8 @@ public class MergeTwoEventLogsOperator extends Operator {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO, "Start: merge event logs");
 		long time = System.currentTimeMillis();
+		
+		MetaData md1 = inputLog1.getMetaData();
 
 		XLogIOObject logIO1 = inputLog1.getData(XLogIOObject.class);
 		XLog xLog1 = logIO1.getArtifact();
@@ -55,6 +62,14 @@ public class MergeTwoEventLogsOperator extends Operator {
 		// first copy entire log1
 		XLog result = XFactoryRegistry.instance().currentDefault()
 				.createLog(xLog1.getAttributes());
+		
+		
+		Set<XEventClassifier> classifiers = new HashSet<XEventClassifier>();
+		classifiers.addAll(xLog1.getClassifiers());
+		classifiers.addAll(xLog2.getClassifiers());
+		
+		result.getClassifiers().addAll(classifiers);
+		
 		for (XTrace t : xLog1) {
 			XTrace copy = XFactoryRegistry.instance().currentDefault()
 					.createTrace(t.getAttributes());
@@ -74,6 +89,17 @@ public class MergeTwoEventLogsOperator extends Operator {
 				logIO1.getPluginContext());
 		xLogIOObject
 				.setVisualizationType(XLogIOObjectVisualizationType.EXAMPLE_SET);
+		
+		XLogIOObjectMetaData mdC = null;
+		if (md1 != null && md1 instanceof XLogIOObjectMetaData)
+			mdC = (XLogIOObjectMetaData) md1;
+		
+		if (mdC != null) {
+			mdC.getXEventClassifiers().clear();
+			mdC.getXEventClassifiers().addAll(classifiers);
+			outputLog.deliverMD(md1);
+		}
+		
 		outputLog.deliver(xLogIOObject);
 
 		logger.log(Level.INFO,

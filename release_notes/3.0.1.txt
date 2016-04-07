@@ -6,6 +6,8 @@ Bug Fixes
     -> commit: 5a4f833c1871e56416b6002475d0db69bca0c8be
 2. Fixed Log to table conversion: date attributes are also handled at a trace level    
     -> commit: cec8de1d7223b813f9a71d373e7b122edf21730f 
+3. Fixed Metadata loss in Log Manipulation operators
+    -> commit: d530b4ae6b8721f197cd18ff4f3370772c5247ca
 
 ==========
 
@@ -15,8 +17,14 @@ New Functionality:
 2. Stream Framework Update:
     Threads are now stopped id streaming is stopped (i.e. reduce # threads in looped experiments).
     Add a "linear fragmentation scheme"-based analysis that allows to skip some events on an event streaming
-    -> commit: 3320436183a4b5dc45839d0ef8cb597fb9d6c90a 
-    
+    -> commit: 3320436183a4b5dc45839d0ef8cb597fb9d6c90a
+3. Backbone (ivy):
+    Disable checksum checks in resolver
+    -> commit: 0dbcef73f7d09ae4513af8009680ff04957546fb 
+
+4. Exampleset to XLog conversion: parameters are now textfields, saves metadata loading issues with RM7.
+    -> commit: d530b4ae6b8721f197cd18ff4f3370772c5247ca
+
 
 ==========
 
