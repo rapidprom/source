@@ -330,6 +330,13 @@
     	<key>mine_fuzzy_model</key>
   	</operator>
   	
+  	<operator>
+        <name>Composite State Machine Miner (CSM Result)</name>
+        <synopsis>This operator mines a Composite State Machine, as described in: Discovering and Exploring State-based Models for Multi-perspective Processes.</synopsis>
+        <help>A log is required as input, with the assumptions that: (1) Each event in the state log has a property "process:name" specifying to which perspective it belongs, and (2) Each trace in the state log has properties "process:initialstate:[perspectiveName]" for each perspective, specifying the initial state of [perspectiveName] at the moment of the first state change in the trace.</help>
+    	<key>csm_miner</key>
+  	</operator>
+  	
   	<!-- STREAMS -->
     <operator>
         <name>Generate Event Stream from CPN</name>

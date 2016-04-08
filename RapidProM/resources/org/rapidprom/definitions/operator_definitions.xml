@@ -116,6 +116,10 @@
                 <key>mine_fuzzy_model</key>
                 <class>org.rapidprom.operators.discovery.FuzzyMinerOperator</class>
             </operator>
+            <operator>
+                <key>csm_miner</key>
+                <class>org.rapidprom.operators.discovery.CSMMinerOperator</class>
+            </operator>
             
         </group>
         <group key="export">

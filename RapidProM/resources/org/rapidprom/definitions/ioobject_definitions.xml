@@ -115,6 +115,13 @@
 	</ioobject>
 	
 	<ioobject
+		name="CSMMinerProM"
+		class="org.rapidprom.ioobjects.CSMMinerResultIOObject"
+		reportable="true">
+		<renderer>org.rapidprom.ioobjectrenderers.CSMMinerResultIOObjecctRenderer</renderer>
+	</ioobject>
+	
+	<ioobject
 		name="MetricsRepositoryProM"
 		class="org.rapidprom.ioobjects.MetricsRepositoryIOObject"
 		reportable="true">
