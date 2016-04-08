@@ -9,7 +9,7 @@ Bug Fixes
 3. Fixed Metadata loss in Log Manipulation operators
     -> commit: d530b4ae6b8721f197cd18ff4f3370772c5247ca
 4. Fixed some minor bugs in Exampleset to XLog conversion and enhanced RM 7 compatibility
-    -> commit: 
+    -> commit: 0f546e45a999c7df5b3aaf5d2cd0bb54e18166a4
 
 ==========
 
