@@ -120,7 +120,7 @@ public class ConformanceAnalysisOperator
 		amd1.setNumberOfMissingValues(new MDInteger(0));
 		metaData.addAttribute(amd1);
 		AttributeMetaData amd2 = new AttributeMetaData(VALUECOL,
-				Ontology.INTEGER);
+				Ontology.NUMERICAL);
 		amd2.setRole(AttributeColumn.REGULAR);
 		amd2.setNumberOfMissingValues(new MDInteger(0));
 		metaData.addAttribute(amd2);
@@ -135,30 +135,31 @@ public class ConformanceAnalysisOperator
 		alignAmd1.setNumberOfMissingValues(new MDInteger(0));
 		metaData2.addAttribute(alignAmd1);
 		AttributeMetaData alignAmd2 = new AttributeMetaData(
-				PNRepResult.TRACEFITNESS, Ontology.STRING);
+				PNRepResult.TRACEFITNESS, Ontology.NUMERICAL);
 		alignAmd2.setRole(AttributeColumn.REGULAR);
 		alignAmd2.setNumberOfMissingValues(new MDInteger(0));
 		metaData2.addAttribute(alignAmd2);
 		AttributeMetaData alignAmd3 = new AttributeMetaData(
-				PNRepResult.MOVELOGFITNESS, Ontology.STRING);
+				PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL);
 		alignAmd3.setRole(AttributeColumn.REGULAR);
 		alignAmd3.setNumberOfMissingValues(new MDInteger(0));
 		metaData2.addAttribute(alignAmd3);
 		AttributeMetaData alignAmd4 = new AttributeMetaData(
-				PNRepResult.MOVEMODELFITNESS, Ontology.STRING);
+				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL);
 		alignAmd4.setRole(AttributeColumn.REGULAR);
 		alignAmd4.setNumberOfMissingValues(new MDInteger(0));
 		metaData2.addAttribute(alignAmd4);
 		AttributeMetaData alignAmd5 = new AttributeMetaData(
-				PNRepResult.RAWFITNESSCOST, Ontology.STRING);
+				PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL);
 		alignAmd5.setRole(AttributeColumn.REGULAR);
 		alignAmd5.setNumberOfMissingValues(new MDInteger(0));
 		metaData2.addAttribute(alignAmd5);
 		AttributeMetaData alignAmd6 = new AttributeMetaData(
-				PNRepResult.NUMSTATEGENERATED, Ontology.STRING);
+				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL);
 		alignAmd6.setRole(AttributeColumn.REGULAR);
 		alignAmd6.setNumberOfMissingValues(new MDInteger(0));
 		metaData2.addAttribute(alignAmd6);
+		metaData2.setNumberOfExamples(1);
 		getTransformer().addRule(
 				new GenerateNewMDRule(outputAlignment, this.metaData2));
 		// for the alignment per trace
@@ -168,31 +169,37 @@ public class ConformanceAnalysisOperator
 		alignAmd11.setRole(AttributeColumn.REGULAR);
 		alignAmd11.setNumberOfMissingValues(new MDInteger(0));
 		metaData3.addAttribute(alignAmd11);
+		AttributeMetaData alignAmd111 = new AttributeMetaData(this.TRACEIDENTIFIER,
+				Ontology.STRING);
+		alignAmd111.setRole(AttributeColumn.REGULAR);
+		alignAmd111.setNumberOfMissingValues(new MDInteger(0));
+		metaData3.addAttribute(alignAmd111);
 		AttributeMetaData alignAmd12 = new AttributeMetaData(
-				PNRepResult.TRACEFITNESS, Ontology.STRING);
+				PNRepResult.TRACEFITNESS, Ontology.NUMERICAL);
 		alignAmd12.setRole(AttributeColumn.REGULAR);
 		alignAmd12.setNumberOfMissingValues(new MDInteger(0));
 		metaData3.addAttribute(alignAmd12);
 		AttributeMetaData alignAmd13 = new AttributeMetaData(
-				PNRepResult.MOVELOGFITNESS, Ontology.STRING);
+				PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL);
 		alignAmd13.setRole(AttributeColumn.REGULAR);
 		alignAmd13.setNumberOfMissingValues(new MDInteger(0));
 		metaData3.addAttribute(alignAmd3);
 		AttributeMetaData alignAmd14 = new AttributeMetaData(
-				PNRepResult.MOVEMODELFITNESS, Ontology.STRING);
+				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL);
 		alignAmd14.setRole(AttributeColumn.REGULAR);
 		alignAmd14.setNumberOfMissingValues(new MDInteger(0));
 		metaData3.addAttribute(alignAmd14);
 		AttributeMetaData alignAmd15 = new AttributeMetaData(
-				PNRepResult.RAWFITNESSCOST, Ontology.STRING);
+				PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL);
 		alignAmd15.setRole(AttributeColumn.REGULAR);
 		alignAmd15.setNumberOfMissingValues(new MDInteger(0));
 		metaData3.addAttribute(alignAmd15);
 		AttributeMetaData alignAmd16 = new AttributeMetaData(
-				PNRepResult.NUMSTATEGENERATED, Ontology.STRING);
+				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL);
 		alignAmd16.setRole(AttributeColumn.REGULAR);
 		alignAmd16.setNumberOfMissingValues(new MDInteger(0));
 		metaData3.addAttribute(alignAmd16);
+		metaData3.setNumberOfExamples(1);
 		getTransformer().addRule(
 				new GenerateNewMDRule(outputAlignmentTrace, this.metaData3));
 		// md4
@@ -294,15 +301,15 @@ public class ConformanceAnalysisOperator
 		attributes2.add(AttributeFactory.createAttribute(this.TRACEINDEX,
 				Ontology.STRING));
 		attributes2.add(AttributeFactory
-				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.STRING));
+				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.NUMERICAL));
 		attributes2.add(AttributeFactory
-				.createAttribute(PNRepResult.MOVELOGFITNESS, Ontology.STRING));
+				.createAttribute(PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
 		attributes2.add(AttributeFactory.createAttribute(
-				PNRepResult.MOVEMODELFITNESS, Ontology.STRING));
+				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL));
 		attributes2.add(AttributeFactory
-				.createAttribute(PNRepResult.RAWFITNESSCOST, Ontology.STRING));
+				.createAttribute(PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
 		attributes2.add(AttributeFactory.createAttribute(
-				PNRepResult.NUMSTATEGENERATED, Ontology.STRING));
+				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL));
 		table2 = new MemoryExampleTable(attributes2);
 		Iterator<SyncReplayResult> iterator = repResult.iterator();
 		while (iterator.hasNext()) {
@@ -311,16 +318,11 @@ public class ConformanceAnalysisOperator
 					DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
 			Object[] vals = new Object[6];
 			vals[0] = next.getTraceIndex().toString();
-			vals[1] = Double
-					.toString(next.getInfo().get(PNRepResult.TRACEFITNESS));
-			vals[2] = Double
-					.toString(next.getInfo().get(PNRepResult.MOVELOGFITNESS));
-			vals[3] = Double
-					.toString(next.getInfo().get(PNRepResult.MOVEMODELFITNESS));
-			vals[4] = Double
-					.toString(next.getInfo().get(PNRepResult.RAWFITNESSCOST));
-			vals[5] = Double.toString(
-					next.getInfo().get(PNRepResult.NUMSTATEGENERATED));
+			vals[1] = next.getInfo().get(PNRepResult.TRACEFITNESS);
+			vals[2] = next.getInfo().get(PNRepResult.MOVELOGFITNESS);
+			vals[3] = next.getInfo().get(PNRepResult.MOVEMODELFITNESS);
+			vals[4] = next.getInfo().get(PNRepResult.RAWFITNESSCOST);
+			vals[5] = next.getInfo().get(PNRepResult.NUMSTATEGENERATED);
 
 			Attribute[] attribArray = new Attribute[attributes2.size()];
 			for (int i = 0; i < attributes2.size(); i++) {
@@ -342,15 +344,15 @@ public class ConformanceAnalysisOperator
 		attributes3.add(AttributeFactory.createAttribute(this.TRACEIDENTIFIER,
 				Ontology.STRING));
 		attributes3.add(AttributeFactory
-				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.STRING));
+				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.NUMERICAL));
 		attributes3.add(AttributeFactory
-				.createAttribute(PNRepResult.MOVELOGFITNESS, Ontology.STRING));
+				.createAttribute(PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
 		attributes3.add(AttributeFactory.createAttribute(
-				PNRepResult.MOVEMODELFITNESS, Ontology.STRING));
+				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL));
 		attributes3.add(AttributeFactory
-				.createAttribute(PNRepResult.RAWFITNESSCOST, Ontology.STRING));
+				.createAttribute(PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
 		attributes3.add(AttributeFactory.createAttribute(
-				PNRepResult.NUMSTATEGENERATED, Ontology.STRING));
+				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL));
 		table3 = new MemoryExampleTable(attributes3);
 		Iterator<SyncReplayResult> iterator2 = repResult.iterator();
 		while (iterator2.hasNext()) {
@@ -358,16 +360,11 @@ public class ConformanceAnalysisOperator
 			DataRowFactory factory = new DataRowFactory(
 					DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
 			Object[] vals = new Object[7];
-			vals[2] = Double
-					.toString(next.getInfo().get(PNRepResult.TRACEFITNESS));
-			vals[3] = Double
-					.toString(next.getInfo().get(PNRepResult.MOVELOGFITNESS));
-			vals[4] = Double
-					.toString(next.getInfo().get(PNRepResult.MOVEMODELFITNESS));
-			vals[5] = Double
-					.toString(next.getInfo().get(PNRepResult.RAWFITNESSCOST));
-			vals[6] = Double.toString(
-					next.getInfo().get(PNRepResult.NUMSTATEGENERATED));
+			vals[2] = next.getInfo().get(PNRepResult.TRACEFITNESS);
+			vals[3] = next.getInfo().get(PNRepResult.MOVELOGFITNESS);
+			vals[4] = next.getInfo().get(PNRepResult.MOVEMODELFITNESS);
+			vals[5] = next.getInfo().get(PNRepResult.RAWFITNESSCOST);
+			vals[6] = next.getInfo().get(PNRepResult.NUMSTATEGENERATED);
 			// convert the list to array
 			Attribute[] attribArray = new Attribute[attributes3.size()];
 			for (int i = 0; i < attributes3.size(); i++) {
