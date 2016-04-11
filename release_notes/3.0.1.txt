@@ -8,6 +8,8 @@ Bug Fixes
     -> commit: cec8de1d7223b813f9a71d373e7b122edf21730f 
 3. Fixed Metadata loss in Log Manipulation operators
     -> commit: d530b4ae6b8721f197cd18ff4f3370772c5247ca
+4. Fixed some minor bugs in Exampleset to XLog conversion and enhanced RM 7 compatibility
+    -> commit: 0f546e45a999c7df5b3aaf5d2cd0bb54e18166a4
 
 ==========
 
@@ -21,9 +23,6 @@ New Functionality:
 3. Backbone (ivy):
     Disable checksum checks in resolver
     -> commit: 0dbcef73f7d09ae4513af8009680ff04957546fb 
-
-4. Exampleset to XLog conversion: parameters are now textfields, saves metadata loading issues with RM7.
-    -> commit: d530b4ae6b8721f197cd18ff4f3370772c5247ca
 
 
 ==========
