@@ -73,7 +73,10 @@ public class ConformanceAnalysisOperator
 			PARAMETER_1_DESCR = "The maximum number of states that are searched for a trace alignment.",
 			PARAMETER_2_KEY = "Timeout (sec)",
 			PARAMETER_2_DESCR = "The number of seconds that this operator will run before "
-					+ "returning whatever it could manage to calculate (or null otherwise).";
+					+ "returning whatever it could manage to calculate (or null otherwise).",
+			PARAMETER_3_KEY = "Number of Threads",
+			PARAMETER_3_DESCR = "Specify the number of threads used to calculate alignments in parallel."
+					+ " With each extra thread, more memory is used but less cpu time is required.";
 
 	private PNRepResultIOObject alignments;
 
@@ -429,7 +432,7 @@ public class ConformanceAnalysisOperator
 			}
 
 			PNRepResultIOObject result = new PNRepResultIOObject(repResult,
-					pluginContext, pNet, xLog.getArtifact(),
+					null, pNet, xLog.getArtifact(),
 					constructMapping(pNet.getArtifact(), xLog.getArtifact(),
 							XLogInfoImpl.NAME_CLASSIFIER));
 			result.setVisualizationType(
@@ -510,7 +513,7 @@ public class ConformanceAnalysisOperator
 		parameters.setFinalMarkings(finalMarking);
 		parameters.setGUIMode(false);
 		parameters.setCreateConn(false);
-		parameters.setNumThreads(8);
+		parameters.setNumThreads(getParameterAsInt(PARAMETER_3_KEY));
 		((CostBasedCompleteParam) parameters)
 				.setMaxNumOfStates(getParameterAsInt(PARAMETER_1_KEY) * 1000);
 
@@ -583,6 +586,10 @@ public class ConformanceAnalysisOperator
 		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_2_KEY,
 				PARAMETER_2_DESCR, 0, Integer.MAX_VALUE, 60);
 		parameterTypes.add(parameterType2);
+		
+		ParameterTypeInt parameterType3 = new ParameterTypeInt(PARAMETER_3_KEY,
+				PARAMETER_3_DESCR, 1, Integer.MAX_VALUE, Runtime.getRuntime().availableProcessors());
+		parameterTypes.add(parameterType3);
 
 		return parameterTypes;
 	}
