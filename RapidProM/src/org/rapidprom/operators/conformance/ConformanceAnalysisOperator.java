@@ -429,7 +429,7 @@ public class ConformanceAnalysisOperator
 			}
 
 			PNRepResultIOObject result = new PNRepResultIOObject(repResult,
-					null, pNet, xLog.getArtifact(),
+					pluginContext, pNet, xLog.getArtifact(),
 					constructMapping(pNet.getArtifact(), xLog.getArtifact(),
 							XLogInfoImpl.NAME_CLASSIFIER));
 			result.setVisualizationType(
