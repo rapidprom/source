@@ -1,6 +1,5 @@
 package org.rapidprom.operators.streams.discovery.abstr;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +7,7 @@ import java.util.Map;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.processmining.eventstream.core.interfaces.XSEventSignature;
 import org.processmining.eventstream.core.interfaces.XSEventStream;
+import org.processmining.eventstream.readers.abstractions.CAxAADataStoreBasedDFAReaderImpl;
 import org.processmining.eventstream.readers.abstractions.XSEventStreamToDFAReaderParameters;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.stream.core.interfaces.XSDataPacket;
@@ -15,7 +15,7 @@ import org.processmining.stream.core.interfaces.XSReader;
 import org.processmining.stream.model.datastructure.DSParameter;
 import org.processmining.stream.model.datastructure.DSParameterDefinition;
 import org.processmining.stream.model.datastructure.DSParameterFactory;
-import org.processmining.stream.model.datastructure.DataStructureType;
+import org.processmining.stream.model.datastructure.DataStructure.Type;
 import org.rapidprom.ioobjects.streams.XSReaderIOObject;
 import org.rapidprom.ioobjects.streams.event.XSEventStreamIOObject;
 import org.rapidprom.util.ObjectUtils;
@@ -56,35 +56,17 @@ public abstract class AbstractDFABasedMinerOperator<D extends XSDataPacket<?, ?>
 
 	protected static final String PARAMETER_KEY_CASE_ACTIVITY_STORE = "case_activity_store";
 	protected static final String PARAMETER_DESC_CASE_ACTIVITY_STORE = "Defines what stream-based data store to use for capturing CASE X ACTIVITY information.";
-	// temporarily disable this functionality for the rapidprom 3.0 release.
-	// protected static final DataStructureType[]
-	// PARAMETER_OPTIONS_CASE_ACTIVITY_STORE =
-	// StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
-	// .toArray(
-	// new
-	// DataStructureType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForCaseActivityPairs
-	// .size()]);
-
-	protected static final DataStructureType[] PARAMETER_OPTIONS_CASE_ACTIVITY_STORE = EnumSet
-			.of(DataStructureType.LOSSY_BUCKET)
-			.toArray(new DataStructureType[EnumSet
-					.of(DataStructureType.LOSSY_BUCKET).size()]);
+	protected static final Type[] PARAMETER_OPTIONS_CASE_ACTIVITY_STORE = CAxAADataStoreBasedDFAReaderImpl.DEFAULT_ALLOWED_CASE_ACTIVITY_DATA_STRUCTURES
+			.toArray(
+					new Type[CAxAADataStoreBasedDFAReaderImpl.DEFAULT_ALLOWED_CASE_ACTIVITY_DATA_STRUCTURES
+							.size()]);
 
 	protected static final String PARAMETER_KEY_ACTIVITY_ACTIVITY_STORE = "activity_activity_store";
 	protected static final String PARAMETER_DESC_ACTIVITY_ACTIVITY_STORE = "Defines what stream-based data store to use for capturing ACITIVTY X ACTIVITY information.";
-
-	protected static final DataStructureType[] PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE = EnumSet
-			.of(DataStructureType.LOSSY_BUCKET)
-			.toArray(new DataStructureType[EnumSet
-					.of(DataStructureType.LOSSY_BUCKET).size()]);
-
-	// protected static final DataStructureType[]
-	// PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE =
-	// StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
-	// .toArray(
-	// new
-	// DataStructureType[StreamInductiveMinerUtils.streamBasedDataStoresAllowedForActivityActivityPairs
-	// .size()]);
+	protected static final Type[] PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE = CAxAADataStoreBasedDFAReaderImpl.DEFAULT_ALLOWED_ACTIVITY_ACTIVITY_DATA_STRUCTURES
+			.toArray(
+					new Type[CAxAADataStoreBasedDFAReaderImpl.DEFAULT_ALLOWED_ACTIVITY_ACTIVITY_DATA_STRUCTURES
+							.size()]);
 
 	public AbstractDFABasedMinerOperator(OperatorDescription description) {
 		super(description);
@@ -114,7 +96,7 @@ public abstract class AbstractDFABasedMinerOperator<D extends XSDataPacket<?, ?>
 		params = setCaseActivityDataStructure(params);
 		params = setActivityActivityDataStructure(params);
 		XSReader<D, R> reader = getAlgorithm(context, eventStream, params);
-		reader.start();
+		reader.startXSRunnable();
 		readerOutputPort.deliver(getIOObject(reader, context));
 	}
 
@@ -122,7 +104,7 @@ public abstract class AbstractDFABasedMinerOperator<D extends XSDataPacket<?, ?>
 
 	protected P setActivityActivityDataStructure(P params)
 			throws UndefinedParameterError {
-		DataStructureType activityActivityStoreType = PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE[getParameterAsInt(
+		Type activityActivityStoreType = PARAMETER_OPTIONS_ACTIVITY_ACTIVITY_STORE[getParameterAsInt(
 				PARAMETER_KEY_ACTIVITY_ACTIVITY_STORE)];
 		params.setActivityActivityDataStructureType(activityActivityStoreType);
 		params.setActivityActivityDataStructureParameters(
@@ -134,7 +116,7 @@ public abstract class AbstractDFABasedMinerOperator<D extends XSDataPacket<?, ?>
 
 	protected P setCaseActivityDataStructure(P params)
 			throws UndefinedParameterError {
-		DataStructureType caseActivityStoreType = PARAMETER_OPTIONS_CASE_ACTIVITY_STORE[getParameterAsInt(
+		Type caseActivityStoreType = PARAMETER_OPTIONS_CASE_ACTIVITY_STORE[getParameterAsInt(
 				PARAMETER_KEY_CASE_ACTIVITY_STORE)];
 		params.setCaseActivityDataStructureType(caseActivityStoreType);
 		params.setCaseActivityDataStructureParameters(
@@ -183,9 +165,9 @@ public abstract class AbstractDFABasedMinerOperator<D extends XSDataPacket<?, ?>
 	}
 
 	protected List<ParameterType> addDataStructureDependencyConditions(
-			String parameterTypeKey, DataStructureType[] options,
+			String parameterTypeKey, Type[] options,
 			List<ParameterType> params) {
-		for (DataStructureType dataStructureType : options) {
+		for (Type dataStructureType : options) {
 			for (DSParameterDefinition paramDef : dataStructureType
 					.getParameterDefinition()) {
 				String key = getDataStructureParameterSubKey(parameterTypeKey,
@@ -202,15 +184,14 @@ public abstract class AbstractDFABasedMinerOperator<D extends XSDataPacket<?, ?>
 	}
 
 	protected String getDataStructureParameterSubKey(
-			String parentParameterTypeKey, DataStructureType sbdst,
-			String param) {
+			String parentParameterTypeKey, Type sbdst, String param) {
 		return sbdst.toString().toLowerCase() + "_" + parentParameterTypeKey
 				+ "_" + param;
 	}
 
 	protected Map<DSParameterDefinition, DSParameter<?>> getDataStructureParameters(
-			String parameterTypeKey, DataStructureType dataStructureType)
-					throws UndefinedParameterError {
+			String parameterTypeKey, Type dataStructureType)
+			throws UndefinedParameterError {
 		Map<DSParameterDefinition, DSParameter<?>> result = new HashMap<DSParameterDefinition, DSParameter<?>>();
 		for (DSParameterDefinition paramDef : dataStructureType
 				.getParameterDefinition()) {

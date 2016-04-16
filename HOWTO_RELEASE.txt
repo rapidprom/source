@@ -6,29 +6,31 @@ Steps in order to release a "new version" of RapidProM
 3.) Generate the javadocs.
 4.) Remove the .RapidProM-X.Y.Z folder 
 5.) Build & Run RapidProM
-6.) Count the total number of files/folders in the .RapidProM-X.Y.Z folder
-7.) Update the Count in the config file.
-8.) Commit the changes in the integration branch.
+6.) Verify that the RapidProM library is not conflicted (i.e. look for evicted modules within the ivy resolve report).
+7.) Count the total number of files/folders in the .RapidProM-X.Y.Z folder
+8.) Update the Count in the config file.
+9.) Commit the changes in the integration branch.
  
  === Creating the Release ===
-9.) Create a prepack for the current version by running:
+10.) Create a prepack for the current version by running:
     management/org.rapidprom.management.CreateIvyPrePack.java
-10.) Commit the prepack in the github library repository.
-11.) Checkout the master branch.
-12.) Merge the integration branch into the master branch.
-13.) Remove the .RapidProM-X.Y.Z folder 
-14.) Build & Run RapidProM
+11.) Commit the prepack in the github library repository.
+12.) Checkout the master branch.
+13.) Merge the integration branch into the master branch.
+14.) Remove the .RapidProM-X.Y.Z folder 
+15.) Build & Run RapidProM
     Verify that RapidProM runs stable
-15.) Tag the master's current head state.
-16.) Upload the .jar file to the market place
+16.) Push commits to the repository
+17.) Tag the master's current head state.
+18.) Upload the .jar file to the market place
 
  === Updating versioning information ===
-17.) Checkout integration
-18.) Update the libraries by running:
+19.) Checkout integration
+20.) Update the libraries by running:
     management/org.rapidprom.management.IvyRapidProMReleaseUpdate
-19.) Commit the libraries to git.
-20.) Update the version information in ivy.xml
-21.) Update the version information build.properties
+21.) Commit the libraries to git.
+22.) Update the version information in ivy.xml
+23.) Update the version information build.properties
  
  
  

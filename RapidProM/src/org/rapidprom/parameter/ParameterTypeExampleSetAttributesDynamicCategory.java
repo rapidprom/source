@@ -22,6 +22,19 @@ public class ParameterTypeExampleSetAttributesDynamicCategory
 	@Override
 	protected Pair<String[], String[]> updateValues() {
 		MetaData md = getMetaDataProvider().getMetaData();
+		// sometimes, the metadata can be null although it is actually not.
+		// suspending the thread for a while appears to be overcoming this
+		// problem.
+		// this is an ugly fix, yet it works. The problem appears in RM 5 and RM
+		// 7.
+		if (md == null) {
+			try {
+				Thread.sleep(50);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			md = getMetaDataProvider().getMetaData();
+		}
 		if (md != null && md instanceof ExampleSetMetaData) {
 			String[] categories = null;
 			ExampleSetMetaData mdc = (ExampleSetMetaData) md;

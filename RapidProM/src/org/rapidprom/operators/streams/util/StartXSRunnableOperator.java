@@ -35,13 +35,13 @@ public class StartXSRunnableOperator extends Operator {
 		for (InputPort i : dependenciesPort.getManagedPorts()) {
 			try {
 				((XSRunnable) i.getData(XSRunnableIOObject.class).getArtifact())
-						.start();
+						.startXSRunnable();
 			} catch (UserError e) {
 			}
 		}
 		XSRunnable runnable = (XSAuthor<?>) runnableInput
 				.getData(XSAuthorIOObject.class).getArtifact();
-		runnable.start();
+		runnable.startXSRunnable();
 		runnableOutput.deliver(runnableInput.getData(XSAuthorIOObject.class));
 	}
 

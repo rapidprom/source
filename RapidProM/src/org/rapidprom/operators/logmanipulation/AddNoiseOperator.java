@@ -7,8 +7,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.deckfour.xes.extension.std.XTimeExtension;
+import org.deckfour.xes.factory.XFactory;
 import org.deckfour.xes.factory.XFactoryNaiveImpl;
-import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.model.XAttributeMap;
 import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
@@ -21,6 +21,7 @@ import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.operator.ports.metadata.MetaData;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.parameter.ParameterTypeDouble;
@@ -63,11 +64,15 @@ public class AddNoiseOperator extends Operator {
 				"Start: add artificial start and end event to all traces");
 		long time = System.currentTimeMillis();
 
+		MetaData md = inputXLog.getMetaData();
+
 		XLogIOObject xLogIOObject = inputXLog.getData(XLogIOObject.class);
 		XLog logOriginal = xLogIOObject.getArtifact();
 		XLog logModified = filterLog(logOriginal);
 		XLogIOObject result = new XLogIOObject(logModified,
 				xLogIOObject.getPluginContext());
+
+		outputEventLog.deliverMD(md);
 		outputEventLog.deliver(result);
 		logger.log(Level.INFO,
 				"End: add artificial start and end event to all traces ("
@@ -75,14 +80,15 @@ public class AddNoiseOperator extends Operator {
 	}
 
 	private XLog filterLog(XLog log) throws UndefinedParameterError {
-		XLog result = XFactoryRegistry.instance().currentDefault()
-				.createLog(log.getAttributes());
-		XFactoryRegistry.instance().setCurrentDefault(new XFactoryNaiveImpl());
+
+		XFactory factory = new XFactoryNaiveImpl();
+		XLog result = factory.createLog(log.getAttributes());
+		result.getClassifiers().addAll(log.getClassifiers());
+
 		int traceCounter = 0;
 		Random rOverall = new Random(getParameterAsInt(PARAMETER_3_KEY));
 		for (XTrace t : log) {
-			XTrace copy = XFactoryRegistry.instance().currentDefault()
-					.createTrace(t.getAttributes());
+			XTrace copy = factory.createTrace(t.getAttributes());
 			Random r = new Random(getParameterAsInt(PARAMETER_3_KEY)
 					+ new Integer(traceCounter).hashCode());
 			double nextDouble = rOverall.nextDouble();
@@ -93,8 +99,7 @@ public class AddNoiseOperator extends Operator {
 					int start = safeNextInt(r, (int) oneThird);
 					for (int i = start; i < t.size(); i++) {
 						XEvent e = t.get(i);
-						XEvent copyEvent = XFactoryRegistry.instance()
-								.currentDefault()
+						XEvent copyEvent = factory
 								.createEvent(e.getAttributes());
 						copy.add(copyEvent);
 					}
@@ -102,8 +107,7 @@ public class AddNoiseOperator extends Operator {
 					int stopFirst = safeNextInt(r, (int) oneThird);
 					for (int i = 0; i < stopFirst; i++) {
 						XEvent e = t.get(i);
-						XEvent copyEvent = XFactoryRegistry.instance()
-								.currentDefault()
+						XEvent copyEvent = factory
 								.createEvent(e.getAttributes());
 						copy.add(copyEvent);
 					}
@@ -111,16 +115,14 @@ public class AddNoiseOperator extends Operator {
 					int startLast = t.size() - safeNextInt(r, (int) oneThird);
 					for (int i = startLast; i < t.size(); i++) {
 						XEvent e = t.get(i);
-						XEvent copyEvent = XFactoryRegistry.instance()
-								.currentDefault()
+						XEvent copyEvent = factory
 								.createEvent(e.getAttributes());
 						copy.add(copyEvent);
 					}
 				} else if (getParameterAsString(PARAMETER_2_KEY)
 						.equals(EXTRA)) {
 					for (XEvent e : t) {
-						XEvent copyEvent = XFactoryRegistry.instance()
-								.currentDefault()
+						XEvent copyEvent = factory
 								.createEvent(e.getAttributes());
 						copy.add(copyEvent);
 					}
@@ -192,8 +194,7 @@ public class AddNoiseOperator extends Operator {
 							} else {
 								event = t.get(i);
 							}
-							XEvent copyEvent = XFactoryRegistry.instance()
-									.currentDefault()
+							XEvent copyEvent = factory
 									.createEvent((XAttributeMap) event
 											.getAttributes().clone());
 							copy.add(copyEvent);
@@ -202,10 +203,8 @@ public class AddNoiseOperator extends Operator {
 					} else {
 						// we still need to copy
 						for (XEvent e : t) {
-							XEvent copyEvent = XFactoryRegistry.instance()
-									.currentDefault()
-									.createEvent((XAttributeMap) e
-											.getAttributes().clone());
+							XEvent copyEvent = factory.createEvent(
+									(XAttributeMap) e.getAttributes().clone());
 							copy.add(copyEvent);
 						}
 					}
@@ -215,8 +214,7 @@ public class AddNoiseOperator extends Operator {
 					for (int i = 0; i < t.size(); i++) {
 						if (i != pos) {
 							XEvent event = t.get(i);
-							XEvent copyEvent = XFactoryRegistry.instance()
-									.currentDefault()
+							XEvent copyEvent = factory
 									.createEvent(event.getAttributes());
 							copy.add(copyEvent);
 						}
@@ -224,8 +222,7 @@ public class AddNoiseOperator extends Operator {
 				}
 			} else {
 				for (XEvent e : t) {
-					XEvent copyEvent = XFactoryRegistry.instance()
-							.currentDefault().createEvent(e.getAttributes());
+					XEvent copyEvent = factory.createEvent(e.getAttributes());
 					copy.add(copyEvent);
 				}
 			}
@@ -249,9 +246,9 @@ public class AddNoiseOperator extends Operator {
 												// events
 			pos++;
 
-		XEvent newEvt = XFactoryRegistry.instance().currentDefault()
-				.createEvent(
-						(XAttributeMap) tr.get(pos).getAttributes().clone());
+		XFactory factory = new XFactoryNaiveImpl();
+		XEvent newEvt = factory.createEvent(
+				(XAttributeMap) tr.get(pos).getAttributes().clone());
 		if (date != null) {
 			xTime.assignTimestamp(newEvt, date);
 		}

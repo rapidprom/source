@@ -59,7 +59,10 @@ public class PerformanceConformanceAnalysisOperator
 			PARAMETER_1_DESCR = "The maximum number of states that are searched for a trace alignment.",
 			PARAMETER_2_KEY = "Timeout (sec)",
 			PARAMETER_2_DESCR = "The number of seconds that this operator will run before "
-					+ "returning whatever it could manage to calculate (or null otherwise).";
+					+ "returning whatever it could manage to calculate (or null otherwise).",
+			PARAMETER_3_KEY = "Number of Threads",
+			PARAMETER_3_DESCR = "Specify the number of threads used to calculate alignments in parallel."
+					+ " With each extra thread, more memory is used but less cpu time is required.";
 
 	private InputPort inputPN = getInputPorts()
 			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
@@ -125,6 +128,7 @@ public class PerformanceConformanceAnalysisOperator
 					flattener.getFragmentTrans());
 			parameter.setGUIMode(false);
 			parameter.setCreateConn(false);
+			parameter.setNumThreads(getParameterAsInt(PARAMETER_3_KEY));
 
 			PNLogReplayer replayer = new PNLogReplayer();
 			PetrinetReplayerNoILPRestrictedMoveModel replayAlgorithm = new PetrinetReplayerNoILPRestrictedMoveModel();
@@ -156,9 +160,10 @@ public class PerformanceConformanceAnalysisOperator
 		try {
 			parameter.setGUIMode(false);
 			parameter.setInitMarking(pNet.getInitialMarking());
-			if(!pNet.hasFinalMarking())
+			if (!pNet.hasFinalMarking())
 				pNet.setFinalMarking(getFinalMarking(pNet.getArtifact()));
 			parameter.setFinalMarkings(pNet.getFinalMarkingAsArray());
+			
 			parameter.setMaxNumOfStates(
 					getParameterAsInt(PARAMETER_1_KEY) * 1000);
 			TransClasses tc = new TransClasses(pNet.getArtifact());
@@ -219,6 +224,11 @@ public class PerformanceConformanceAnalysisOperator
 		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_2_KEY,
 				PARAMETER_2_DESCR, 0, Integer.MAX_VALUE, 60);
 		parameterTypes.add(parameterType2);
+
+		ParameterTypeInt parameterType3 = new ParameterTypeInt(PARAMETER_3_KEY,
+				PARAMETER_3_DESCR, 1, Integer.MAX_VALUE,
+				Runtime.getRuntime().availableProcessors());
+		parameterTypes.add(parameterType3);
 
 		return parameterTypes;
 	}
