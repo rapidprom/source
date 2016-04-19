@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.petrinet.behavioralanalysis.woflan.Woflan;
-import org.processmining.plugins.petrinet.behavioralanalysis.woflan.WoflanDiagnosis;
+import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.WoflanDiagnosisIOObject;
 
@@ -23,7 +23,6 @@ import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeInt;
-import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.tools.LogService;
 
 public class WoflanAnalysisOperator extends Operator {
@@ -53,19 +52,15 @@ public class WoflanAnalysisOperator extends Operator {
 		logger.log(Level.INFO, "Start: woflan analysis");
 		long time = System.currentTimeMillis();
 
-		PetriNetIOObject petriNet = input.getData(PetriNetIOObject.class);
 		WoflanDiagnosisIOObject woflanDiagnosisIOObject = null;
 		SimpleTimeLimiter limiter = new SimpleTimeLimiter();
 
 		try {
-			woflanDiagnosisIOObject = limiter.callWithTimeout(
-					new WOFLANER(petriNet.getPluginContext(), petriNet),
-					getTimer(), TimeUnit.SECONDS, true);
+			woflanDiagnosisIOObject = limiter.callWithTimeout(new WOFLANER(),
+					getParameterAsInt(PARAMETER_1_KEY), TimeUnit.SECONDS, true);
 		} catch (Exception e) {
-			woflanDiagnosisIOObject = new WoflanDiagnosisIOObject(
-					new WoflanDiagnosis(petriNet.getArtifact()),
-					petriNet.getPluginContext());
 			e.printStackTrace();
+			return;
 		}
 
 		outputWoflan.deliver(woflanDiagnosisIOObject);
@@ -91,30 +86,17 @@ public class WoflanAnalysisOperator extends Operator {
 		return parameterTypes;
 	}
 
-	private long getTimer() {
-		try {
-			return (long) getParameterAsInt(PARAMETER_1_KEY);
-		} catch (UndefinedParameterError e) {
-			e.printStackTrace();
-		}
-		return 0;
-	}
-
 	class WOFLANER implements Callable<WoflanDiagnosisIOObject> {
-
-		PluginContext pc;
-		PetriNetIOObject pn;
-
-		public WOFLANER(PluginContext pc, PetriNetIOObject pn) {
-			this.pc = pc;
-			this.pn = pn;
-		}
 
 		@Override
 		public WoflanDiagnosisIOObject call() throws Exception {
+			PetriNetIOObject petriNet = input.getData(PetriNetIOObject.class);
+			PluginContext pluginContext = ProMPluginContextManager.instance()
+					.getContext();
 			Woflan woflan = new Woflan();
 			return new WoflanDiagnosisIOObject(
-					woflan.diagnose(pc, pn.getArtifact()), pc);
+					woflan.diagnose(pluginContext, petriNet.getArtifact()),
+					pluginContext);
 		}
 
 	}
