@@ -2,22 +2,6 @@ Release Notes RapidProM 3.0.2
 ==========
 
 Bug Fixes
-1. Something ...
-    -> commit: XXX
-
-==========
-
-New Functionality:
-1. Something ...
-    -> commit: XXX
-
-
-==========
-
-Removed Functionality:
-1. ...
-==========
-
-Additional Notes:
-
+1. Classifier error caused precision and generalization scores to be 0.
+    -> commit: 8498a1e21db01517eea3a2d84c9739f75f8bdb0b
 
