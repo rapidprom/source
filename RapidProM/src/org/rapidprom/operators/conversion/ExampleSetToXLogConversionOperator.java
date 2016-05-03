@@ -300,10 +300,10 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 	}
 
 	private XEvent constructEvent(XFactory factory, ExampleSet data,
-			Example example) {
+			Example example, String eventIdentifier) {
 		XAttributeMap attributes = new XAttributeMapImpl();
-		String eventName = example.getValueAsString(data.getAttributes().get(
-				getDynamicParameterTypeValue(PARAMETER_KEY_EVENT_IDENTIFIER)));
+		String eventName = example
+				.getValueAsString(data.getAttributes().get(eventIdentifier));
 		attributes.put(XConceptExtension.KEY_NAME,
 				new XAttributeLiteralImpl(XConceptExtension.KEY_NAME, eventName,
 						XConceptExtension.instance()));
@@ -328,9 +328,14 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 		// iterate over traces and events
 		Iterator<Example> iterator = data.iterator();
 		Map<String, XTrace> mapping = new HashMap<String, XTrace>();
+		String traceIdentifier = getDynamicParameterTypeValue(
+				PARAMETER_KEY_TRACE_IDENTIFIER);
+		String eventIdentifier = getDynamicParameterTypeValue(
+				PARAMETER_KEY_EVENT_IDENTIFIER);
 		while (iterator.hasNext()) {
 			log = processExampleAsEvent(factory, log, data, iterator.next(),
-					mapping);
+					mapping, traceIdentifier, eventIdentifier);
+
 		}
 		return log;
 	}
@@ -602,14 +607,11 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 	}
 
 	private XLog processExampleAsEvent(XFactory factory, XLog log,
-			ExampleSet data, Example example, Map<String, XTrace> mapping) {
-		XTrace trace = constructTrace(factory, log,
-				example.getValueAsString(
-						data.getAttributes()
-								.get(getDynamicParameterTypeValue(
-										PARAMETER_KEY_TRACE_IDENTIFIER))),
-				mapping);
-		trace.add(constructEvent(factory, data, example));
+			ExampleSet data, Example example, Map<String, XTrace> mapping,
+			String traceIdentifier, String eventIdentifier) {
+		XTrace trace = constructTrace(factory, log, example.getValueAsString(
+				data.getAttributes().get(traceIdentifier)), mapping);
+		trace.add(constructEvent(factory, data, example, eventIdentifier));
 		return log;
 
 	}
