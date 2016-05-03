@@ -17,7 +17,6 @@ import org.deckfour.xes.classification.XEventClassifier;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.info.XLogInfo;
 import org.deckfour.xes.info.XLogInfoFactory;
-import org.deckfour.xes.info.impl.XLogInfoImpl;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.processmining.framework.plugin.PluginContext;
@@ -169,8 +168,8 @@ public class ConformanceAnalysisOperator
 		alignAmd11.setRole(AttributeColumn.REGULAR);
 		alignAmd11.setNumberOfMissingValues(new MDInteger(0));
 		metaData3.addAttribute(alignAmd11);
-		AttributeMetaData alignAmd111 = new AttributeMetaData(this.TRACEIDENTIFIER,
-				Ontology.STRING);
+		AttributeMetaData alignAmd111 = new AttributeMetaData(
+				this.TRACEIDENTIFIER, Ontology.STRING);
 		alignAmd111.setRole(AttributeColumn.REGULAR);
 		alignAmd111.setNumberOfMissingValues(new MDInteger(0));
 		metaData3.addAttribute(alignAmd111);
@@ -302,12 +301,12 @@ public class ConformanceAnalysisOperator
 				Ontology.STRING));
 		attributes2.add(AttributeFactory
 				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.NUMERICAL));
-		attributes2.add(AttributeFactory
-				.createAttribute(PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
+		attributes2.add(AttributeFactory.createAttribute(
+				PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
 		attributes2.add(AttributeFactory.createAttribute(
 				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL));
-		attributes2.add(AttributeFactory
-				.createAttribute(PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
+		attributes2.add(AttributeFactory.createAttribute(
+				PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
 		attributes2.add(AttributeFactory.createAttribute(
 				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL));
 		table2 = new MemoryExampleTable(attributes2);
@@ -345,12 +344,12 @@ public class ConformanceAnalysisOperator
 				Ontology.STRING));
 		attributes3.add(AttributeFactory
 				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.NUMERICAL));
-		attributes3.add(AttributeFactory
-				.createAttribute(PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
+		attributes3.add(AttributeFactory.createAttribute(
+				PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
 		attributes3.add(AttributeFactory.createAttribute(
 				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL));
-		attributes3.add(AttributeFactory
-				.createAttribute(PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
+		attributes3.add(AttributeFactory.createAttribute(
+				PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
 		attributes3.add(AttributeFactory.createAttribute(
 				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL));
 		table3 = new MemoryExampleTable(attributes3);
@@ -431,7 +430,7 @@ public class ConformanceAnalysisOperator
 			PNRepResultIOObject result = new PNRepResultIOObject(repResult,
 					pluginContext, pNet, xLog.getArtifact(),
 					constructMapping(pNet.getArtifact(), xLog.getArtifact(),
-							XLogInfoImpl.NAME_CLASSIFIER));
+							getXEventClassifier()));
 			result.setVisualizationType(
 					PNRepResultIOObjectVisualizationType.PROJECT_ON_MODEL);
 
@@ -583,9 +582,10 @@ public class ConformanceAnalysisOperator
 		ParameterTypeInt parameterType2 = new ParameterTypeInt(PARAMETER_2_KEY,
 				PARAMETER_2_DESCR, 0, Integer.MAX_VALUE, 60);
 		parameterTypes.add(parameterType2);
-		
+
 		ParameterTypeInt parameterType3 = new ParameterTypeInt(PARAMETER_3_KEY,
-				PARAMETER_3_DESCR, 1, Integer.MAX_VALUE, Runtime.getRuntime().availableProcessors());
+				PARAMETER_3_DESCR, 1, Integer.MAX_VALUE,
+				Runtime.getRuntime().availableProcessors());
 		parameterTypes.add(parameterType3);
 
 		return parameterTypes;
