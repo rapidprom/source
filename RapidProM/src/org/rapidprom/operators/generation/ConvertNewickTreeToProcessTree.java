@@ -9,6 +9,8 @@ import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.ProcessTreeIOObject;
 import org.rapidprom.ioobjects.experimental.NewickTreeIOObject;
 
+import com.rapidminer.example.ExampleSet;
+import com.rapidminer.example.ExampleSetFactory;
 import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
@@ -23,12 +25,17 @@ public class ConvertNewickTreeToProcessTree extends Operator {
 			NewickTreeIOObject.class);
 
 	private OutputPort output = getOutputPorts().createPort("process tree");
+	private OutputPort outputOriginalString = getOutputPorts()
+			.createPort("original newick tree (String)");
 
 	public ConvertNewickTreeToProcessTree(OperatorDescription description) {
 		super(description);
 
 		getTransformer().addRule(
 				new GenerateNewMDRule(output, ProcessTreeIOObject.class));
+		
+		getTransformer().addRule(
+				new GenerateNewMDRule(outputOriginalString, ExampleSet.class));
 	}
 
 	public void doWork() throws OperatorException {
@@ -48,6 +55,12 @@ public class ConvertNewickTreeToProcessTree extends Operator {
 										input.getData(NewickTreeIOObject.class)
 												.getArtifact()),
 						pluginContext));
+		
+		Object[][] outputString = new Object[1][1];
+		outputString[0][0] = input.getData(NewickTreeIOObject.class).getArtifact().getTree();
+		ExampleSet es = ExampleSetFactory.createExampleSet(outputString);
+
+		outputOriginalString.deliver(es);
 
 		logger.log(Level.INFO, "End: converting newick tree to process tree ("
 				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
