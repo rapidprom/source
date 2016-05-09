@@ -587,11 +587,6 @@ public class ConformanceAnalysisOperator
 				PARAMETER_3_DESCR, 1, Integer.MAX_VALUE, Runtime.getRuntime().availableProcessors());
 		parameterTypes.add(parameterType3);
 
-		ParameterTypeInt parameterType3 = new ParameterTypeInt(PARAMETER_3_KEY,
-				PARAMETER_3_DESCR, 1, Integer.MAX_VALUE,
-				Runtime.getRuntime().availableProcessors());
-		parameterTypes.add(parameterType3);
-
 		return parameterTypes;
 	}
 
