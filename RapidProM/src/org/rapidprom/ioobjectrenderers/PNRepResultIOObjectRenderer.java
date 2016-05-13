@@ -1,8 +1,11 @@
 package org.rapidprom.ioobjectrenderers;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.lang.ref.WeakReference;
 import java.util.EnumSet;
+
+import javax.swing.JFrame;
 
 import org.processmining.plugins.petrinet.replayresult.PNRepResult;
 import org.processmining.plugins.petrinet.replayresult.visualization.PNLogReplayResultVisPanel;
@@ -37,8 +40,26 @@ public class PNRepResultIOObjectRenderer extends
 	@Override
 	public Reportable createReportable(Object renderable,
 			IOContainer ioContainer, int desiredWidth, int desiredHeight) {
-		return new DefaultComponentRenderable(
-				getVisualizationComponent(renderable, ioContainer));
+		Component panel = null;
+		try {
+			panel = createModelComponet(renderable, ioContainer);
+			JFrame frame = new JFrame();
+			frame.getContentPane().add(panel);
+			frame.setSize(desiredWidth, desiredHeight);
+			frame.setPreferredSize(new Dimension(desiredWidth, desiredHeight));
+			frame.setMinimumSize(new Dimension(desiredWidth, desiredHeight));
+			frame.setMaximumSize(new Dimension(desiredWidth, desiredHeight));
+			frame.pack();
+			frame.revalidate();
+			frame.repaint();
+			frame.setVisible(true);
+			Thread.sleep(1000);
+			frame.setVisible(false);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return new DefaultComponentRenderable(panel);
 	}
 
 	@Override
