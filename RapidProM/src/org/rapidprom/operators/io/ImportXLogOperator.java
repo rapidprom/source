@@ -43,8 +43,7 @@ public class ImportXLogOperator
 			.toArray(new ImplementingPlugin[EnumSet
 					.allOf(ImplementingPlugin.class).size()]);
 
-	private final static String[] SUPPORTED_FILE_FORMATS = new String[] { "xes",
-			"xez", "xes.gz" };
+	private final static String[] SUPPORTED_FILE_FORMATS = new String[] { "xes" };
 
 	public ImportXLogOperator(OperatorDescription description) {
 		super(description, XLogIOObject.class, SUPPORTED_FILE_FORMATS);

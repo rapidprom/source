@@ -37,8 +37,8 @@ public class ExtractXLogOperator
 		extends AbstractRapidProMExtractorOperator<XLogIOObject> {
 
 	public static enum ImplementingPlugin {
-		LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs"), MAP_DB(
-				"Buffered by MAPDB"), NAIVE("Naive");
+		NAIVE("Naive"), LIGHT_WEIGHT_SEQ_ID("Lightweight & Sequential IDs"), MAP_DB(
+				"Buffered by MAPDB");
 
 		private final String name;
 
