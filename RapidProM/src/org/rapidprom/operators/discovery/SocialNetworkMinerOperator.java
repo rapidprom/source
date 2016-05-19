@@ -102,20 +102,14 @@ public class SocialNetworkMinerOperator
 					.getFutureResultAwareContext(SNRAMiner.class);
 			SNRAMiner miner1 = new SNRAMiner();
 			result = miner1.socialnetwork(pluginContext, getXLog());
-			break;
+			break;		
 		case 2:
-			pluginContext = ProMPluginContextManager.instance()
-					.getFutureResultAwareContext(SNSTMiner.class);
-			SNSTMiner miner2 = new SNSTMiner();
-			result = miner2.socialnetwork(pluginContext, getXLog());
-			break;
-		case 3:
 			pluginContext = ProMPluginContextManager.instance()
 					.getFutureResultAwareContext(SNSCMiner.class);
 			SNSCMiner miner3 = new SNSCMiner();
 			result = miner3.socialnetwork(pluginContext, getXLog());
 			break;
-		case 4:
+		case 3:
 			pluginContext = ProMPluginContextManager.instance()
 					.getFutureResultAwareContext(SNWTMiner.class);
 			SNWTMiner miner4 = new SNWTMiner();

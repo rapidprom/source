@@ -2,6 +2,7 @@ package org.rapidprom.operators.analysis;
 
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +23,15 @@ import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeBoolean;
 import com.rapidminer.parameter.ParameterTypeInt;
 import com.rapidminer.tools.LogService;
 
 public class WoflanAnalysisOperator extends Operator {
 
-	private static final String PARAMETER_1_KEY = "Time limit (sec)",
+	private static final String PARAMETER_0_KEY = "Enable Time limit",
+			PARAMETER_0_DESCR = "Tries to evaluate soundness within a given time period.",
+			PARAMETER_1_KEY = "Time limit (sec)",
 			PARAMETER_1_DESCR = "Time limit before the analysis is cancelled. "
 					+ "Helpful when analyzing large Petri nets.";
 
@@ -53,20 +57,26 @@ public class WoflanAnalysisOperator extends Operator {
 		long time = System.currentTimeMillis();
 
 		WoflanDiagnosisIOObject woflanDiagnosisIOObject = null;
-		SimpleTimeLimiter limiter = new SimpleTimeLimiter();
+		SimpleTimeLimiter limiter = new SimpleTimeLimiter(Executors.newSingleThreadExecutor());
+		Object[][] outputString = new Object[1][1];
 
 		try {
-			woflanDiagnosisIOObject = limiter.callWithTimeout(new WOFLANER(),
-					getParameterAsInt(PARAMETER_1_KEY), TimeUnit.SECONDS, true);
+			if (getParameterAsBoolean(PARAMETER_0_KEY))
+				woflanDiagnosisIOObject = limiter.callWithTimeout(
+						new WOFLANER(), getParameterAsInt(PARAMETER_1_KEY),
+						TimeUnit.SECONDS, false);
+			else
+				woflanDiagnosisIOObject = limiter.callWithTimeout(
+						new WOFLANER(), Long.MAX_VALUE, TimeUnit.SECONDS, false);
+			
+			outputString[0][0] = woflanDiagnosisIOObject.getArtifact()
+					.toString();
+			outputWoflan.deliver(woflanDiagnosisIOObject);
 		} catch (Exception e) {
+			outputString[0][0] = " Woflan could not evaluate soundness in the given time.";
 			e.printStackTrace();
-			return;
 		}
 
-		outputWoflan.deliver(woflanDiagnosisIOObject);
-
-		Object[][] outputString = new Object[1][1];
-		outputString[0][0] = woflanDiagnosisIOObject.getArtifact().toString();
 		ExampleSet es = ExampleSetFactory.createExampleSet(outputString);
 
 		outputWoflanString.deliver(es);
@@ -78,6 +88,10 @@ public class WoflanAnalysisOperator extends Operator {
 	public List<ParameterType> getParameterTypes() {
 
 		List<ParameterType> parameterTypes = super.getParameterTypes();
+
+		ParameterTypeBoolean parameter0 = new ParameterTypeBoolean(
+				PARAMETER_0_KEY, PARAMETER_0_DESCR, false);
+		parameterTypes.add(parameter0);
 
 		ParameterTypeInt parameter1 = new ParameterTypeInt(PARAMETER_1_KEY,
 				PARAMETER_1_DESCR, 0, 10000, 60);
