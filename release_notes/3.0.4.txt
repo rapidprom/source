@@ -1,0 +1,21 @@
+Release Notes RapidProM 3.0.3
+==========
+Bug Fixes
+1. ...
+
+
+==========
+
+New Functionality:
+1. ...
+
+
+==========
+
+Removed Functionality:
+1. ...
+
+==========
+
+Additional Notes:
+
