@@ -1,13 +1,17 @@
-Release Notes RapidProM 3.0.3
+Release Notes RapidProM 3.0.4
 ==========
 Bug Fixes
-1. ...
+1. Woflan prints a message when it times out.
+2. ILP-discovered models can now be analysed with the Analyze Performance operator.
 
 
 ==========
 
 New Functionality:
-1. ...
+1. Woflan timeout is now optional.
+2. Social Network Miner Variants are re-sorted.
+3. The Naïve log importer is now default.
+4. Only .xes log files can be imported (.xes.gz files are currently not supported since they cause issues)
 
 
 ==========
@@ -18,4 +22,3 @@ Removed Functionality:
 ==========
 
 Additional Notes:
-
