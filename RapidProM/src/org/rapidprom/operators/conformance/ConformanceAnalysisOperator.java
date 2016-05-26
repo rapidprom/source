@@ -243,7 +243,7 @@ public class ConformanceAnalysisOperator
 		} catch (UncheckedTimeoutException e1) {
 			pluginContext.getProgress().cancel();
 			logger.log(Level.INFO, "Conformance Checker timed out.");
-			output.deliver(null);
+			output.deliver(new PNRepResultIOObject(null, pluginContext, null, null, null));
 			
 		} catch (Exception e) {
 			e.printStackTrace();
