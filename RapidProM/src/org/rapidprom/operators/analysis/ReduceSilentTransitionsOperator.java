@@ -1,5 +1,6 @@
 package org.rapidprom.operators.analysis;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -16,6 +17,8 @@ import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.tools.LogService;
 
 public class ReduceSilentTransitionsOperator extends Operator {
@@ -24,6 +27,13 @@ public class ReduceSilentTransitionsOperator extends Operator {
 			.createPort("model (ProM Petri Net)", PetriNetIOObject.class);
 	private OutputPort outputPetrinet = getOutputPorts()
 			.createPort("model (ProM Petri Net)");
+
+	private static final String VARIATION = "Preserve:",
+			VARIATION_DESCR = "The reduction rules can be applied for reducing the silent "
+					+ "transitions of a petri net while preserving soundness or behavior, "
+					+ "or while keeping the sinks and sources of the original petri net.";
+	private static final String SOUNDNESS = "Soundness", BEHAVIOR = "Behavior",
+			RETAIN = "Retain Sink/Source places";
 
 	public ReduceSilentTransitionsOperator(OperatorDescription description) {
 		super(description);
@@ -39,12 +49,26 @@ public class ReduceSilentTransitionsOperator extends Operator {
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getFutureResultAwareContext(Murata.class);
 		Murata reducer = new Murata();
-		Object[] result = null;
+		Object[] result = new Object[2];
 		try {
-			result = reducer.run(pluginContext,
-					inputPetrinet.getData(PetriNetIOObject.class).getArtifact(),
-					inputPetrinet.getData(PetriNetIOObject.class)
-							.getInitialMarking());
+			if (getParameterAsString(VARIATION).equals(BEHAVIOR))
+				result = reducer.runPreserveBehavior(pluginContext,
+						inputPetrinet.getData(PetriNetIOObject.class)
+								.getArtifact(),
+						inputPetrinet.getData(PetriNetIOObject.class)
+								.getInitialMarking());
+			else if (getParameterAsString(VARIATION).equals(SOUNDNESS))
+				result = reducer.runPreserveSoundness(pluginContext,
+						inputPetrinet.getData(PetriNetIOObject.class)
+								.getArtifact(),
+						inputPetrinet.getData(PetriNetIOObject.class)
+								.getInitialMarking());
+			else {
+				result[0] = reducer.runWF(pluginContext, inputPetrinet
+						.getData(PetriNetIOObject.class).getArtifact());
+				result[1] = inputPetrinet.getData(PetriNetIOObject.class)
+						.getInitialMarking();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -55,6 +79,18 @@ public class ReduceSilentTransitionsOperator extends Operator {
 		logger.log(Level.INFO, "End: reduce silent transitions ("
 				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 
+	}
+
+	public List<ParameterType> getParameterTypes() {
+		List<ParameterType> parameterTypes = super.getParameterTypes();
+
+		String[] options = new String[] { SOUNDNESS, BEHAVIOR, RETAIN };
+
+		ParameterTypeCategory variation = new ParameterTypeCategory(VARIATION,
+				VARIATION_DESCR, options, 0);
+		parameterTypes.add(variation);
+
+		return parameterTypes;
 	}
 
 }

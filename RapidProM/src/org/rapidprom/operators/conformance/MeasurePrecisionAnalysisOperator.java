@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javassist.tools.rmi.ObjectNotFoundException;
-
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.pnalignanalysis.conformance.AlignmentPrecGen;
 import org.processmining.plugins.pnalignanalysis.conformance.AlignmentPrecGenRes;
@@ -23,14 +21,16 @@ import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeBoolean;
 import com.rapidminer.tools.LogService;
 
+import javassist.tools.rmi.ObjectNotFoundException;
+
 public class MeasurePrecisionAnalysisOperator extends Operator {
 
 	private static final String PARAMETER_1 = "Consider traces with the same activity sequence as the same trace";
 	private InputPort input = getInputPorts().createPort(
 			"alignments (ProM PNRepResult)", PNRepResultIOObject.class);
 
-	private OutputPort outputMetrics = getOutputPorts().createPort(
-			"example set (Data Table)");
+	private OutputPort outputMetrics = getOutputPorts()
+			.createPort("example set (Data Table)");
 
 	public MeasurePrecisionAnalysisOperator(OperatorDescription description) {
 		super(description);
@@ -49,22 +49,32 @@ public class MeasurePrecisionAnalysisOperator extends Operator {
 		PNRepResultIOObject alignment = input
 				.getData(PNRepResultIOObject.class);
 
-		AlignmentPrecGen aligner = new AlignmentPrecGen();
-		AlignmentPrecGenRes result = null;
-		try {
-			result = aligner.measureConformanceAssumingCorrectAlignment(
-					pluginContext, alignment.getMapping(),
-					alignment.getArtifact(), alignment.getPn().getArtifact(),
-					alignment.getPn().getInitialMarking(),
-					getParameterAsBoolean(PARAMETER_1));
-		} catch (ObjectNotFoundException e) {
-			e.printStackTrace();
-		}
+		ExampleSet es;
 
-		ExampleSet es = ExampleSetFactory.createExampleSet(new Object[][] {
-				{ "precision", result.getPrecision() },
-				{ "generalization", result.getGeneralization() } });
-		outputMetrics.deliver(es);
+		if (alignment.getArtifact() != null) {
+			AlignmentPrecGen aligner = new AlignmentPrecGen();
+			AlignmentPrecGenRes result = null;
+			try {
+				result = aligner.measureConformanceAssumingCorrectAlignment(
+						pluginContext, alignment.getMapping(),
+						alignment.getArtifact(),
+						alignment.getPn().getArtifact(),
+						alignment.getPn().getInitialMarking(),
+						getParameterAsBoolean(PARAMETER_1));
+
+				es = ExampleSetFactory.createExampleSet(new Object[][] {
+						{ "precision", result.getPrecision() },
+						{ "generalization", result.getGeneralization() } });
+				outputMetrics.deliver(es);
+				
+			} catch (ObjectNotFoundException e) {
+				e.printStackTrace();
+			}
+		} else {
+			es = ExampleSetFactory.createExampleSet(new Object[][] {
+					{ "precision", "?" }, { "generalization", "?" } });
+			outputMetrics.deliver(es);
+		}
 
 		logger.log(Level.INFO,
 				"End: measure precision/generalization based on alignments ("
