@@ -33,7 +33,8 @@
         <dependency org="org.rapidprom" name="Murata" rev="6.5.48" rapidprom:release="3.0.5" />
         <dependency org="org.rapidprom" name="PetriNets" rev="6.5.71" rapidprom:release="3.0.5" />
         <dependency org="org.rapidprom" name="PNetAlignmentAnalysis" rev="6.5.35" rapidprom:release="3.0.5" />
-        <dependency org="org.rapidprom" name="PNetReplayer" rev="6.5.52" rapidprom:release="3.0.5"/>
+        <dependency org="org.rapidprom" name="PNAnalysis" rev="6.5.67" rapidprom:release="3.0.5" />
+        <dependency org="org.rapidprom" name="PNetReplayer" rev="6.5.75" rapidprom:release="3.0.5"/>
         <dependency org="org.rapidprom" name="PTConversions" rev="6.5.3" rapidprom:release="3.0.5" />
         <dependency org="org.rapidprom" name="PomPomView" rev="6.5.36" rapidprom:release="3.0.5" />
         <dependency org="org.rapidprom" name="SocialNetwork" rev="6.5.35" rapidprom:release="3.0.5" />
@@ -43,7 +44,7 @@
         <dependency org="org.rapidprom" name="TransitionSystems" rev="6.5.54" rapidprom:release="3.0.5" />
         <dependency org="org.rapidprom" name="TSPetriNet" rev="6.5.35" rapidprom:release="3.0.5" />
         <dependency org="org.rapidprom" name="Uma" rev="6.5.46" rapidprom:release="3.0.5" />
-        <dependency org="org.rapidprom" name="Woflan" rev="6.5.33" rapidprom:release="3.0.5" />
+        <dependency org="org.rapidprom" name="Woflan" rev="6.5.44" rapidprom:release="3.0.5" />
         <dependency org="org.rapidprom" name="XESLite" rev="6.5.168" rapidprom:release="3.0.5" />
         <exclude org="*" ext="*" type="source"/>
         <exclude org="*" ext="*" type="javadoc"/>

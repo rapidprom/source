@@ -7,6 +7,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.processmining.contexts.cli.CLIPluginContext;
 import org.processmining.framework.plugin.PluginContext;
 import org.processmining.plugins.petrinet.behavioralanalysis.woflan.Woflan;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
@@ -14,6 +15,7 @@ import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.WoflanDiagnosisIOObject;
 
 import com.google.common.util.concurrent.SimpleTimeLimiter;
+import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.rapidminer.example.ExampleSet;
 import com.rapidminer.example.ExampleSetFactory;
 import com.rapidminer.operator.Operator;
@@ -57,24 +59,39 @@ public class WoflanAnalysisOperator extends Operator {
 		long time = System.currentTimeMillis();
 
 		WoflanDiagnosisIOObject woflanDiagnosisIOObject = null;
-		SimpleTimeLimiter limiter = new SimpleTimeLimiter(Executors.newSingleThreadExecutor());
+		PluginContext pluginContext = ProMPluginContextManager.instance()
+				.getFutureResultAwareContext(Woflan.class);
+		SimpleTimeLimiter limiter = new SimpleTimeLimiter(
+				Executors.newSingleThreadExecutor());
 		Object[][] outputString = new Object[1][1];
 
 		try {
 			if (getParameterAsBoolean(PARAMETER_0_KEY))
 				woflanDiagnosisIOObject = limiter.callWithTimeout(
-						new WOFLANER(), getParameterAsInt(PARAMETER_1_KEY),
-						TimeUnit.SECONDS, false);
+						new WOFLANER(pluginContext),
+						getParameterAsInt(PARAMETER_1_KEY), TimeUnit.SECONDS,
+						true);
 			else
 				woflanDiagnosisIOObject = limiter.callWithTimeout(
-						new WOFLANER(), Long.MAX_VALUE, TimeUnit.SECONDS, false);
-			
+						new WOFLANER(pluginContext), Long.MAX_VALUE,
+						TimeUnit.SECONDS, true);
+
 			outputString[0][0] = woflanDiagnosisIOObject.getArtifact()
 					.toString();
 			outputWoflan.deliver(woflanDiagnosisIOObject);
-		} catch (Exception e) {
+
+		} catch (UncheckedTimeoutException e) {
+
 			outputString[0][0] = " Woflan could not evaluate soundness in the given time.";
-			e.printStackTrace();
+			logger.log(Level.INFO, "Woflan timed out.");
+
+			pluginContext.getProgress().cancel();
+
+		} catch (Exception e1) {
+
+			e1.printStackTrace();
+			outputString[0][0] = " Error checking soundness.";
+			pluginContext.getProgress().cancel();
 		}
 
 		ExampleSet es = ExampleSetFactory.createExampleSet(outputString);
@@ -90,7 +107,7 @@ public class WoflanAnalysisOperator extends Operator {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
 		ParameterTypeBoolean parameter0 = new ParameterTypeBoolean(
-				PARAMETER_0_KEY, PARAMETER_0_DESCR, false);
+				PARAMETER_0_KEY, PARAMETER_0_DESCR, true);
 		parameterTypes.add(parameter0);
 
 		ParameterTypeInt parameter1 = new ParameterTypeInt(PARAMETER_1_KEY,
@@ -102,11 +119,15 @@ public class WoflanAnalysisOperator extends Operator {
 
 	class WOFLANER implements Callable<WoflanDiagnosisIOObject> {
 
+		private PluginContext pluginContext;
+
+		public WOFLANER(PluginContext input) {
+			pluginContext = input;
+		}
+
 		@Override
 		public WoflanDiagnosisIOObject call() throws Exception {
 			PetriNetIOObject petriNet = input.getData(PetriNetIOObject.class);
-			PluginContext pluginContext = ProMPluginContextManager.instance()
-					.getContext();
 			Woflan woflan = new Woflan();
 			return new WoflanDiagnosisIOObject(
 					woflan.diagnose(pluginContext, petriNet.getArtifact()),
