@@ -30,7 +30,7 @@
         <dependency org="org.rapidprom" name="LogDialog" rev="6.5.42" rapidprom:release="3.0.7" />
         <dependency org="org.rapidprom" name="LogProjection" rev="6.5.38" rapidprom:release="3.0.7" />
         <dependency org="org.rapidprom" name="ModelRepair" rev="6.5.12" rapidprom:release="3.0.7" />
-        <dependency org="org.rapidprom" name="Murata" rev="6.5.48" rapidprom:release="3.0.7" />
+        <dependency org="org.rapidprom" name="Murata" rev="6.5.54" rapidprom:release="3.0.7" />
         <dependency org="org.rapidprom" name="PetriNets" rev="6.5.71" rapidprom:release="3.0.7" />
         <dependency org="org.rapidprom" name="PNetAlignmentAnalysis" rev="6.5.35" rapidprom:release="3.0.7" />
         <dependency org="org.rapidprom" name="PNAnalysis" rev="6.5.67" rapidprom:release="3.0.7" />
