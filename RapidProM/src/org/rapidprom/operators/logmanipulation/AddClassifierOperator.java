@@ -1,6 +1,8 @@
 package org.rapidprom.operators.logmanipulation;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.deckfour.xes.classification.XEventAndClassifier;
 import org.deckfour.xes.classification.XEventLifeTransClassifier;
@@ -20,6 +22,7 @@ import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.MetaData;
 import com.rapidminer.parameter.ParameterType;
 import com.rapidminer.parameter.ParameterTypeCategory;
+import com.rapidminer.tools.LogService;
 
 public class AddClassifierOperator extends Operator {
 
@@ -41,6 +44,10 @@ public class AddClassifierOperator extends Operator {
 
 	public void doWork() throws OperatorException {
 
+		Logger logger = LogService.getRoot();
+		logger.log(Level.INFO, "Start: add classifier");
+		long time = System.currentTimeMillis();
+		
 		XLogIOObject logObject = inputXLog.getData(XLogIOObject.class);
 
 		XLog newLog = (XLog) logObject.getArtifact().clone();
@@ -81,6 +88,8 @@ public class AddClassifierOperator extends Operator {
 		}
 
 		outputEventLog.deliver(result);
+		logger.log(Level.INFO, "End: add classifier ("
+				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
 
 	public List<ParameterType> getParameterTypes() {

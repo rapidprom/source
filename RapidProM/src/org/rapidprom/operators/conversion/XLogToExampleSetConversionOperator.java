@@ -46,8 +46,7 @@ public class XLogToExampleSetConversionOperator extends Operator {
 	 * The default constructor needed in exactly this signature
 	 */
 	public XLogToExampleSetConversionOperator(OperatorDescription description) {
-		super(description);
-		
+		super(description);		
 	}
 	
 	@Override
@@ -75,6 +74,7 @@ public class XLogToExampleSetConversionOperator extends Operator {
 		}
 		/** Adding a rule for the output */
 		getTransformer().addRule( new GenerateNewMDRule(output, this.metaData));
+		output.deliverMD(metaData);
 		output.deliver(es);
 		
 		logger.log(Level.INFO, "End: Event Log to Table conversion ("

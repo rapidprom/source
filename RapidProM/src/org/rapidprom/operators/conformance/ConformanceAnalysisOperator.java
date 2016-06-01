@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +27,7 @@ import org.processmining.models.graphbased.directed.petrinet.elements.Place;
 import org.processmining.models.graphbased.directed.petrinet.elements.Transition;
 import org.processmining.models.semantics.petrinet.Marking;
 import org.processmining.plugins.astar.petrinet.AbstractPetrinetReplayer;
+import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithILP;
 import org.processmining.plugins.astar.petrinet.PetrinetReplayerWithoutILP;
 import org.processmining.plugins.connectionfactories.logpetrinet.TransEvClassMapping;
 import org.processmining.plugins.petrinet.replayer.PNLogReplayer;
@@ -41,6 +43,7 @@ import org.rapidprom.ioobjects.XLogIOObject;
 import org.rapidprom.operators.abstr.AbstractRapidProMDiscoveryOperator;
 
 import com.google.common.util.concurrent.SimpleTimeLimiter;
+import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.rapidminer.example.Attribute;
 import com.rapidminer.example.ExampleSet;
 import com.rapidminer.example.table.AttributeFactory;
@@ -57,6 +60,7 @@ import com.rapidminer.operator.ports.metadata.ExampleSetMetaData;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.operator.ports.metadata.MDInteger;
 import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeCategory;
 import com.rapidminer.parameter.ParameterTypeInt;
 import com.rapidminer.parameter.UndefinedParameterError;
 import com.rapidminer.tools.LogService;
@@ -68,7 +72,9 @@ import nl.tue.astar.AStarException;
 public class ConformanceAnalysisOperator
 		extends AbstractRapidProMDiscoveryOperator {
 
-	private static final String PARAMETER_1_KEY = "Max Explored States (in Thousands)",
+	private static final String PARAMETER_0_KEY = "Replay Algorithm",
+			PARAMETER_0_DESCR = "The Petri net replayer algorithm that will be used to calculate alignments.",
+			PARAMETER_1_KEY = "Max Explored States (in Thousands)",
 			PARAMETER_1_DESCR = "The maximum number of states that are searched for a trace alignment.",
 			PARAMETER_2_KEY = "Timeout (sec)",
 			PARAMETER_2_DESCR = "The number of seconds that this operator will run before "
@@ -76,6 +82,9 @@ public class ConformanceAnalysisOperator
 			PARAMETER_3_KEY = "Number of Threads",
 			PARAMETER_3_DESCR = "Specify the number of threads used to calculate alignments in parallel."
 					+ " With each extra thread, more memory is used but less cpu time is required.";
+
+	private static final String WITH_ILP = "ILP Replayer",
+			WITHOUT_ILP = "non-ILP Replayer";
 
 	private PNRepResultIOObject alignments;
 
@@ -216,186 +225,31 @@ public class ConformanceAnalysisOperator
 				"Start: replay log on petri net for conformance checking");
 		long time = System.currentTimeMillis();
 
-		SimpleTimeLimiter limiter = new SimpleTimeLimiter();
+		SimpleTimeLimiter limiter = new SimpleTimeLimiter(
+				Executors.newSingleThreadExecutor());
+		PluginContext pluginContext = ProMPluginContextManager.instance()
+				.getFutureResultAwareContext(PNLogReplayer.class);
 
 		PNRepResult repResult = null;
+
 		try {
-			alignments = limiter.callWithTimeout(new ALIGNMENT_CALCULATOR(),
+			alignments = limiter.callWithTimeout(
+					new ALIGNMENT_CALCULATOR(pluginContext),
 					getParameterAsInt(PARAMETER_2_KEY), TimeUnit.SECONDS, true);
 			repResult = alignments.getArtifact();
 
 			output.deliver(alignments);
+
+		} catch (UncheckedTimeoutException e1) {
+			pluginContext.getProgress().cancel();
+			logger.log(Level.INFO, "Conformance Checker timed out.");
+			output.deliver(new PNRepResultIOObject(null, pluginContext, null, null, null));
+			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return;
 		}
 
-		Iterator<SyncReplayResult> iterator3 = repResult.iterator();
-		boolean unreliable = false;
-		while (iterator3.hasNext()) {
-			SyncReplayResult next = iterator3.next();
-			System.out.println("RELIABLE:" + next.isReliable());
-			boolean reliable = next.isReliable();
-			if (!reliable) {
-				unreliable = true;
-				break;
-			}
-		}
-		Map<String, Object> info = repResult.getInfo();
-		double trace_fitness = 0;
-		try {
-			trace_fitness = Double
-					.parseDouble((String) info.get(PNRepResult.TRACEFITNESS));
-		} catch (Exception e) {
-			trace_fitness = (Double) info.get(PNRepResult.TRACEFITNESS);
-		}
-		double move_log_fitness = (Double) info.get(PNRepResult.MOVELOGFITNESS);
-		double move_model_fitness = (Double) info
-				.get(PNRepResult.MOVEMODELFITNESS);
-		double raw_fitness_costs = (Double) info
-				.get(PNRepResult.RAWFITNESSCOST);
-		double num_state_gen = (Double) info.get(PNRepResult.NUMSTATEGENERATED);
-
-		ExampleSet es = null;
-		MemoryExampleTable table = null;
-		List<Attribute> attributes = new LinkedList<Attribute>();
-		attributes.add(AttributeFactory.createAttribute(this.NAMECOL,
-				Ontology.STRING));
-		attributes.add(AttributeFactory.createAttribute(this.VALUECOL,
-				Ontology.NUMERICAL));
-		table = new MemoryExampleTable(attributes);
-		if (unreliable) {
-			fillTableWithRow(table, PNRepResult.TRACEFITNESS, Double.NaN,
-					attributes);
-			fillTableWithRow(table, PNRepResult.MOVELOGFITNESS, Double.NaN,
-					attributes);
-			fillTableWithRow(table, PNRepResult.MOVEMODELFITNESS, Double.NaN,
-					attributes);
-			fillTableWithRow(table, PNRepResult.RAWFITNESSCOST, Double.NaN,
-					attributes);
-			fillTableWithRow(table, PNRepResult.NUMSTATEGENERATED, Double.NaN,
-					attributes);
-			fillTableWithRow(table, "Generalization", Double.NaN, attributes);
-			fillTableWithRow(table, "Precision", Double.NaN, attributes);
-
-		} else {
-			fillTableWithRow(table, PNRepResult.TRACEFITNESS, trace_fitness,
-					attributes);
-			fillTableWithRow(table, PNRepResult.MOVELOGFITNESS,
-					move_log_fitness, attributes);
-			fillTableWithRow(table, PNRepResult.MOVEMODELFITNESS,
-					move_model_fitness, attributes);
-			fillTableWithRow(table, PNRepResult.RAWFITNESSCOST,
-					raw_fitness_costs, attributes);
-			fillTableWithRow(table, PNRepResult.NUMSTATEGENERATED,
-					num_state_gen, attributes);
-		}
-		es = table.createExampleSet();
-		outputData.deliver(es);
-
-		// output the trace alignment
-		ExampleSet es2 = null;
-		MemoryExampleTable table2 = null;
-		List<Attribute> attributes2 = new LinkedList<Attribute>();
-		attributes2.add(AttributeFactory.createAttribute(this.TRACEINDEX,
-				Ontology.STRING));
-		attributes2.add(AttributeFactory
-				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.NUMERICAL));
-		attributes2.add(AttributeFactory.createAttribute(
-				PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
-		attributes2.add(AttributeFactory.createAttribute(
-				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL));
-		attributes2.add(AttributeFactory.createAttribute(
-				PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
-		attributes2.add(AttributeFactory.createAttribute(
-				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL));
-		table2 = new MemoryExampleTable(attributes2);
-		Iterator<SyncReplayResult> iterator = repResult.iterator();
-		while (iterator.hasNext()) {
-			SyncReplayResult next = iterator.next();
-			DataRowFactory factory = new DataRowFactory(
-					DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
-			Object[] vals = new Object[6];
-			vals[0] = next.getTraceIndex().toString();
-			vals[1] = next.getInfo().get(PNRepResult.TRACEFITNESS);
-			vals[2] = next.getInfo().get(PNRepResult.MOVELOGFITNESS);
-			vals[3] = next.getInfo().get(PNRepResult.MOVEMODELFITNESS);
-			vals[4] = next.getInfo().get(PNRepResult.RAWFITNESSCOST);
-			vals[5] = next.getInfo().get(PNRepResult.NUMSTATEGENERATED);
-
-			Attribute[] attribArray = new Attribute[attributes2.size()];
-			for (int i = 0; i < attributes2.size(); i++) {
-				attribArray[i] = attributes2.get(i);
-			}
-			DataRow dataRow = factory.create(vals, attribArray);
-			table2.addDataRow(dataRow);
-		}
-		es2 = table2.createExampleSet();
-		// add to list so that afterwards it can be cleared if needed
-		outputAlignment.deliver(es2);
-
-		// create the third exampleset
-		ExampleSet es3 = null;
-		MemoryExampleTable table3 = null;
-		List<Attribute> attributes3 = new LinkedList<Attribute>();
-		attributes3.add(AttributeFactory.createAttribute(this.TRACEINDEX,
-				Ontology.STRING));
-		attributes3.add(AttributeFactory.createAttribute(this.TRACEIDENTIFIER,
-				Ontology.STRING));
-		attributes3.add(AttributeFactory
-				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.NUMERICAL));
-		attributes3.add(AttributeFactory.createAttribute(
-				PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
-		attributes3.add(AttributeFactory.createAttribute(
-				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL));
-		attributes3.add(AttributeFactory.createAttribute(
-				PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
-		attributes3.add(AttributeFactory.createAttribute(
-				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL));
-		table3 = new MemoryExampleTable(attributes3);
-		Iterator<SyncReplayResult> iterator2 = repResult.iterator();
-		while (iterator2.hasNext()) {
-			SyncReplayResult next = iterator2.next();
-			DataRowFactory factory = new DataRowFactory(
-					DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
-			Object[] vals = new Object[7];
-			vals[2] = next.getInfo().get(PNRepResult.TRACEFITNESS);
-			vals[3] = next.getInfo().get(PNRepResult.MOVELOGFITNESS);
-			vals[4] = next.getInfo().get(PNRepResult.MOVEMODELFITNESS);
-			vals[5] = next.getInfo().get(PNRepResult.RAWFITNESSCOST);
-			vals[6] = next.getInfo().get(PNRepResult.NUMSTATEGENERATED);
-			// convert the list to array
-			Attribute[] attribArray = new Attribute[attributes3.size()];
-			for (int i = 0; i < attributes3.size(); i++) {
-				attribArray[i] = attributes3.get(i);
-			}
-			List<Integer> listArray = convertIntListToArray(
-					next.getTraceIndex().toString());
-			for (Integer s : listArray) {
-				// get the right trace
-				XTrace xTrace = getXLog().get(s);
-				String name = XConceptExtension.instance().extractName(xTrace);
-				vals[0] = s.toString();
-				vals[1] = name;
-				DataRow dataRow = factory.create(vals, attribArray);
-				table3.addDataRow(dataRow);
-			}
-		}
-		es3 = table3.createExampleSet();
-		outputAlignmentTrace.deliver(es3);
-		// CREATE THE fourth es
-		ExampleSet es4 = null;
-		MemoryExampleTable table4 = null;
-		List<Attribute> attributes4 = new LinkedList<Attribute>();
-		attributes4.add(AttributeFactory.createAttribute(this.NAMECOL,
-				Ontology.STRING));
-		attributes4.add(AttributeFactory.createAttribute(this.VALUECOL,
-				Ontology.STRING));
-		table4 = new MemoryExampleTable(attributes4);
-		fillTableWithRow(table4, RELIABLE, Boolean.toString(unreliable),
-				attributes4);
-		es4 = table4.createExampleSet();
-		outputReliable.deliver(es4);
+		fillTables(repResult);
 
 		logger.log(Level.INFO,
 				"End: replay log on petri net for conformance checking ("
@@ -404,14 +258,14 @@ public class ConformanceAnalysisOperator
 
 	class ALIGNMENT_CALCULATOR implements Callable<PNRepResultIOObject> {
 
-		public ALIGNMENT_CALCULATOR() {
+		PluginContext pluginContext;
+
+		public ALIGNMENT_CALCULATOR(PluginContext input) {
+			pluginContext = input;
 		}
 
 		@Override
 		public PNRepResultIOObject call() throws Exception {
-
-			PluginContext pluginContext = ProMPluginContextManager.instance()
-					.getFutureResultAwareContext(PNLogReplayer.class);
 
 			XLogIOObject xLog = new XLogIOObject(getXLog(), pluginContext);
 			PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
@@ -420,10 +274,10 @@ public class ConformanceAnalysisOperator
 			try {
 				if (!pNet.hasFinalMarking())
 					pNet.setFinalMarking(getFinalMarking(pNet.getArtifact()));
-				repResult = getAlignment(pNet.getArtifact(), xLog.getArtifact(),
-						pNet.getInitialMarking(), pNet.getFinalMarking());
+				repResult = getAlignment(pluginContext, pNet.getArtifact(),
+						xLog.getArtifact(), pNet.getInitialMarking(),
+						pNet.getFinalMarking());
 			} catch (ObjectNotFoundException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -490,9 +344,9 @@ public class ConformanceAnalysisOperator
 
 	// Boudewijn's methods for creating alignments
 
-	public PNRepResult getAlignment(PetrinetGraph net, XLog log,
-			Marking initialMarking, Marking finalMarking)
-					throws UndefinedParameterError {
+	public PNRepResult getAlignment(PluginContext pluginContext,
+			PetrinetGraph net, XLog log, Marking initialMarking,
+			Marking finalMarking) throws UndefinedParameterError {
 
 		Map<Transition, Integer> costMOS = constructMOSCostFunction(net);
 		XEventClassifier eventClassifier = getXEventClassifier();
@@ -501,7 +355,11 @@ public class ConformanceAnalysisOperator
 		TransEvClassMapping mapping = constructMapping(net, log,
 				eventClassifier);
 
-		AbstractPetrinetReplayer<?, ?> replayEngine = new PetrinetReplayerWithoutILP();
+		AbstractPetrinetReplayer<?, ?> replayEngine = null;
+		if (getParameterAsString(PARAMETER_0_KEY).equals(WITH_ILP))
+			replayEngine = new PetrinetReplayerWithILP();
+		else
+			replayEngine = new PetrinetReplayerWithoutILP();
 
 		IPNReplayParameter parameters = new CostBasedCompleteParam(costMOT,
 				costMOS);
@@ -515,7 +373,7 @@ public class ConformanceAnalysisOperator
 
 		PNRepResult result = null;
 		try {
-			result = replayEngine.replayLog(null, net, log, mapping,
+			result = replayEngine.replayLog(pluginContext, net, log, mapping,
 					parameters);
 
 		} catch (AStarException e) {
@@ -575,6 +433,11 @@ public class ConformanceAnalysisOperator
 	public List<ParameterType> getParameterTypes() {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
+		ParameterTypeCategory parameterType0 = new ParameterTypeCategory(
+				PARAMETER_0_KEY, PARAMETER_0_DESCR,
+				new String[] { WITH_ILP, WITHOUT_ILP }, 0);
+		parameterTypes.add(parameterType0);
+
 		ParameterTypeInt parameterType1 = new ParameterTypeInt(PARAMETER_1_KEY,
 				PARAMETER_1_DESCR, 0, Integer.MAX_VALUE, 200);
 		parameterTypes.add(parameterType1);
@@ -588,6 +451,248 @@ public class ConformanceAnalysisOperator
 		parameterTypes.add(parameterType3);
 
 		return parameterTypes;
+	}
+
+	public void fillTables(PNRepResult repResult) throws OperatorException {
+
+		if (repResult != null && !repResult.isEmpty()) {
+
+			Iterator<SyncReplayResult> iterator3 = repResult.iterator();
+			boolean unreliable = false;
+			while (iterator3.hasNext()) {
+				SyncReplayResult next = iterator3.next();
+				boolean reliable = next.isReliable();
+				if (!reliable) {
+					unreliable = true;
+					break;
+				}
+			}
+
+			fillFitnessTable(repResult, unreliable);
+			fillTraceGroupAlignmentTable(repResult);
+			fillTraceSingleAlignmentTable(repResult);
+			fillUnreliableAlignmentsTable(unreliable);
+
+		} else {
+
+			fillFitnessTable(null, true);
+			fillTraceGroupAlignmentTable(null);
+			fillTraceSingleAlignmentTable(null);
+			fillUnreliableAlignmentsTable(true);
+
+		}
+
+	}
+
+	public void fillFitnessTable(PNRepResult repResult, boolean unreliable) {
+
+		ExampleSet es = null;
+		MemoryExampleTable table = null;
+		List<Attribute> attributes = new LinkedList<Attribute>();
+		attributes.add(AttributeFactory.createAttribute(this.NAMECOL,
+				Ontology.STRING));
+		attributes.add(AttributeFactory.createAttribute(this.VALUECOL,
+				Ontology.NUMERICAL));
+		table = new MemoryExampleTable(attributes);
+		if (unreliable || repResult == null) {
+			fillTableWithRow(table, PNRepResult.TRACEFITNESS, Double.NaN,
+					attributes);
+			fillTableWithRow(table, PNRepResult.MOVELOGFITNESS, Double.NaN,
+					attributes);
+			fillTableWithRow(table, PNRepResult.MOVEMODELFITNESS, Double.NaN,
+					attributes);
+			fillTableWithRow(table, PNRepResult.RAWFITNESSCOST, Double.NaN,
+					attributes);
+			fillTableWithRow(table, PNRepResult.NUMSTATEGENERATED, Double.NaN,
+					attributes);
+
+		} else {
+
+			Map<String, Object> info = repResult.getInfo();
+			double trace_fitness = 0;
+			try {
+				trace_fitness = Double.parseDouble(
+						(String) info.get(PNRepResult.TRACEFITNESS));
+			} catch (Exception e) {
+				trace_fitness = (Double) info.get(PNRepResult.TRACEFITNESS);
+			}
+			double move_log_fitness = (Double) info
+					.get(PNRepResult.MOVELOGFITNESS);
+			double move_model_fitness = (Double) info
+					.get(PNRepResult.MOVEMODELFITNESS);
+			double raw_fitness_costs = (Double) info
+					.get(PNRepResult.RAWFITNESSCOST);
+			double num_state_gen = (Double) info
+					.get(PNRepResult.NUMSTATEGENERATED);
+
+			fillTableWithRow(table, PNRepResult.TRACEFITNESS, trace_fitness,
+					attributes);
+			fillTableWithRow(table, PNRepResult.MOVELOGFITNESS,
+					move_log_fitness, attributes);
+			fillTableWithRow(table, PNRepResult.MOVEMODELFITNESS,
+					move_model_fitness, attributes);
+			fillTableWithRow(table, PNRepResult.RAWFITNESSCOST,
+					raw_fitness_costs, attributes);
+			fillTableWithRow(table, PNRepResult.NUMSTATEGENERATED,
+					num_state_gen, attributes);
+		}
+		es = table.createExampleSet();
+		outputData.deliver(es);
+	}
+
+	public void fillTraceGroupAlignmentTable(PNRepResult repResult) {
+		// output the trace alignment
+		ExampleSet es2 = null;
+		MemoryExampleTable table2 = null;
+		List<Attribute> attributes2 = new LinkedList<Attribute>();
+		attributes2.add(AttributeFactory.createAttribute(this.TRACEINDEX,
+				Ontology.STRING));
+		attributes2.add(AttributeFactory
+				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.NUMERICAL));
+		attributes2.add(AttributeFactory.createAttribute(
+				PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
+		attributes2.add(AttributeFactory.createAttribute(
+				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL));
+		attributes2.add(AttributeFactory.createAttribute(
+				PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
+		attributes2.add(AttributeFactory.createAttribute(
+				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL));
+		table2 = new MemoryExampleTable(attributes2);
+
+		if (repResult != null) {
+			Iterator<SyncReplayResult> iterator = repResult.iterator();
+			while (iterator.hasNext()) {
+				SyncReplayResult next = iterator.next();
+				DataRowFactory factory = new DataRowFactory(
+						DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
+				Object[] vals = new Object[6];
+				vals[0] = next.getTraceIndex().toString();
+				vals[1] = next.getInfo().get(PNRepResult.TRACEFITNESS);
+				vals[2] = next.getInfo().get(PNRepResult.MOVELOGFITNESS);
+				vals[3] = next.getInfo().get(PNRepResult.MOVEMODELFITNESS);
+				vals[4] = next.getInfo().get(PNRepResult.RAWFITNESSCOST);
+				vals[5] = next.getInfo().get(PNRepResult.NUMSTATEGENERATED);
+
+				Attribute[] attribArray = new Attribute[attributes2.size()];
+				for (int i = 0; i < attributes2.size(); i++) {
+					attribArray[i] = attributes2.get(i);
+				}
+				DataRow dataRow = factory.create(vals, attribArray);
+				table2.addDataRow(dataRow);
+			}
+		} else {
+			DataRowFactory factory = new DataRowFactory(
+					DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
+			Object[] vals = new Object[6];
+			vals[0] = "?";
+			vals[1] = Double.NaN;
+			vals[2] = Double.NaN;
+			vals[3] = Double.NaN;
+			vals[4] = Double.NaN;
+			vals[5] = Double.NaN;
+
+			Attribute[] attribArray = new Attribute[attributes2.size()];
+			for (int i = 0; i < attributes2.size(); i++) {
+				attribArray[i] = attributes2.get(i);
+			}
+			DataRow dataRow = factory.create(vals, attribArray);
+			table2.addDataRow(dataRow);
+		}
+
+		es2 = table2.createExampleSet();
+		outputAlignment.deliver(es2);
+	}
+
+	public void fillTraceSingleAlignmentTable(PNRepResult repResult)
+			throws OperatorException {
+
+		// create the third exampleset
+		ExampleSet es3 = null;
+		MemoryExampleTable table3 = null;
+		List<Attribute> attributes3 = new LinkedList<Attribute>();
+		attributes3.add(AttributeFactory.createAttribute(this.TRACEINDEX,
+				Ontology.STRING));
+		attributes3.add(AttributeFactory.createAttribute(this.TRACEIDENTIFIER,
+				Ontology.STRING));
+		attributes3.add(AttributeFactory
+				.createAttribute(PNRepResult.TRACEFITNESS, Ontology.NUMERICAL));
+		attributes3.add(AttributeFactory.createAttribute(
+				PNRepResult.MOVELOGFITNESS, Ontology.NUMERICAL));
+		attributes3.add(AttributeFactory.createAttribute(
+				PNRepResult.MOVEMODELFITNESS, Ontology.NUMERICAL));
+		attributes3.add(AttributeFactory.createAttribute(
+				PNRepResult.RAWFITNESSCOST, Ontology.NUMERICAL));
+		attributes3.add(AttributeFactory.createAttribute(
+				PNRepResult.NUMSTATEGENERATED, Ontology.NUMERICAL));
+		table3 = new MemoryExampleTable(attributes3);
+
+		if (repResult != null) {
+			Iterator<SyncReplayResult> iterator2 = repResult.iterator();
+			while (iterator2.hasNext()) {
+				SyncReplayResult next = iterator2.next();
+				DataRowFactory factory = new DataRowFactory(
+						DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
+				Object[] vals = new Object[7];
+				vals[2] = next.getInfo().get(PNRepResult.TRACEFITNESS);
+				vals[3] = next.getInfo().get(PNRepResult.MOVELOGFITNESS);
+				vals[4] = next.getInfo().get(PNRepResult.MOVEMODELFITNESS);
+				vals[5] = next.getInfo().get(PNRepResult.RAWFITNESSCOST);
+				vals[6] = next.getInfo().get(PNRepResult.NUMSTATEGENERATED);
+				// convert the list to array
+				Attribute[] attribArray = new Attribute[attributes3.size()];
+				for (int i = 0; i < attributes3.size(); i++) {
+					attribArray[i] = attributes3.get(i);
+				}
+				List<Integer> listArray = convertIntListToArray(
+						next.getTraceIndex().toString());
+				for (Integer s : listArray) {
+					// get the right trace
+					XTrace xTrace = getXLog().get(s);
+					String name = XConceptExtension.instance()
+							.extractName(xTrace);
+					vals[0] = s.toString();
+					vals[1] = name;
+					DataRow dataRow = factory.create(vals, attribArray);
+					table3.addDataRow(dataRow);
+				}
+			}
+		} else {
+			DataRowFactory factory = new DataRowFactory(
+					DataRowFactory.TYPE_DOUBLE_ARRAY, '.');
+			Object[] vals = new Object[7];
+			vals[0] = "?";
+			vals[1] = "?";
+			vals[2] = Double.NaN;
+			vals[3] = Double.NaN;
+			vals[4] = Double.NaN;
+			vals[5] = Double.NaN;
+			vals[6] = Double.NaN;
+
+			Attribute[] attribArray = new Attribute[attributes3.size()];
+			for (int i = 0; i < attributes3.size(); i++) {
+				attribArray[i] = attributes3.get(i);
+			}
+			DataRow dataRow = factory.create(vals, attribArray);
+			table3.addDataRow(dataRow);
+		}
+		es3 = table3.createExampleSet();
+		outputAlignmentTrace.deliver(es3);
+	}
+
+	public void fillUnreliableAlignmentsTable(boolean unreliable) {
+		// CREATE THE fourth es
+		ExampleSet es4 = null;
+		MemoryExampleTable table4 = null;
+		List<Attribute> attributes4 = new LinkedList<Attribute>();
+		attributes4.add(AttributeFactory.createAttribute(this.NAMECOL,
+				Ontology.STRING));
+		attributes4.add(AttributeFactory.createAttribute(this.VALUECOL,
+				Ontology.STRING));
+		table4 = new MemoryExampleTable(attributes4);
+		fillTableWithRow(table4, RELIABLE, Boolean.toString(unreliable),
+				attributes4);
+		es4 = table4.createExampleSet();
+		outputReliable.deliver(es4);
 	}
 
 }

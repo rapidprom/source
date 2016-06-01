@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,6 +41,7 @@ import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.operators.abstr.AbstractRapidProMDiscoveryOperator;
 
 import com.google.common.util.concurrent.SimpleTimeLimiter;
+import com.google.common.util.concurrent.UncheckedTimeoutException;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
@@ -85,12 +87,19 @@ public class PerformanceConformanceAnalysisOperator
 		long time = System.currentTimeMillis();
 
 		ManifestIOObject manifestIOObject;
-		SimpleTimeLimiter limiter = new SimpleTimeLimiter();
+		SimpleTimeLimiter limiter = new SimpleTimeLimiter(
+				Executors.newSingleThreadExecutor());
+
+		PluginContext pluginContext = ProMPluginContextManager.instance()
+				.getFutureResultAwareContext(PNManifestReplayer.class);
 		try {
 			manifestIOObject = limiter.callWithTimeout(
-					new PERFORMANCE_CALCULATOR(),
+					new PERFORMANCE_CALCULATOR(pluginContext),
 					getParameterAsInt(PARAMETER_2_KEY), TimeUnit.SECONDS, true);
 			outputManifest.deliver(manifestIOObject);
+		} catch (UncheckedTimeoutException e1) {
+			pluginContext.getProgress().cancel();
+			logger.log(Level.INFO, "Performance Ckecker timed out.");
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
@@ -103,13 +112,14 @@ public class PerformanceConformanceAnalysisOperator
 
 	class PERFORMANCE_CALCULATOR implements Callable<ManifestIOObject> {
 
-		public PERFORMANCE_CALCULATOR() {
+		PluginContext pluginContext;
+
+		public PERFORMANCE_CALCULATOR(PluginContext input) {
+			pluginContext = input;
 		}
 
 		@Override
 		public ManifestIOObject call() throws Exception {
-			PluginContext pluginContext = ProMPluginContextManager.instance()
-					.getFutureResultAwareContext(PNManifestReplayer.class);
 
 			PetriNetIOObject pNet = inputPN.getData(PetriNetIOObject.class);
 			XLog xLog = getXLog();
@@ -135,8 +145,7 @@ public class PerformanceConformanceAnalysisOperator
 
 			Manifest result = null;
 			try {
-				PNRepResult alignment = replayer.replayLog(
-						manifestParameters.isGUIMode() ? pluginContext : null,
+				PNRepResult alignment = replayer.replayLog(pluginContext,
 						flattener.getNet(), xLog, flattener.getMap(),
 						replayAlgorithm, parameter);
 				result = ManifestFactory.construct(pNet.getArtifact(),
@@ -152,6 +161,7 @@ public class PerformanceConformanceAnalysisOperator
 			}
 
 		}
+
 	}
 
 	private PNManifestReplayerParameter getParameterObject(
@@ -163,7 +173,7 @@ public class PerformanceConformanceAnalysisOperator
 			if (!pNet.hasFinalMarking())
 				pNet.setFinalMarking(getFinalMarking(pNet.getArtifact()));
 			parameter.setFinalMarkings(pNet.getFinalMarkingAsArray());
-			
+
 			parameter.setMaxNumOfStates(
 					getParameterAsInt(PARAMETER_1_KEY) * 1000);
 			TransClasses tc = new TransClasses(pNet.getArtifact());

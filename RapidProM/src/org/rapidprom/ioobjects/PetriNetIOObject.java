@@ -69,13 +69,19 @@ public class PetriNetIOObject extends AbstractRapidProMIOObject<Petrinet> {
 	}
 
 	public Marking[] getFinalMarkingAsArray() throws ObjectNotFoundException {
+
 		List<Marking> fM = new ArrayList<Marking>();
-		for (Place place : finalMarking) {
-			Marking m = new Marking();
-			m.add(place);
-			fM.add(m);
+		if (finalMarking.size() > 0) {
+			for (Place place : finalMarking) {
+				Marking m = new Marking();
+				m.add(place);
+				fM.add(m);
+			}
+			return fM.toArray(new Marking[finalMarking.size()]);
 		}
-		return fM.toArray(new Marking[finalMarking.size()]);
+		else
+			return new Marking[]{new Marking()};
+
 	}
 
 	public void setFinalMarking(Marking marking) {

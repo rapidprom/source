@@ -61,7 +61,7 @@ public class AddNoiseOperator extends Operator {
 	public void doWork() throws OperatorException {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO,
-				"Start: add artificial start and end event to all traces");
+				"Start: add noise");
 		long time = System.currentTimeMillis();
 
 		MetaData md = inputXLog.getMetaData();
@@ -75,7 +75,7 @@ public class AddNoiseOperator extends Operator {
 		outputEventLog.deliverMD(md);
 		outputEventLog.deliver(result);
 		logger.log(Level.INFO,
-				"End: add artificial start and end event to all traces ("
+				"End: add noise ("
 						+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
 

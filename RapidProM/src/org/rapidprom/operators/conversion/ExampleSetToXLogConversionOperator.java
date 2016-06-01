@@ -55,11 +55,11 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 
 	private static final String DEFAULT_VALUE_OPTIONAL = "<ignore>";
 	private static final String GLOBAL_INVALID = "__INVALID__";
-	private static final String PARAMETER_DEFAULT_EVENT_LIFECYCLE_TRANSITION = DEFAULT_VALUE_OPTIONAL;
-	private static final String PARAMETER_DEFAULT_EVENT_RESOURCE = DEFAULT_VALUE_OPTIONAL;
+	private static final String PARAMETER_DEFAULT_EVENT_LIFECYCLE_TRANSITION = "E:lifecycle:transition";
+	private static final String PARAMETER_DEFAULT_EVENT_RESOURCE = "E:org:resource";
 	private static final String PARAMETER_DEFAULT_EVENT_RESOURCE_GROUP = DEFAULT_VALUE_OPTIONAL;
 	private static final String PARAMETER_DEFAULT_EVENT_RESOURCE_ROLE = DEFAULT_VALUE_OPTIONAL;
-	private static final String PARAMETER_DEFAULT_EVENT_TIMESTAMP = DEFAULT_VALUE_OPTIONAL;
+	private static final String PARAMETER_DEFAULT_EVENT_TIMESTAMP = "E:time:timestamp";
 	private static final String PARAMETER_DEFAULT_TRACE_IDENTIFIER = "T:concept:name";
 	private static final String PARAMETER_DEFAULT_EVENT_IDENTIFIER = "E:concept:name";
 	private static final String PARAMETER_DESC_EVENT_IDENTIFIER = "Please select an attribute of the example set to act as an event identifier";
