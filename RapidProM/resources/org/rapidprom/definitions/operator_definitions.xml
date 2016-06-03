@@ -278,6 +278,10 @@
                     <key>log_split</key>
                     <class>org.rapidprom.operators.logmanipulation.SplitXLogOperator</class>
                 </operator>
+                <operator>
+                    <key>unique_paths_calculator</key>
+                    <class>org.rapidprom.operators.generation.NoUniquePathsCalculatorOperator</class>
+                </operator>
             </group>
     </group>
 </operators>

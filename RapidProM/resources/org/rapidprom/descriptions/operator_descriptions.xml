@@ -444,6 +444,13 @@
 		<help> An Event log is required as input </help>
         <key>log_split</key>                    
     </operator>
+    
+    <operator>
+        <name>Number of Unique Paths</name>
+		<synopsis>This operator calculate the number of unique paths within a process tree</synopsis>
+		<help>The output is an exampleset with a single cell containing the number of unique paths of the process tree given as input, and the parameter value.</help>
+        <key>unique_paths_calculator</key>
+    </operator>
 	
 	
 </operatorHelp>
