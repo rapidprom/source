@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.deckfour.xes.classification.XEventAndClassifier;
 import org.deckfour.xes.classification.XEventClassifier;
-import org.deckfour.xes.classification.XEventLifeTransClassifier;
 import org.deckfour.xes.classification.XEventNameClassifier;
 import org.deckfour.xes.model.XLog;
 import org.rapidprom.ioobjects.XLogIOObject;
@@ -25,7 +24,7 @@ public class AbstractRapidProMDiscoveryOperator extends Operator {
 	private static final String PARAMETER_KEY_EVENT_CLASSIFIER = "event_classifier";
 	private static final String PARAMETER_DESC_EVENT_CLASSIFIER = "Specifies how to identify events within the event log, as defined in http://www.xes-standard.org/";
 	private static XEventClassifier[] PARAMETER_DEFAULT_CLASSIFIERS = new XEventClassifier[] {
-			new XEventAndClassifier(new XEventNameClassifier(), new XEventLifeTransClassifier())};
+			new XEventAndClassifier(new XEventNameClassifier()) };
 
 	public AbstractRapidProMDiscoveryOperator(OperatorDescription description) {
 		super(description);
