@@ -267,8 +267,12 @@
                     <class>org.rapidprom.operators.generation.ConvertNewickTreeToProcessTree</class>
                 </operator>
                 <operator>
-                    <key>generate_noisy_log</key>
+                    <key>generate_noisy_log_event</key>
                     <class>org.rapidprom.operators.generation.GenerateNoisyLogOperator</class>
+                </operator>
+                <operator>
+                    <key>generate_noisy_log_trace</key>
+                    <class>org.rapidprom.operators.generation.GenerateNoisyLog2Operator</class>
                 </operator>
                 <operator>
                     <key>log_cross_validation</key>
