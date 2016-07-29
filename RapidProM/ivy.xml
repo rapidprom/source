@@ -13,7 +13,7 @@
         <dependency org="org.rapidprom" name="BPMN" rev="6.5.56" rapidprom:release="3.0.8" />
         <dependency org="org.rapidprom" name="BPMNConversions" rev="6.5.48" rapidprom:release="3.0.8" />
         <dependency org="org.rapidprom" name="CPNet" rev="6.5.84" rapidprom:release="3.0.8" />
-        <dependency org="org.rapidprom" name="DataAwareReplayer" rev="6.5.453"  rapidprom:release="3.0.8"/>
+        <dependency org="org.rapidprom" name="DataAwareReplayer" rev="6.7.509"  rapidprom:release="3.0.8"/>
         <dependency org="org.rapidprom" name="DataPetriNets" rev="6.5.291" rapidprom:release="3.0.8" />
         <dependency org="org.rapidprom" name="DottedChart" rev="6.5.17" rapidprom:release="3.0.8" />
         <dependency org="org.rapidprom" name="EvolutionaryTreeMiner" rev="6.5.53" rapidprom:release="3.0.8" />
@@ -46,7 +46,7 @@
         <dependency org="org.rapidprom" name="Uma" rev="6.5.46" rapidprom:release="3.0.8" />
         <dependency org="org.rapidprom" name="Woflan" rev="6.5.44" rapidprom:release="3.0.8" />
         <dependency org="org.rapidprom" name="XESLite" rev="6.5.168" rapidprom:release="3.0.8" />
-        <dependency org="org.rapidprom" name="PTAndLogGenerator" rev="6.5.65" rapidprom:release="3.0.8" />
+        <dependency org="org.rapidprom" name="PTAndLogGenerator" rev="6.7.80" rapidprom:release="3.0.8" />
         <exclude org="*" ext="*" type="source"/>
         <exclude org="*" ext="*" type="javadoc"/>
     </dependencies>
