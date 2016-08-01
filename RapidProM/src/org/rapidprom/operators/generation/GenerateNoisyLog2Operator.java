@@ -1,23 +1,31 @@
 package org.rapidprom.operators.generation;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.deckfour.xes.model.XLog;
 import org.processmining.framework.plugin.PluginContext;
+import org.processmining.ptandloggenerator.parameters.NoiseGeneratorSettings;
 import org.processmining.ptandloggenerator.plugins.Alfredo_GenerateNoisyLog;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.PetriNetIOObject;
 import org.rapidprom.ioobjects.XLogIOObject;
+import org.rapidprom.operators.abstr.AbstractRapidProMDiscoveryOperator;
 
-import com.rapidminer.operator.Operator;
 import com.rapidminer.operator.OperatorDescription;
 import com.rapidminer.operator.OperatorException;
 import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
+import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeDouble;
 import com.rapidminer.tools.LogService;
 
-public class GenerateNoisyLog2Operator extends Operator {
+import javassist.tools.rmi.ObjectNotFoundException;
+
+public class GenerateNoisyLog2Operator
+		extends AbstractRapidProMDiscoveryOperator {
 
 	public static final String PARAMETER_1_KEY = "Probability of Add Event",
 			PARAMETER_1_DESCR = "The probability of, for a given trace, adding an event in a random position",
@@ -36,9 +44,6 @@ public class GenerateNoisyLog2Operator extends Operator {
 			PARAMETER_8_KEY = "Probability of Remove Tail",
 			PARAMETER_8_DESCR = "The probability of, for a given trace, remove up to 1/3 of its last events.";
 
-	private InputPort inputLog = getInputPorts().createPort("event log",
-			XLogIOObject.class);
-
 	private InputPort inputNet = getInputPorts().createPort("petri net",
 			PetriNetIOObject.class);
 
@@ -47,25 +52,84 @@ public class GenerateNoisyLog2Operator extends Operator {
 	public GenerateNoisyLog2Operator(OperatorDescription description) {
 		super(description);
 		getTransformer()
-		.addRule(new GenerateNewMDRule(output, XLogIOObject.class));
+				.addRule(new GenerateNewMDRule(output, XLogIOObject.class));
 	}
-	
+
 	public void doWork() throws OperatorException {
 		Logger logger = LogService.getRoot();
 		logger.log(Level.INFO, "Start: generating noisy event log");
 		long time = System.currentTimeMillis();
 
-		XLogIOObject log = inputLog.getData(XLogIOObject.class);
+		XLog log = getXLog();
 		PetriNetIOObject petriNet = inputNet.getData(PetriNetIOObject.class);
 		PluginContext pluginContext = ProMPluginContextManager.instance()
 				.getContext();
-		
+
 		Alfredo_GenerateNoisyLog noiseGenerator = new Alfredo_GenerateNoisyLog();
-		
-		XLog result = noiseGenerator.addNoiseWithDefaultParameters(context, log, net, initialMarking, finMarking, classifier)
-		output.deliver(null);
+
+		// create the settings object
+		NoiseGeneratorSettings settings = new NoiseGeneratorSettings();
+		settings.setProbAddEvent(getParameterAsDouble(PARAMETER_1_KEY));
+		settings.setProbRemoveEvent(getParameterAsDouble(PARAMETER_2_KEY));
+		settings.setProbDuplicateEvent(getParameterAsDouble(PARAMETER_3_KEY));
+		settings.setProbSwapConsecutiveEvents(
+				getParameterAsDouble(PARAMETER_4_KEY));
+		settings.setProbSwapRandomEvents(getParameterAsDouble(PARAMETER_5_KEY));
+		settings.setProbRemoveHead(getParameterAsDouble(PARAMETER_6_KEY));
+		settings.setProbRemoveBody(getParameterAsDouble(PARAMETER_7_KEY));
+		settings.setProbRemoveTail(getParameterAsDouble(PARAMETER_8_KEY));
+
+		XLog result = null;
+		try {
+			result = noiseGenerator.addNoise(pluginContext,
+					log, petriNet.getArtifact(),
+					petriNet.getInitialMarking(), petriNet.getFinalMarking(),
+					getXEventClassifier(), settings);
+		} catch (ObjectNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		output.deliver(new XLogIOObject(result, pluginContext));
 		logger.log(Level.INFO, "End: generating noisy event log ("
 				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
+	}
+
+	public List<ParameterType> getParameterTypes() {
+		List<ParameterType> parameterTypes = super.getParameterTypes();
+
+		ParameterTypeDouble parameter1 = new ParameterTypeDouble(
+				PARAMETER_1_KEY, PARAMETER_1_DESCR, 0, 1, 0.1);
+		parameterTypes.add(parameter1);
+
+		ParameterTypeDouble parameter2 = new ParameterTypeDouble(
+				PARAMETER_2_KEY, PARAMETER_2_DESCR, 0, 1, 0.1);
+		parameterTypes.add(parameter2);
+
+		ParameterTypeDouble parameter3 = new ParameterTypeDouble(
+				PARAMETER_3_KEY, PARAMETER_3_DESCR, 0, 1, 0.1);
+		parameterTypes.add(parameter3);
+
+		ParameterTypeDouble parameter4 = new ParameterTypeDouble(
+				PARAMETER_4_KEY, PARAMETER_4_DESCR, 0, 1, 0.1);
+		parameterTypes.add(parameter4);
+
+		ParameterTypeDouble parameter5 = new ParameterTypeDouble(
+				PARAMETER_5_KEY, PARAMETER_5_DESCR, 0, 1, 0.1);
+		parameterTypes.add(parameter5);
+
+		ParameterTypeDouble parameter6 = new ParameterTypeDouble(
+				PARAMETER_6_KEY, PARAMETER_6_DESCR, 0, 1, 0.1);
+		parameterTypes.add(parameter6);
+
+		ParameterTypeDouble parameter7 = new ParameterTypeDouble(
+				PARAMETER_7_KEY, PARAMETER_7_DESCR, 0, 1, 0.1);
+		parameterTypes.add(parameter7);
+
+		ParameterTypeDouble parameter8 = new ParameterTypeDouble(
+				PARAMETER_8_KEY, PARAMETER_8_DESCR, 0, 1, 0.1);
+		parameterTypes.add(parameter8);
+
+		return parameterTypes;
 	}
 
 }
