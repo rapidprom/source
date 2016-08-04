@@ -404,5 +404,22 @@
 		<help> An Event log is required as input </help>		
         <key>case_data_extractor</key>                
     </operator>
-	
+	<operator>
+	    <name>DAPOQ-Lang Query </name>
+		<synopsis>Executes a DAPOQ-Lang Query on a SLEX Meta Model </synopsis>
+		<help> A SLEX Meta Model is required as input </help>		
+        <key>dapoq_lang_query</key>                
+    </operator>
+    <operator>
+	    <name>SLEXMM Meta Model Importer </name>
+		<synopsis>Imports a SLEX Meta Model </synopsis>
+		<help> A file is required as input </help>		
+        <key>import_slex_mm</key>
+    </operator>
+    <operator>
+	    <name>SLEXMM Meta Model Generator </name>
+		<synopsis>Generates a SLEX Meta Model from several inputs</synopsis>
+		<help>A Data Model, a set of events and versions, logs and process definitions are required as input</help>		
+        <key>generate_slex_mm</key>
+    </operator>
 </operatorHelp>
