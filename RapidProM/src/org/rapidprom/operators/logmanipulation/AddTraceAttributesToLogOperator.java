@@ -1,7 +1,6 @@
 package org.rapidprom.operators.logmanipulation;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
@@ -108,30 +107,14 @@ public class AddTraceAttributesToLogOperator extends Operator {
 		return parameterTypes;
 	}
 
-	private HashMap<String,XTrace> buildTraceMap(XLog xlog) {
-		HashMap<String,XTrace> map = new HashMap<>();
-		
-		for (XTrace t : xlog) {
-			String name = XConceptExtension.instance().extractName(t);
-			if (name != null) {
-				map.put(name, t);
-			}
-		}
-		
-		return map;
-	}
-	
 	private XLog mergeExampleSetIntoLog(XLog xLog, ExampleSet es,
 			String nameIDcolumn, Attribute idColumnAttrib) throws UndefinedParameterError {
-		
-		HashMap<String,XTrace> traceMap = buildTraceMap(xLog);
-		
 		Iterator<Example> iterator = es.iterator();
 		while (iterator.hasNext()) {
 			Example example = iterator.next();
 			// get the case id and see if a corresponding trace can be found
 			String caseid = example.getValueAsString(idColumnAttrib);
-			XTrace t = traceMap.get(caseid);
+			XTrace t = findTrace(caseid, xLog);
 			if (t != null) {
 				Attributes attributes = example.getAttributes();
 				Iterator<Attribute> iterator2 = attributes.iterator();
@@ -172,6 +155,16 @@ public class AddTraceAttributesToLogOperator extends Operator {
 			}
 		}
 		return xLog;
+	}
+
+	private XTrace findTrace(String caseid, XLog xLog) {
+		for (XTrace t : xLog) {
+			String name = XConceptExtension.instance().extractName(t);
+			if (name.equals(caseid)) {
+				return t;
+			}
+		}
+		return null;
 	}
 
 }

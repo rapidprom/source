@@ -19,7 +19,6 @@ import org.deckfour.xes.extension.std.XLifecycleExtension;
 import org.deckfour.xes.extension.std.XOrganizationalExtension;
 import org.deckfour.xes.extension.std.XTimeExtension;
 import org.deckfour.xes.factory.XFactory;
-import org.deckfour.xes.factory.XFactoryBufferedImpl;
 import org.deckfour.xes.factory.XFactoryRegistry;
 import org.deckfour.xes.model.XAttributeLiteral;
 import org.deckfour.xes.model.XAttributeMap;
@@ -29,7 +28,6 @@ import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.model.impl.XAttributeLiteralImpl;
 import org.deckfour.xes.model.impl.XAttributeMapImpl;
 import org.deckfour.xes.model.impl.XAttributeTimestampImpl;
-import org.processmining.xeslite.external.XFactoryExternalStore;
 //import org.processmining.models.xes.XEventPassageClassifier;
 import org.rapidprom.external.connectors.prom.ProMPluginContextManager;
 import org.rapidprom.ioobjects.XLogIOObject;
@@ -314,8 +312,7 @@ public class ExampleSetToXLogConversionOperator extends Operator {
 	}
 
 	private XLog constructLogByExampleSet(ExampleSet data) {
-//		XFactory factory = XFactoryRegistry.instance().currentDefault();
-		XFactory factory = new XFactoryExternalStore.MapDBDiskImpl();
+		XFactory factory = XFactoryRegistry.instance().currentDefault();
 
 		XLog log = createLog(factory, getParameterAsBoolean(
 				PARAMETER_KEY_INCLUDE_EVENT_LIFECYCLE_TRANSITION));

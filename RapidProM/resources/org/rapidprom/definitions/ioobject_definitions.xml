@@ -175,14 +175,4 @@
 		class="org.rapidprom.ioobjects.streams.XSRunnableIOObject"
 		reportable="false">
 	</ioobject>
-	<ioobject name="SLEXMMIOObject"
-		class="org.rapidprom.ioobjects.SLEXMMIOObject"
-		reportable="false">
-		<renderer>org.rapidprom.ioobjectrenderers.SLEXMMIOObjectRenderer</renderer>
-	</ioobject>
-	<ioobject name="SLEXMMSubSetIOObject"
-		class="org.rapidprom.ioobjects.SLEXMMSubSetIOObject"
-		reportable="false">
-		<renderer>org.rapidprom.ioobjectrenderers.SLEXMMIOSubSetObjectRenderer</renderer>
-	</ioobject>
 </ioobjects>
