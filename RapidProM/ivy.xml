@@ -46,8 +46,6 @@
         <dependency org="org.rapidprom" name="Uma" rev="6.5.46" rapidprom:release="3.0.8" />
         <dependency org="org.rapidprom" name="Woflan" rev="6.5.44" rapidprom:release="3.0.8" />
         <dependency org="org.rapidprom" name="XESLite" rev="6.5.168" rapidprom:release="3.0.8" />
-        <dependency org="db-process-mining" name="OpenSLEX" rev="0.6" conf="*"/>
-        <dependency org="db-process-mining" name="DAPOQ-Lang" rev="0.6" conf="*"/>
         <exclude org="*" ext="*" type="source"/>
         <exclude org="*" ext="*" type="javadoc"/>
     </dependencies>
