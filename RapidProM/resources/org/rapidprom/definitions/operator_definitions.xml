@@ -252,5 +252,19 @@
                 </operator>
             </group>
         </group>
+        <group key="experimental">
+        	<operator>
+        		<key>dapoq_lang_query</key>
+        		<class>org.rapidprom.operators.experimental.DAPOQLangQueryOperator</class>
+        	</operator>
+        	<operator>
+        		<key>import_slex_mm</key>
+        		<class>org.rapidprom.operators.io.ImportSLEXMMOperator</class>
+        	</operator>
+        	<operator>
+        		<key>generate_slex_mm</key>
+        		<class>org.rapidprom.operators.experimental.GenerateSLEXMMOperator</class>
+        	</operator>
+        </group>
     </group>
 </operators>
