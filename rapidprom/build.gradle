@@ -4,7 +4,7 @@ buildscript {
 		maven { url 'https://maven.rapidminer.com/content/groups/public/' }
 		ivy {
 			ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-3.0.8.xml"
-			artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision]-[release].[ext]"
+			artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision]-3.0.8.[ext]"
 		}
 	}	
 }
@@ -16,8 +16,8 @@ repositories {
     jcenter()
 	maven { url 'https://maven.rapidminer.com/content/groups/public/' }
 	ivy {
-		artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision].[ext]"
-		ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-[release].xml"
+		ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-3.0.8.xml"
+		artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision]-3.0.8.[ext]"
 	}
 }
 
@@ -56,6 +56,8 @@ extensionConfig {
 
 // Define third party library dependencies
 dependencies {
-	compile 'org.rapidprom:AlphaMiner:6.5.47'
+	compile("org.rapidprom:AlphaMiner:6.5.47"){
+		transitive = true
+	}
 	compile 'com.google.guava:guava:18.0'
 }
