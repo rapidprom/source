@@ -3,8 +3,8 @@ buildscript {
 		jcenter()
 		maven { url 'https://maven.rapidminer.com/content/groups/public/' }
 		ivy {
-			ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-3.0.8.xml"
-			artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision]-3.0.8.[ext]"
+			ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-test.xml"
+			artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision].[ext]"
 		}
 	}	
 }
@@ -16,8 +16,8 @@ repositories {
     jcenter()
 	maven { url 'https://maven.rapidminer.com/content/groups/public/' }
 	ivy {
-		ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-3.0.8.xml"
-		artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision]-3.0.8.[ext]"
+		ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-test.xml"
+		artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision].[ext]"
 	}
 }
 
