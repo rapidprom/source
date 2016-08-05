@@ -2,10 +2,6 @@ buildscript {
 	repositories {
 		jcenter()
 		maven { url 'https://maven.rapidminer.com/content/groups/public/' }
-		ivy {
-			ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-test.xml"
-			artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision].[ext]"
-		}
 	}	
 }
 
@@ -13,12 +9,18 @@ plugins { id 'com.rapidminer.extension' version '0.8.2' }
 
 // Define Maven artifact repositories
 repositories {
+	ext { 
+	rapidpromRelease = "3.0.8"
+	}
     jcenter()
 	maven { url 'https://maven.rapidminer.com/content/groups/public/' }
 	ivy {
-		ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-test.xml"
-		artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision].[ext]"
+	url "https://github.com/rapidprom/libraries/raw/master/"
+	layout "pattern", {
+		artifact "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision].[ext]"
+		ivy "[module]-[revision]/ivy-[module]-[revision]-${rapidpromRelease}.xml"
 	}
+}
 }
 
 extensionConfig {
