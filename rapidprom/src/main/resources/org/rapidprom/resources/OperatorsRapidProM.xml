@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<operators name="rapidprom" version="6.0" docbundle="org/rapidprom/resources/i18n/OperatorsDocRapidProM">
+    <group key="">
+        <!-- This is an example how to specify Operators and Operator groups. The Operator groups define
+                where Operators will be located in the Operator tree. -->
+        <!--
+        <group key="example_group">
+           <operator>
+              <key>example_operator_key</key>
+              <class>org.rapidprom.operator.OperatorClass</class>
+           </operator>
+         </group>
+         -->
+    </group>
+</operators>

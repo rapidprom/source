@@ -1,0 +1,61 @@
+buildscript {
+	repositories {
+		jcenter()
+		maven { url 'https://maven.rapidminer.com/content/groups/public/' }
+		ivy {
+			ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-3.0.8.xml"
+			artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision]-[release].[ext]"
+		}
+	}	
+}
+
+plugins { id 'com.rapidminer.extension' version '0.8.2' }
+
+// Define Maven artifact repositories
+repositories {
+    jcenter()
+	maven { url 'https://maven.rapidminer.com/content/groups/public/' }
+	ivy {
+		artifactPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/[module]-[revision].[ext]"
+		ivyPattern "https://github.com/rapidprom/libraries/raw/master/[module]-[revision]/ivy-[module]-[revision]-[release].xml"
+	}
+}
+
+extensionConfig {
+
+    // The extension name
+    name 'RapidProM'
+
+    /*
+     * The artifact group which will be used when publishing the extensions Jar
+     * and for package customization when initializing the project repository.
+     *
+     */
+    groupId = 'org.rapidprom'
+
+    /*
+     * The extension vendor which will be displayed in the extensions about box
+     * and for customizing the license headers when initializing the project repository.
+     *
+     */
+    vendor = "Eindhoven University of Technology"
+
+    /*
+     * The vendor homepage which will be displayed in the extensions about box
+     * and for customizing the license headers when initializing the project repository.
+     *
+     */
+    homepage = "www.rapidprom.org"
+
+    // define RapidMiner version and extension dependencies
+    dependencies {
+        rapidminer '7.2.0'
+        //extension namespace: 'text', version: '7.2.0'
+    }
+}
+
+// Define third party library dependencies
+dependencies {
+	compile 'org.rapidprom:AlphaMiner:6.5.47'
+	compile 'com.google.guava:guava:18.0'
+}
