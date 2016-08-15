@@ -19,6 +19,7 @@ import com.rapidminer.operator.ports.InputPort;
 import com.rapidminer.operator.ports.OutputPort;
 import com.rapidminer.operator.ports.metadata.GenerateNewMDRule;
 import com.rapidminer.parameter.ParameterType;
+import com.rapidminer.parameter.ParameterTypeBoolean;
 import com.rapidminer.parameter.ParameterTypeDouble;
 import com.rapidminer.tools.LogService;
 
@@ -42,7 +43,9 @@ public class GenerateNoisyLog2Operator
 			PARAMETER_7_KEY = "Probability of Remove Body",
 			PARAMETER_7_DESCR = "The probability of, for a given trace, remove up to 1/3 of its middle events.",
 			PARAMETER_8_KEY = "Probability of Remove Tail",
-			PARAMETER_8_DESCR = "The probability of, for a given trace, remove up to 1/3 of its last events.";
+			PARAMETER_8_DESCR = "The probability of, for a given trace, remove up to 1/3 of its last events.",
+			PARAMETER_9_KEY = "Enforce Single Noise Operation",
+			PARAMETER_9_DESCR = "When enabled, the algorithm will enforce a single noise operation (e.g., add an event) on each iteration, selected randomly from all the noise types with a probability above 0 (regardless of the actual value). This option gives the smalles possible ammount of noise so that the traces do not fit the model.";
 
 	private InputPort inputNet = getInputPorts().createPort("petri net",
 			PetriNetIOObject.class);
@@ -57,7 +60,7 @@ public class GenerateNoisyLog2Operator
 
 	public void doWork() throws OperatorException {
 		Logger logger = LogService.getRoot();
-		logger.log(Level.INFO, "Start: generating noisy event log");
+		logger.log(Level.INFO, "Start: generating noisy event log (alf)");
 		long time = System.currentTimeMillis();
 
 		XLog log = getXLog();
@@ -78,25 +81,30 @@ public class GenerateNoisyLog2Operator
 		settings.setProbRemoveHead(getParameterAsDouble(PARAMETER_6_KEY));
 		settings.setProbRemoveBody(getParameterAsDouble(PARAMETER_7_KEY));
 		settings.setProbRemoveTail(getParameterAsDouble(PARAMETER_8_KEY));
+		settings.setForceSingleNoiseOp(getParameterAsBoolean(PARAMETER_9_KEY));
 
 		XLog result = null;
 		try {
-			result = noiseGenerator.addNoise(pluginContext,
-					log, petriNet.getArtifact(),
-					petriNet.getInitialMarking(), petriNet.getFinalMarking(),
-					getXEventClassifier(), settings);
+			result = noiseGenerator.addNoise(pluginContext, log,
+					petriNet.getArtifact(), petriNet.getInitialMarking(),
+					petriNet.getFinalMarking(), getXEventClassifier(),
+					settings);
 		} catch (ObjectNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		output.deliver(new XLogIOObject(result, pluginContext));
-		logger.log(Level.INFO, "End: generating noisy event log ("
+		logger.log(Level.INFO, "End: generating noisy event log (alf) ("
 				+ (System.currentTimeMillis() - time) / 1000 + " sec)");
 	}
 
 	public List<ParameterType> getParameterTypes() {
 		List<ParameterType> parameterTypes = super.getParameterTypes();
 
+		ParameterTypeBoolean parameter9 = new ParameterTypeBoolean(
+				PARAMETER_9_KEY, PARAMETER_9_DESCR, false);
+		parameterTypes.add(parameter9);
+		
 		ParameterTypeDouble parameter1 = new ParameterTypeDouble(
 				PARAMETER_1_KEY, PARAMETER_1_DESCR, 0, 1, 0.1);
 		parameterTypes.add(parameter1);
@@ -128,7 +136,7 @@ public class GenerateNoisyLog2Operator
 		ParameterTypeDouble parameter8 = new ParameterTypeDouble(
 				PARAMETER_8_KEY, PARAMETER_8_DESCR, 0, 1, 0.1);
 		parameterTypes.add(parameter8);
-
+		
 		return parameterTypes;
 	}
 
